@@ -1,0 +1,455 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuikGraph.MSAGL</name>
+    </assembly>
+    <members>
+        <member name="T:JetBrains.Annotations.CanBeNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could be <c>null</c> sometimes,
+            so the check for <c>null</c> is necessary before its usage.
+            </summary>
+            <example><code>
+            [CanBeNull] object Test() => null;
+            
+            void UseTest() {
+              var p = Test();
+              var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.NotNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could never be <c>null</c>.
+            </summary>
+            <example><code>
+            [NotNull] object Foo() {
+              return null; // Warning: Possible 'null' assignment
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemNotNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can never be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemCanBeNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ContractAnnotationAttribute">
+            <summary>
+            Describes dependency between method input and output.
+            </summary>
+            <syntax>
+            <p>Function Definition Table syntax:</p>
+            <list>
+            <item>FDT      ::= FDTRow [;FDTRow]*</item>
+            <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
+            <item>Input    ::= ParameterName: Value [, Input]*</item>
+            <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
+            <item>Value    ::= true | false | null | notnull | canbenull</item>
+            </list>
+            If method has single input parameter, it's name could be omitted.<br/>
+            Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output
+            means that the methos doesn't return normally (throws or terminates the process).<br/>
+            Value <c>canbenull</c> is only applicable for output parameters.<br/>
+            You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
+            with rows separated by semicolon. There is no notion of order rows, all rows are checked
+            for applicability and applied per each program state tracked by R# analysis.<br/>
+            </syntax>
+            <examples><list>
+            <item><code>
+            [ContractAnnotation("=&gt; halt")]
+            public void TerminationMethod()
+            </code></item>
+            <item><code>
+            [ContractAnnotation("halt &lt;= condition: false")]
+            public void Assert(bool condition, string text) // regular assertion method
+            </code></item>
+            <item><code>
+            [ContractAnnotation("s:null =&gt; true")]
+            public bool IsNullOrEmpty(string s) // string.IsNullOrEmpty()
+            </code></item>
+            <item><code>
+            // A method that returns null if the parameter is null,
+            // and not null if the parameter is not null
+            [ContractAnnotation("null =&gt; null; notnull =&gt; notnull")]
+            public object Transform(object data) 
+            </code></item>
+            <item><code>
+            [ContractAnnotation("=&gt; true, result: notnull; =&gt; false, result: null")]
+            public bool TryParse(string s, out Person result)
+            </code></item>
+            </list></examples>
+        </member>
+        <member name="T:JetBrains.Annotations.UsedImplicitlyAttribute">
+            <summary>
+            Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
+            so this symbol will not be marked as unused (as well as by other usage inspections).
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.MeansImplicitUseAttribute">
+            <summary>
+            Should be used on attributes and causes ReSharper to not mark symbols marked with such attributes
+            as unused (as well as by other usage inspections)
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Access">
+            <summary>Only entity marked with attribute considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Assign">
+            <summary>Indicates implicit assignment to a member.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature">
+            <summary>
+            Indicates implicit instantiation of a type with fixed constructor signature.
+            That means any unused constructor parameters won't be reported as such.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature">
+            <summary>Indicates implicit instantiation of a type.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ImplicitUseTargetFlags">
+            <summary>
+            Specify what is considered used implicitly when marked
+            with <see cref="T:JetBrains.Annotations.MeansImplicitUseAttribute"/> or <see cref="T:JetBrains.Annotations.UsedImplicitlyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.Members">
+            <summary>Members of entity marked with attribute are considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.WithMembers">
+            <summary>Entity marked with attribute and all its members considered used.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PublicAPIAttribute">
+            <summary>
+            This attribute is intended to mark publicly available API
+            which should not be removed and so is treated as used.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.InstantHandleAttribute">
+            <summary>
+            Tells code analysis engine if the parameter is completely handled when the invoked method is on stack.
+            If the parameter is a delegate, indicates that delegate is executed while the method is executed.
+            If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PureAttribute">
+            <summary>
+            Indicates that a method does not make any observable state changes.
+            The same as <c>System.Diagnostics.Contracts.PureAttribute</c>.
+            </summary>
+            <example><code>
+            [Pure] int Multiply(int x, int y) => x * y;
+            
+            void M() {
+              Multiply(123, 42); // Waring: Return value of pure method is not used
+            }
+            </code></example>
+        </member>
+        <member name="T:QuikGraph.Utils.DisposableHelpers">
+            <summary>
+            Helpers to work with <see cref="T:System.IDisposable"/>.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Utils.DisposableHelpers.Finally(System.Action)">
+            <summary>
+            Calls an action when going out of scope.
+            </summary>
+            <param name="action">The action to call.</param>
+            <returns>A <see cref="T:System.IDisposable"/> object to give to a using clause.</returns>
+        </member>
+        <member name="M:QuikGraph.Utils.DisposableHelpers.FinallyScope.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.Utils.MathUtils">
+            <summary>
+            Math utilities.
+            </summary>
+        </member>
+        <member name="F:QuikGraph.Utils.MathUtils.DoubleEpsilon">
+            <summary>
+            Smallest value such that 1.0+<see cref="F:QuikGraph.Utils.MathUtils.DoubleEpsilon"/> != 1.0
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Utils.MathUtils.IsZero(System.Double)">
+            <summary>
+            Returns whether or not the double is "close" to 0, but this is faster.
+            </summary>
+            <returns>The result of the comparision.</returns>
+            <param name="a">The double to compare to 0.</param>
+        </member>
+        <member name="M:QuikGraph.Utils.MathUtils.NearEqual(System.Double,System.Double)">
+            <summary>
+            Returns whether or not two <see cref="T:System.Double"/>s are "equal". That is, whether or
+            not they are within epsilon of each other.
+            </summary>
+            <param name="a">The first <see cref="T:System.Double"/> to compare.</param>
+            <param name="b">The second <see cref="T:System.Double"/> to compare.</param>
+            <returns>The result of the comparision.</returns>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglEdgeEventHandler`2">
+            <summary>
+            Delegate for an handler dealing with a edge.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="sender">Event sender.</param>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglVertexNodeEventHandler`1">
+            <summary>
+            Delegate to for an handler dealing with a MSAGL vertex.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <param name="sender">Event sender.</param>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglEdgeEventArgs`2">
+            <summary>
+            Arguments of an event related to an MSAGL edge.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglEdgeEventArgs`2.#ctor(`1,Microsoft.Msagl.Drawing.Edge)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglEdgeEventArgs`2"/> class.
+            </summary>
+            <param name="edge">Concerned edge.</param>
+            <param name="msaglEdge">Concerned <see cref="T:Microsoft.Msagl.Drawing.Edge"/>.</param>
+        </member>
+        <member name="P:QuikGraph.MSAGL.MsaglEdgeEventArgs`2.MsaglEdge">
+            <summary>
+            Edge concerned by the event.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglVertexEventArgs`1">
+            <summary>
+            Arguments of an event related to an MSAGL vertex.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglVertexEventArgs`1.#ctor(`0,Microsoft.Msagl.Drawing.Node)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglVertexEventArgs`1"/> class.
+            </summary>
+            <param name="vertex">Concerned vertex.</param>
+            <param name="node">Concerned <see cref="T:Microsoft.Msagl.Drawing.Node"/>.</param>
+        </member>
+        <member name="P:QuikGraph.MSAGL.MsaglVertexEventArgs`1.Node">
+            <summary>
+            <see cref="T:Microsoft.Msagl.Drawing.Node"/> concerned by the event.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2">
+            <summary>
+            Default MSAGL graph populator.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.#ctor(QuikGraph.IEdgeListGraph{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2"/> class.
+            </summary>
+            <param name="visitedGraph">Graph to convert to MSAGL graph.</param>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.OnStarted(System.EventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.OnFinished(System.EventArgs)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.AddNode(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.GetVertexId(`0)">
+            <summary>
+            Gets the vertex identifier.
+            </summary>
+            <param name="vertex">Vertex to get id.</param>
+            <returns>Vertex id.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.GetVertexLabel(System.String,`0)">
+            <summary>
+            Gets the vertex label.
+            </summary>
+            <param name="id">Vertex id.</param>
+            <param name="vertex">Vertex to get label.</param>
+            <returns>Vertex label.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglDefaultGraphPopulator`2.AddEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglGraphExtensions">
+            <summary>
+            Extensions related to MSAGL bridge.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphExtensions.CreateMsaglPopulator``2(QuikGraph.IEdgeListGraph{``0,``1})">
+            <summary>
+            Creates an <see cref="T:QuikGraph.MSAGL.MsaglGraphPopulator`2"/>.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="graph">Graph to convert to MSAGL graph.</param>
+            <returns>Graph populator.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphExtensions.CreateMsaglPopulator``2(QuikGraph.IEdgeListGraph{``0,``1},System.String,System.IFormatProvider)">
+            <summary>
+            Creates an <see cref="T:QuikGraph.MSAGL.MsaglGraphPopulator`2"/>.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="graph">Graph to convert to MSAGL graph.</param>
+            <param name="format">Graph format.</param>
+            <param name="formatProvider">Graph format provider.</param>
+            <returns>Graph populator.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphExtensions.CreateMsaglPopulator``2(QuikGraph.IEdgeListGraph{``0,``1},QuikGraph.VertexIdentity{``0})">
+            <summary>
+            Creates an <see cref="T:QuikGraph.MSAGL.MsaglGraphPopulator`2"/>.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="graph">Graph to convert to MSAGL graph.</param>
+            <param name="vertexIdentity">Delegate that given a vertex return its identifier.</param>
+            <returns>Graph populator.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphExtensions.ToMsaglGraph``2(QuikGraph.IEdgeListGraph{``0,``1},QuikGraph.MSAGL.MsaglVertexNodeEventHandler{``0},QuikGraph.MSAGL.MsaglEdgeEventHandler{``0,``1})">
+            <summary>
+            Converts <paramref name="graph"/> to an <see cref="T:Microsoft.Msagl.Drawing.Graph"/>.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="graph">Graph to convert to MSAGL graph.</param>
+            <param name="nodeAdded">Node added delegate.</param>
+            <param name="edgeAdded">Edge added delegate.</param>
+            <returns>MSAGL Graph.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphExtensions.ToMsaglGraph``2(QuikGraph.IEdgeListGraph{``0,``1},QuikGraph.VertexIdentity{``0},QuikGraph.MSAGL.MsaglVertexNodeEventHandler{``0},QuikGraph.MSAGL.MsaglEdgeEventHandler{``0,``1})">
+            <summary>
+            Converts <paramref name="graph"/> to an <see cref="T:Microsoft.Msagl.Drawing.Graph"/>.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <param name="graph">Graph to convert to MSAGL graph.</param>
+            <param name="vertexIdentity">Delegate that given a vertex return its identifier.</param>
+            <param name="nodeAdded">Node added delegate.</param>
+            <param name="edgeAdded">Edge added delegate.</param>
+            <returns>MSAGL Graph.</returns>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglGraphPopulator`2">
+            <summary>
+            Base class for MSAGL graph populator.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.#ctor(QuikGraph.IEdgeListGraph{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglGraphPopulator`2"/> class.
+            </summary>
+            <param name="visitedGraph">Graph to convert to MSAGL graph.</param>
+        </member>
+        <member name="P:QuikGraph.MSAGL.MsaglGraphPopulator`2.MsaglGraph">
+            <summary>
+            MSAGL graph corresponding to <see cref="P:QuikGraph.Algorithms.AlgorithmBase`1.VisitedGraph"/>.
+            </summary>
+        </member>
+        <member name="E:QuikGraph.MSAGL.MsaglGraphPopulator`2.NodeAdded">
+            <summary>
+            Fired when a node is added to the graph.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.OnNodeAdded(QuikGraph.MSAGL.MsaglVertexEventArgs{`0})">
+            <summary>
+            Called when a <see cref="T:Microsoft.Msagl.Drawing.Node"/> is added.
+            </summary>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="E:QuikGraph.MSAGL.MsaglGraphPopulator`2.EdgeAdded">
+            <summary>
+            Fired when an edge is added to the graph.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.OnEdgeAdded(QuikGraph.MSAGL.MsaglEdgeEventArgs{`0,`1})">
+            <summary>
+            Called when an <see cref="T:Microsoft.Msagl.Drawing.Edge"/> is added.
+            </summary>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.InternalCompute">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.AddNode(`0)">
+            <summary>
+            Called when a <paramref name="vertex"/> should be added to the graph.
+            </summary>
+            <param name="vertex">Vertex to add.</param>
+            <returns>Added <see cref="T:Microsoft.Msagl.Drawing.Node"/>.</returns>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglGraphPopulator`2.AddEdge(`1)">
+            <summary>
+            Called when an <paramref name="edge"/> should be added to the graph.
+            </summary>
+            <param name="edge">Edge to add.</param>
+            <returns>Added <see cref="T:Microsoft.Msagl.Drawing.Edge"/>.</returns>
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglIdentifiableGraphPopulator`2">
+            <summary>
+            MSAGL graph populator (using identifiable vertices).
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglIdentifiableGraphPopulator`2.#ctor(QuikGraph.IEdgeListGraph{`0,`1},QuikGraph.VertexIdentity{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglIdentifiableGraphPopulator`2"/> class.
+            </summary>
+            <param name="visitedGraph">Graph to convert to MSAGL graph.</param>
+            <param name="vertexIdentity">Delegate that given a vertex return its identifier.</param>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglIdentifiableGraphPopulator`2.AddNode(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglIdentifiableGraphPopulator`2.AddEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2">
+            <summary>
+            MSAGL graph populator (with string formatting).
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2.#ctor(QuikGraph.IEdgeListGraph{`0,`1},System.String,System.IFormatProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2"/> class.
+            </summary>
+            <param name="visitedGraph">Graph to convert to MSAGL graph.</param>
+            <param name="formatProvider">Graph format provider.</param>
+            <param name="format">Graph format.</param>
+        </member>
+        <member name="P:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2.FormatProvider">
+            <summary>
+            Vertex format provider.
+            </summary>
+        </member>
+        <member name="P:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2.Format">
+            <summary>
+            Vertex id format.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.MSAGL.MsaglToStringGraphPopulator`2.GetVertexId(`0)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

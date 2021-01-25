@@ -1,0 +1,582 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuikGraph.Petri</name>
+    </assembly>
+    <members>
+        <member name="T:QuikGraph.Utils.StringUtils">
+            <summary>
+            Helper to replace string standard utilities when not available in target version.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Utils.StringUtils.Join``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Concatenates collection members using the specified <paramref name="separator"/> between each member.
+            </summary>
+            <param name="separator">String to use as separator. It is included only if <paramref name="values"/> contains multiple values.</param>
+            <param name="values">Enumerable of values to concatenate.</param>
+            <typeparam name="T">Element type.</typeparam>
+            <returns>String composed of elements from <paramref name="values"/> separated by <paramref name="separator"/>.</returns>
+        </member>
+        <member name="T:QuikGraph.Utils.DisposableHelpers">
+            <summary>
+            Helpers to work with <see cref="T:System.IDisposable"/>.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Utils.DisposableHelpers.Finally(System.Action)">
+            <summary>
+            Calls an action when going out of scope.
+            </summary>
+            <param name="action">The action to call.</param>
+            <returns>A <see cref="T:System.IDisposable"/> object to give to a using clause.</returns>
+        </member>
+        <member name="M:QuikGraph.Utils.DisposableHelpers.FinallyScope.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.Utils.MathUtils">
+            <summary>
+            Math utilities.
+            </summary>
+        </member>
+        <member name="F:QuikGraph.Utils.MathUtils.DoubleEpsilon">
+            <summary>
+            Smallest value such that 1.0+<see cref="F:QuikGraph.Utils.MathUtils.DoubleEpsilon"/> != 1.0
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Utils.MathUtils.IsZero(System.Double)">
+            <summary>
+            Returns whether or not the double is "close" to 0, but this is faster.
+            </summary>
+            <returns>The result of the comparision.</returns>
+            <param name="a">The double to compare to 0.</param>
+        </member>
+        <member name="M:QuikGraph.Utils.MathUtils.NearEqual(System.Double,System.Double)">
+            <summary>
+            Returns whether or not two <see cref="T:System.Double"/>s are "equal". That is, whether or
+            not they are within epsilon of each other.
+            </summary>
+            <param name="a">The first <see cref="T:System.Double"/> to compare.</param>
+            <param name="b">The second <see cref="T:System.Double"/> to compare.</param>
+            <returns>The result of the comparision.</returns>
+        </member>
+        <member name="T:QuikGraph.Petri.AlwaysTrueConditionExpression`1">
+            <summary>
+            Represents an always enabled condition.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.AlwaysTrueConditionExpression`1.IsEnabled(System.Collections.Generic.IList{`0})">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.Petri.IdentityExpression`1">
+            <summary>
+            Identity evaluation expression.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.IdentityExpression`1.Evaluate(System.Collections.Generic.IList{`0})">
+            <inheritdoc />
+        </member>
+        <member name="T:QuikGraph.Petri.IArc`1">
+            <summary>
+            A directed edge of a net which may connect a <see cref="T:QuikGraph.Petri.IPlace`1"/>
+            to a <see cref="T:QuikGraph.Petri.ITransition`1"/> or a <see cref="T:QuikGraph.Petri.ITransition`1"/> to
+            a <see cref="T:QuikGraph.Petri.IPlace`1"/>.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+            <remarks>Usually represented by an arrow.</remarks>
+        </member>
+        <member name="P:QuikGraph.Petri.IArc`1.IsInputArc">
+            <summary>
+            Gets a value indicating if the <see cref="T:QuikGraph.Petri.IArc`1"/>
+            instance is an <strong>input arc</strong>.
+            </summary>
+            <remarks>
+            An arc that leads from an input <see cref="T:QuikGraph.Petri.IPlace`1"/> to a
+            <see cref="T:QuikGraph.Petri.ITransition`1"/> is called an <em>Input Arc</em> of
+            the transition.
+            </remarks>
+        </member>
+        <member name="P:QuikGraph.Petri.IArc`1.Place">
+            <summary>
+            Gets the <see cref="T:QuikGraph.Petri.IPlace`1"/> instance attached to the <see cref="T:QuikGraph.Petri.IArc`1"/>.
+            </summary>
+            <value>
+            The <see cref="T:QuikGraph.Petri.IPlace`1"/> attached to the <see cref="T:QuikGraph.Petri.IArc`1"/>.
+            </value>
+        </member>
+        <member name="P:QuikGraph.Petri.IArc`1.Transition">
+            <summary>
+            Gets or sets the <see cref="T:QuikGraph.Petri.ITransition`1"/> instance attached to the <see cref="T:QuikGraph.Petri.IArc`1"/>.
+            </summary>
+            <value>
+            The <see cref="T:QuikGraph.Petri.ITransition`1"/> attached to the <see cref="T:QuikGraph.Petri.IArc`1"/>.
+            </value>
+        </member>
+        <member name="P:QuikGraph.Petri.IArc`1.Annotation">
+            <summary>
+            Gets or sets the arc annotation.
+            </summary>
+            <value>
+            The <see cref="T:QuikGraph.Petri.IExpression`1"/> annotation instance.
+            </value>
+            <remarks>
+            An expression that may involve constants, variables and operators
+            used to annotate the arc. The expression evaluates over the type
+            of the arc's associated place.
+            </remarks>
+        </member>
+        <member name="T:QuikGraph.Petri.IConditionExpression`1">
+            <summary>
+            Represents a conditional expression evaluating tokens.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.IConditionExpression`1.IsEnabled(System.Collections.Generic.IList{`0})">
+            <summary>
+            Checks if the condition is true (enabled), or not.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.IExpression`1">
+            <summary>
+            Represents an expression evaluating tokens (markings).
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.IExpression`1.Evaluate(System.Collections.Generic.IList{`0})">
+            <summary>
+            Evaluates <paramref name="markings"/>.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.IMutablePetriNet`1">
+            <summary>
+            A mutable High Level Petri Graph.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.IMutablePetriNet`1.AddPlace(System.String)">
+            <summary>
+            Adds a <see cref="T:QuikGraph.Petri.IPlace`1"/> with given <paramref name="name"/> to this Petri net.
+            </summary>
+            <param name="name">Place name.</param>
+            <returns>Added <see cref="T:QuikGraph.Petri.IPlace`1"/>.</returns>
+        </member>
+        <member name="M:QuikGraph.Petri.IMutablePetriNet`1.AddTransition(System.String)">
+            <summary>
+            Adds a <see cref="T:QuikGraph.Petri.ITransition`1"/> with given <paramref name="name"/> to this Petri net.
+            </summary>
+            <param name="name">Transition name.</param>
+            <returns>Added <see cref="T:QuikGraph.Petri.ITransition`1"/>.</returns>
+        </member>
+        <member name="M:QuikGraph.Petri.IMutablePetriNet`1.AddArc(QuikGraph.Petri.IPlace{`0},QuikGraph.Petri.ITransition{`0})">
+            <summary>
+            Adds an <see cref="T:QuikGraph.Petri.IArc`1"/> with given source <paramref name="place"/> and target <paramref name="transition"/> to this Petri net.
+            </summary>
+            <param name="place">Source place.</param>
+            <param name="transition">Target transition.</param>
+            <returns>Added <see cref="T:QuikGraph.Petri.IArc`1"/>.</returns>
+        </member>
+        <member name="M:QuikGraph.Petri.IMutablePetriNet`1.AddArc(QuikGraph.Petri.ITransition{`0},QuikGraph.Petri.IPlace{`0})">
+            <summary>
+            Adds an <see cref="T:QuikGraph.Petri.IArc`1"/> with given source <paramref name="transition"/> and target <paramref name="place"/> to this Petri net.
+            </summary>
+            <param name="transition">Source transition.</param>
+            <param name="place">Target place.</param>
+            <returns>Added <see cref="T:QuikGraph.Petri.IArc`1"/>.</returns>
+        </member>
+        <member name="T:QuikGraph.Petri.IPetriGraph`1">
+            <summary>
+            Represents a Petri Graph (a mutable bidirectional directed graph).
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="T:QuikGraph.Petri.IPetriNet`1">
+            <summary>
+            A High Level Petri Graph.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+            <remarks>
+            This object is called a Petri Net in honor of Petri's work. In fact,
+            it should be named High Level Petri Graph.
+            </remarks>
+        </member>
+        <member name="P:QuikGraph.Petri.IPetriNet`1.Places">
+            <summary>
+            Gets a collection of <see cref="T:QuikGraph.Petri.IPlace`1"/> instances.
+            </summary>
+            <value>
+            A collection of <see cref="T:QuikGraph.Petri.IPlace`1"/> instances.
+            </value>
+        </member>
+        <member name="P:QuikGraph.Petri.IPetriNet`1.Transitions">
+            <summary>
+            Gets a collection of <see cref="T:QuikGraph.Petri.ITransition`1"/> instances.
+            </summary>
+            <value>
+            A collection of <see cref="T:QuikGraph.Petri.ITransition`1"/> instances.
+            </value>
+        </member>
+        <member name="P:QuikGraph.Petri.IPetriNet`1.Arcs">
+            <summary>
+            Gets a collection of <see cref="T:QuikGraph.Petri.IArc`1"/> instances.
+            </summary>
+            <value>
+            A collection of <see cref="T:QuikGraph.Petri.IArc`1"/> instances.
+            </value>
+        </member>
+        <member name="P:QuikGraph.Petri.IPetriNet`1.Graph">
+            <summary>
+            Gets the Petri Graph.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.IPetriVertex">
+            <summary>
+            A vertex (node) of a Petri Graph.
+            </summary>
+        </member>
+        <member name="P:QuikGraph.Petri.IPetriVertex.Name">
+            <summary>
+            Gets or sets the name of the node.
+            </summary>
+            <value>
+            A <see cref="T:System.String"/> representing the name of the node.
+            </value>
+        </member>
+        <member name="T:QuikGraph.Petri.IPlace`1">
+            <summary>
+            A place in the HLPN framework.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+            <remarks>
+            <para>
+            A <see cref="T:QuikGraph.Petri.Place`1"/> is characterized by a set of tokens, called the <see cref="P:QuikGraph.Petri.IPlace`1.Marking"/> of the place.
+            </para>
+            <para>
+            Usually represented by an ellipses (often circles).
+            </para>
+            </remarks>
+        </member>
+        <member name="P:QuikGraph.Petri.IPlace`1.Marking">
+            <summary>
+            Set of tokens (marking of the place).
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.IPlace`1.ToStringWithMarking">
+            <summary>
+            Converts this <see cref="T:QuikGraph.Petri.IPlace`1"/> to string (includes <see cref="P:QuikGraph.Petri.IPlace`1.Marking"/>).
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.IReadOnlyPetriGraph`1">
+            <summary>
+            Represents a read only Petri Graph (a bidirectional directed graph).
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="T:QuikGraph.Petri.ITransition`1">
+            <summary>
+            A node of a net, taken from the transition kind.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+            <remarks>Usually represented by a rectangle.</remarks>
+        </member>
+        <member name="P:QuikGraph.Petri.ITransition`1.Condition">
+            <summary>
+            A boolean expression associated with the transition.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.PetriNetSimulator`1">
+            <summary>
+            Petri Net simulator.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNetSimulator`1.#ctor(QuikGraph.Petri.IPetriNet{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.PetriNetSimulator`1"/> class.
+            </summary>
+            <param name="net">Petri net to simulate.</param>
+        </member>
+        <member name="P:QuikGraph.Petri.PetriNetSimulator`1.Net">
+            <summary>
+            Petri Net.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNetSimulator`1.Initialize">
+            <summary>
+            Initializes simulator.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNetSimulator`1.SimulateStep">
+            <summary>
+            Simulates a step.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.Arc`1.#ctor(QuikGraph.Petri.IPlace{`0},QuikGraph.Petri.ITransition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.Arc`1"/> class.
+            </summary>
+            <param name="place">Place (Source).</param>
+            <param name="transition">Transition (Target).</param>
+        </member>
+        <member name="M:QuikGraph.Petri.Arc`1.#ctor(QuikGraph.Petri.ITransition{`0},QuikGraph.Petri.IPlace{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.Arc`1"/> class.
+            </summary>
+            <param name="transition">Transition (Source).</param>
+            <param name="place">Place (Target).</param>
+        </member>
+        <member name="P:QuikGraph.Petri.Arc`1.IsInputArc">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.Arc`1.Place">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.Arc`1.Transition">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.Arc`1.Annotation">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Arc`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriGraph`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.PetriGraph`1"/> class.
+            </summary>
+        </member>
+        <member name="T:QuikGraph.Petri.PetriNet`1">
+            <summary>
+            High Level Petri Graph.
+            </summary>
+            <typeparam name="TToken">Token type.</typeparam>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.PetriNet`1"/> class.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.#ctor(QuikGraph.Petri.PetriNet{`0})">
+            <summary>
+            Copy constructor.
+            </summary>
+        </member>
+        <member name="P:QuikGraph.Petri.PetriNet`1.Places">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.PetriNet`1.Transitions">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.PetriNet`1.Arcs">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.PetriNet`1.Graph">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.AddPlace(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.AddTransition(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.AddArc(QuikGraph.Petri.IPlace{`0},QuikGraph.Petri.ITransition{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.AddArc(QuikGraph.Petri.ITransition{`0},QuikGraph.Petri.IPlace{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.Clone">
+            <summary>
+            Clones this <see cref="T:QuikGraph.Petri.PetriNet`1"/>.
+            </summary>
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.System#ICloneable#Clone">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.PetriNet`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Place`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.Place`1"/> class.
+            </summary>
+            <param name="name">Place name.</param>
+        </member>
+        <member name="P:QuikGraph.Petri.Place`1.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.Place`1.Marking">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Place`1.ToStringWithMarking">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Place`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Transition`1.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuikGraph.Petri.Transition`1"/> class.
+            </summary>
+            <param name="name">Transition name.</param>
+        </member>
+        <member name="P:QuikGraph.Petri.Transition`1.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:QuikGraph.Petri.Transition`1.Condition">
+            <inheritdoc />
+        </member>
+        <member name="M:QuikGraph.Petri.Transition`1.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:JetBrains.Annotations.CanBeNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could be <c>null</c> sometimes,
+            so the check for <c>null</c> is necessary before its usage.
+            </summary>
+            <example><code>
+            [CanBeNull] object Test() => null;
+            
+            void UseTest() {
+              var p = Test();
+              var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.NotNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could never be <c>null</c>.
+            </summary>
+            <example><code>
+            [NotNull] object Foo() {
+              return null; // Warning: Possible 'null' assignment
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemNotNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can never be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemCanBeNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ContractAnnotationAttribute">
+            <summary>
+            Describes dependency between method input and output.
+            </summary>
+            <syntax>
+            <p>Function Definition Table syntax:</p>
+            <list>
+            <item>FDT      ::= FDTRow [;FDTRow]*</item>
+            <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
+            <item>Input    ::= ParameterName: Value [, Input]*</item>
+            <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
+            <item>Value    ::= true | false | null | notnull | canbenull</item>
+            </list>
+            If method has single input parameter, it's name could be omitted.<br/>
+            Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output
+            means that the methos doesn't return normally (throws or terminates the process).<br/>
+            Value <c>canbenull</c> is only applicable for output parameters.<br/>
+            You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
+            with rows separated by semicolon. There is no notion of order rows, all rows are checked
+            for applicability and applied per each program state tracked by R# analysis.<br/>
+            </syntax>
+            <examples><list>
+            <item><code>
+            [ContractAnnotation("=&gt; halt")]
+            public void TerminationMethod()
+            </code></item>
+            <item><code>
+            [ContractAnnotation("halt &lt;= condition: false")]
+            public void Assert(bool condition, string text) // regular assertion method
+            </code></item>
+            <item><code>
+            [ContractAnnotation("s:null =&gt; true")]
+            public bool IsNullOrEmpty(string s) // string.IsNullOrEmpty()
+            </code></item>
+            <item><code>
+            // A method that returns null if the parameter is null,
+            // and not null if the parameter is not null
+            [ContractAnnotation("null =&gt; null; notnull =&gt; notnull")]
+            public object Transform(object data) 
+            </code></item>
+            <item><code>
+            [ContractAnnotation("=&gt; true, result: notnull; =&gt; false, result: null")]
+            public bool TryParse(string s, out Person result)
+            </code></item>
+            </list></examples>
+        </member>
+        <member name="T:JetBrains.Annotations.UsedImplicitlyAttribute">
+            <summary>
+            Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
+            so this symbol will not be marked as unused (as well as by other usage inspections).
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.MeansImplicitUseAttribute">
+            <summary>
+            Should be used on attributes and causes ReSharper to not mark symbols marked with such attributes
+            as unused (as well as by other usage inspections)
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Access">
+            <summary>Only entity marked with attribute considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Assign">
+            <summary>Indicates implicit assignment to a member.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature">
+            <summary>
+            Indicates implicit instantiation of a type with fixed constructor signature.
+            That means any unused constructor parameters won't be reported as such.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature">
+            <summary>Indicates implicit instantiation of a type.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ImplicitUseTargetFlags">
+            <summary>
+            Specify what is considered used implicitly when marked
+            with <see cref="T:JetBrains.Annotations.MeansImplicitUseAttribute"/> or <see cref="T:JetBrains.Annotations.UsedImplicitlyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.Members">
+            <summary>Members of entity marked with attribute are considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.WithMembers">
+            <summary>Entity marked with attribute and all its members considered used.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PublicAPIAttribute">
+            <summary>
+            This attribute is intended to mark publicly available API
+            which should not be removed and so is treated as used.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.InstantHandleAttribute">
+            <summary>
+            Tells code analysis engine if the parameter is completely handled when the invoked method is on stack.
+            If the parameter is a delegate, indicates that delegate is executed while the method is executed.
+            If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PureAttribute">
+            <summary>
+            Indicates that a method does not make any observable state changes.
+            The same as <c>System.Diagnostics.Contracts.PureAttribute</c>.
+            </summary>
+            <example><code>
+            [Pure] int Multiply(int x, int y) => x * y;
+            
+            void M() {
+              Multiply(123, 42); // Waring: Return value of pure method is not used
+            }
+            </code></example>
+        </member>
+    </members>
+</doc>

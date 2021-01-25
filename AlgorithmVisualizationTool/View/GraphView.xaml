@@ -1,0 +1,205 @@
+﻿<UserControl x:Class="AlgorithmVisualizationTool.View.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:validation="clr-namespace:AlgorithmVisualizationTool.Model.Validations"
+             xmlns:mvvmmodel="clr-namespace:AlgorithmVisualizationTool.Model.MVVM"
+             xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions" 
+             xmlns:local="clr-namespace:AlgorithmVisualizationTool.View"
+             mc:Ignorable="d" 
+              d:DesignHeight="600" d:DesignWidth="1000">
+
+    <DockPanel LastChildFill="True">
+        <Menu DockPanel.Dock="Top" Margin="0,0,0,10" FontSize="14">
+            <MenuItem Header="File">
+                <MenuItem Header="New project..." InputGestureText="Ctrl+N" Command="{Binding KeyNewCommand}"/>
+                <MenuItem Header="Open project..." InputGestureText="Ctrl+O" Command="{Binding KeyOpenCommand}"/>
+                <Separator/>
+                <MenuItem InputGestureText="Ctrl+S" Command="{Binding KeySaveCommand}">
+                    <MenuItem.Header>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Save {0}.graph">
+                                    <Binding Path="GraphName"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding SaveAs_ClickedCommand}">
+                    <MenuItem.Header>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="Save {0}.graph As...">
+                                    <Binding Path="GraphName"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </MenuItem.Header>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Import"/>
+                <MenuItem Header="Export"/>
+                <Separator/>
+                <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding KeyExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Info" Command="{Binding InfoClickedCommand}"/>
+        </Menu>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <TabControl FontSize="14">
+                <TabItem Header="Overview">
+                    <Grid>
+                        <TextBox FontSize="14" Margin="10,44,10,0" VerticalAlignment="Top">
+                            <TextBox.Text>
+                                <Binding Path="GraphName" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                                    <Binding.ValidationRules>
+                                        <validation:NameValidationRule MinLength="1"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Style.Triggers>
+                                        <Trigger Property="Validation.HasError" Value="true">
+                                            <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Graph name:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,94,0,0" Text="Last modified / saved:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Graph.LastModifiedToString}"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,166,0,0" Text="File path:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,190,0,0" Text="{Binding Graph.FilePath}" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Graph Description">
+                    <Grid>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Graph description (DOT):" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                        <TextBox FontSize="14" Margin="10,44,10,38" Text="{Binding GraphDescription, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                        <Grid VerticalAlignment="Bottom">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Content="Import" Margin="10, 0, 5, 10" FontSize="14"/>
+                            <Button Grid.Column="1" Content="Export" Margin="5, 0, 10, 10" FontSize="14"/>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Graph Algorithm">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Algorithms:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <ListBox FontSize="14" Margin="10,44,10,10">
+                                <ListBox.Items>
+                                    <ListBoxItem Content="TODO ..."/>
+                                    <ListBoxItem Content="Liste 1"/>
+                                    <ListBoxItem Content="Liste 2"/>
+                                    <ListBoxItem Content="Liste 3"/>
+                                </ListBox.Items>
+                            </ListBox>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Progress:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="76,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding AlgorithmExecutor.ProgressText}" Value="{x:Null}">
+                                                <Setter Property="Text" Value="{Binding AlgorithmExecutor.Progress, StringFormat={}{0:N2}%}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding AlgorithmExecutor.ProgressText}" Value="">
+                                                <Setter Property="Text" Value="{Binding AlgorithmExecutor.Progress, StringFormat={}{0:N2}%}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                        <Setter Property="Text">
+                                            <Setter.Value>
+                                                <MultiBinding StringFormat="{}{0:N2}% - {1}">
+                                                    <Binding Path="AlgorithmExecutor.Progress"/>
+                                                    <Binding Path="AlgorithmExecutor.ProgressText"/>
+                                                </MultiBinding>
+                                            </Setter.Value>                                       
+                                        </Setter>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <ProgressBar Height="10" Margin="10,44,10,0" VerticalAlignment="Top" Minimum="0" Maximum="100" Value="{Binding AlgorithmExecutor.Progress}"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="10,70,0,0" Text="Delay:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="56,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" ToolTip="Double-click to edit" Text="{Binding AlgorithmExecutor.Delay, StringFormat={}{0}ms}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding AlgorithmDelayDoubleClickedCommand}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                            <Slider Margin="10,94,10,0" VerticalAlignment="Top" Maximum="{Binding AlgorithmMaxDelay}" Value="{Binding AlgorithmExecutor.Delay}"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="10,117,0,0" Text="Min: 0ms" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Right" Margin="0,117,10,0" TextWrapping="Wrap" VerticalAlignment="Top" ToolTip="Double-click to edit" Text="{Binding AlgorithmMaxDelay, StringFormat={}Max: {0}ms}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding AlgorithmMaxDelayDoubleClickedCommand}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                            <StackPanel Margin="0,150,0,0" VerticalAlignment="Top">
+                                <Button MinHeight="23" Content="{Binding StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}"/>
+                                <Grid Margin="10, 10, 10, 10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="Step Backward" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Top" Command="{Binding StepBackwardAlgorithmClickedCommand}"/>
+                                    <Button Content="Step Forward" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Command="{Binding StepForwardAlgorithmClickedCommand}"/>
+                                </Grid>
+                                <Button Content="Reset" VerticalAlignment="Top" Margin="10,0,10,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Exposed lists:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <DataGrid FontSize="14" Margin="10,44,10,10" ItemsSource="{Binding AlgorithmExecutor.SelectedGraphAlgorithm.ExposedLists}" AutoGenerateColumns="False" IsReadOnly="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding ListName}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Items" Binding="{Binding JoinedListItems}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="4" Margin="2,0,2,0"/>
+
+            <!--<zoom:ZoomControl Grid.Column="2"  Grid.Row="1"  Zoom="0.2" ZoomBoxOpacity="0.5">
+                <graphmodel:GraphLayout x:Name="graphLayout" Margin="10" Graph="{Binding Path=GraphTest, UpdateSourceTrigger=PropertyChanged}"
+                   LayoutAlgorithmType="Tree" OverlapRemovalAlgorithmType="FSA">
+                    --><!--<graphmodel:GraphLayout.Resources>
+                        <DataTemplate DataType="{x:Type graphmodel:TestVertex2}">
+                            <Border BorderBrush="{Binding BorderColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" BorderThickness="2" Background="Transparent" MinWidth="50" MinHeight="10">
+                                <TextBlock Text="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </Border>
+                        </DataTemplate>
+                    </graphmodel:GraphLayout.Resources>--><!--
+                </graphmodel:GraphLayout>
+            </zoom:ZoomControl>-->
+
+            <zoom:ZoomControl Grid.Column="2"  Grid.Row="1"  Zoom="0.2" ZoomBoxOpacity="0.5">
+                <ContentControl Content="{Binding AlgorithmExecutor.GraphLayout}" Margin="10"/>
+            </zoom:ZoomControl>
+        </Grid>
+    </DockPanel>
+</UserControl>

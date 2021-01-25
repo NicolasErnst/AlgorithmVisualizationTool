@@ -1,0 +1,1948 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GraphShape.Controls</name>
+    </assembly>
+    <members>
+        <member name="T:JetBrains.Annotations.CanBeNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could be <c>null</c> sometimes,
+            so the check for <c>null</c> is necessary before its usage.
+            </summary>
+            <example><code>
+            [CanBeNull] object Test() => null;
+            
+            void UseTest() {
+              var p = Test();
+              var s = p.ToString(); // Warning: Possible 'System.NullReferenceException'
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.NotNullAttribute">
+            <summary>
+            Indicates that the value of the marked element could never be <c>null</c>.
+            </summary>
+            <example><code>
+            [NotNull] object Foo() {
+              return null; // Warning: Possible 'null' assignment
+            }
+            </code></example>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemNotNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can never be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ItemCanBeNullAttribute">
+            <summary>
+            Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
+            and Lazy classes to indicate that the value of a collection item, of the Task.Result property
+            or of the Lazy.Value property can be null.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.NotifyPropertyChangedInvocatorAttribute">
+             <summary>
+             Indicates that the method is contained in a type that implements
+             <c>System.ComponentModel.INotifyPropertyChanged</c> interface and this method
+             is used to notify that some property value changed.
+             </summary>
+             <remarks>
+             The method should be non-static and conform to one of the supported signatures:
+             <list>
+             <item><c>NotifyChanged(string)</c></item>
+             <item><c>NotifyChanged(params string[])</c></item>
+             <item><c>NotifyChanged{T}(Expression{Func{T}})</c></item>
+             <item><c>NotifyChanged{T,U}(Expression{Func{T,U}})</c></item>
+             <item><c>SetProperty{T}(ref T, T, string)</c></item>
+             </list>
+             </remarks>
+             <example><code>
+             public class Foo : INotifyPropertyChanged {
+               public event PropertyChangedEventHandler PropertyChanged;
+             
+               [NotifyPropertyChangedInvocator]
+               protected virtual void NotifyChanged(string propertyName) { ... }
+            
+               string _name;
+             
+               public string Name {
+                 get { return _name; }
+                 set { _name = value; NotifyChanged("LastName"); /* Warning */ }
+               }
+             }
+             </code>
+             Examples of generated notifications:
+             <list>
+             <item><c>NotifyChanged("Property")</c></item>
+             <item><c>NotifyChanged(() =&gt; Property)</c></item>
+             <item><c>NotifyChanged((VM x) =&gt; x.Property)</c></item>
+             <item><c>SetProperty(ref myField, value, "Property")</c></item>
+             </list>
+             </example>
+        </member>
+        <member name="T:JetBrains.Annotations.ContractAnnotationAttribute">
+            <summary>
+            Describes dependency between method input and output.
+            </summary>
+            <syntax>
+            <p>Function Definition Table syntax:</p>
+            <list>
+            <item>FDT      ::= FDTRow [;FDTRow]*</item>
+            <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
+            <item>Input    ::= ParameterName: Value [, Input]*</item>
+            <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
+            <item>Value    ::= true | false | null | notnull | canbenull</item>
+            </list>
+            If method has single input parameter, it's name could be omitted.<br/>
+            Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output
+            means that the methos doesn't return normally (throws or terminates the process).<br/>
+            Value <c>canbenull</c> is only applicable for output parameters.<br/>
+            You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
+            with rows separated by semicolon. There is no notion of order rows, all rows are checked
+            for applicability and applied per each program state tracked by R# analysis.<br/>
+            </syntax>
+            <examples><list>
+            <item><code>
+            [ContractAnnotation("=&gt; halt")]
+            public void TerminationMethod()
+            </code></item>
+            <item><code>
+            [ContractAnnotation("halt &lt;= condition: false")]
+            public void Assert(bool condition, string text) // regular assertion method
+            </code></item>
+            <item><code>
+            [ContractAnnotation("s:null =&gt; true")]
+            public bool IsNullOrEmpty(string s) // string.IsNullOrEmpty()
+            </code></item>
+            <item><code>
+            // A method that returns null if the parameter is null,
+            // and not null if the parameter is not null
+            [ContractAnnotation("null =&gt; null; notnull =&gt; notnull")]
+            public object Transform(object data) 
+            </code></item>
+            <item><code>
+            [ContractAnnotation("=&gt; true, result: notnull; =&gt; false, result: null")]
+            public bool TryParse(string s, out Person result)
+            </code></item>
+            </list></examples>
+        </member>
+        <member name="T:JetBrains.Annotations.UsedImplicitlyAttribute">
+            <summary>
+            Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
+            so this symbol will not be marked as unused (as well as by other usage inspections).
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.MeansImplicitUseAttribute">
+            <summary>
+            Should be used on attributes and causes ReSharper to not mark symbols marked with such attributes
+            as unused (as well as by other usage inspections)
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Access">
+            <summary>Only entity marked with attribute considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.Assign">
+            <summary>Indicates implicit assignment to a member.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature">
+            <summary>
+            Indicates implicit instantiation of a type with fixed constructor signature.
+            That means any unused constructor parameters won't be reported as such.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature">
+            <summary>Indicates implicit instantiation of a type.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.ImplicitUseTargetFlags">
+            <summary>
+            Specify what is considered used implicitly when marked
+            with <see cref="T:JetBrains.Annotations.MeansImplicitUseAttribute"/> or <see cref="T:JetBrains.Annotations.UsedImplicitlyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.Members">
+            <summary>Members of entity marked with attribute are considered used.</summary>
+        </member>
+        <member name="F:JetBrains.Annotations.ImplicitUseTargetFlags.WithMembers">
+            <summary>Entity marked with attribute and all its members considered used.</summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PublicAPIAttribute">
+            <summary>
+            This attribute is intended to mark publicly available API
+            which should not be removed and so is treated as used.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.InstantHandleAttribute">
+            <summary>
+            Tells code analysis engine if the parameter is completely handled when the invoked method is on stack.
+            If the parameter is a delegate, indicates that delegate is executed while the method is executed.
+            If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
+            </summary>
+        </member>
+        <member name="T:JetBrains.Annotations.PureAttribute">
+            <summary>
+            Indicates that a method does not make any observable state changes.
+            The same as <c>System.Diagnostics.Contracts.PureAttribute</c>.
+            </summary>
+            <example><code>
+            [Pure] int Multiply(int x, int y) => x * y;
+            
+            void M() {
+              Multiply(123, 42); // Waring: Return value of pure method is not used
+            }
+            </code></example>
+        </member>
+        <member name="T:GraphShape.Controls.Behaviors.DragBehavior">
+            <summary>
+            Dragging behavior.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.Behaviors.DragBehavior.IsDragEnabledProperty">
+            <summary>
+            Dragging enable state attached dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.GetIsDragEnabled(System.Windows.DependencyObject)">
+            <summary>
+            Gets the dragging enabled attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.SetIsDragEnabled(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the dragging enabled attached property value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.Behaviors.DragBehavior.IsDraggingProperty">
+            <summary>
+            Dragging state attached dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.GetIsDragging(System.Windows.DependencyObject)">
+            <summary>
+            Gets the dragging attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.SetIsDragging(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the dragging attached property value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.Behaviors.DragBehavior.XProperty">
+            <summary>
+            X position attached dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.GetX(System.Windows.DependencyObject)">
+            <summary>
+            Gets the X attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.SetX(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the X attached property value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.Behaviors.DragBehavior.YProperty">
+            <summary>
+            Y position attached dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.GetY(System.Windows.DependencyObject)">
+            <summary>
+            Gets the Y attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Behaviors.DragBehavior.SetY(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the Y attached property value.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.AlgorithmConstraints">
+            <summary>
+            Enumeration of possible algorithm constraints regarding overlap and edge routing.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.AlgorithmConstraints.Must">
+            <summary>
+            Must perform process.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.AlgorithmConstraints.Automatic">
+            <summary>
+            Automatic process if needed.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.AlgorithmConstraints.Skip">
+            <summary>
+            Skip process.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.AnimationContext">
+            <summary>
+            Animation context.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.AnimationContext.GraphCanvas">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.AnimationContext.#ctor(GraphShape.Controls.GraphCanvas)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.AnimationContext"/> class.
+            </summary>
+            <param name="canvas">Graph canvas.</param>
+        </member>
+        <member name="T:GraphShape.Controls.Animations.SimpleMoveAnimation">
+            <summary>
+            Simple move animations.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Animations.SimpleMoveAnimation.Animate(GraphShape.Controls.IAnimationContext,System.Windows.Controls.Control,System.Double,System.Double,System.TimeSpan)">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.CompoundVertexControl">
+            <summary>
+            Compound vertex control.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.PartInnerCanvas">
+            <summary>
+            Inner canvas part name.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.InnerCanvas">
+            <summary>
+            Inner canvas control.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.CompoundVertexControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.CompoundVertexControl"/> class.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.CompoundVertexControl.OnApplyTemplate">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.CompoundVertexControl.Vertices">
+            <summary>
+            Vertices controls.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.VerticesPropertyKey">
+            <summary>
+            Vertices property key.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.VerticesProperty">
+            <summary>
+            Vertices dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.CompoundVertexControl.LayoutMode">
+            <summary>
+            Layout mode.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.LayoutModeProperty">
+            <summary>
+            Layout mode dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.CompoundVertexControl.IsExpanded">
+            <summary>
+            Indicates if vertex is expanded or not.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.IsExpandedProperty">
+            <summary>
+            Is expanded dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.CompoundVertexControl.InnerCanvasSize">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.CompoundVertexControl.VertexBorderThickness">
+            <inheritdoc />
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.ExpandedEvent">
+            <summary>
+            Expanded event.
+            </summary>
+        </member>
+        <member name="E:GraphShape.Controls.CompoundVertexControl.Expanded">
+            <inheritdoc />
+        </member>
+        <member name="F:GraphShape.Controls.CompoundVertexControl.CollapsedEvent">
+            <summary>
+            Collapsed event.
+            </summary>
+        </member>
+        <member name="E:GraphShape.Controls.CompoundVertexControl.Collapsed">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.ContextualGraphLayout`3">
+            <summary>
+            Contextual Graph layout control.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <typeparam name="TGraph">Graph type.</typeparam>
+        </member>
+        <member name="P:GraphShape.Controls.ContextualGraphLayout`3.SelectedVertex">
+            <summary>
+            Gets or sets the <see cref="P:GraphShape.Controls.ContextualGraphLayout`3.SelectedVertex"/> which influences the context.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.ContextualGraphLayout`3.SelectedVertexProperty">
+            <summary>
+            Selected vertex dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.ContextualGraphLayout`3.CreateLayoutContext(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.Collections.Generic.IDictionary{`0,GraphShape.Size})">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.ContextualGraphLayout`3.CanLayout">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.EdgeControl">
+            <summary>
+            Edge control.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.EdgeControl.Source">
+            <summary>
+            Source vertex.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.EdgeControl.SourceProperty">
+            <summary>
+            Source vertex dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.EdgeControl.Target">
+            <summary>
+            Target vertex.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.EdgeControl.TargetProperty">
+            <summary>
+            Target vertex dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.EdgeControl.RoutePoints">
+            <summary>
+            Route points.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.EdgeControl.RoutePointsProperty">
+            <summary>
+            Route points dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.EdgeControl.Edge">
+            <summary>
+            Edge.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.EdgeControl.EdgeProperty">
+            <summary>
+            Edge dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.EdgeControl.StrokeThickness">
+            <summary>
+            Stroke thickness.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.EdgeControl.StrokeThicknessProperty">
+            <summary>
+            Stroke thickness dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.EdgeControl.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.EdgeControl.Terminate">
+            <inheritdoc />
+        </member>
+        <member name="E:GraphShape.Controls.EdgeControl.Disposing">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.EdgeControl.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.EdgeControl.Dispose(System.Boolean)">
+            <summary>
+            Dispose this object.
+            </summary>
+            <param name="disposing">Indicates if called by dispose or finalizer.</param>
+        </member>
+        <member name="T:GraphShape.Controls.GraphCanvas">
+            <summary>
+            Graph canvas.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.XProperty">
+            <summary>
+            X attached dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.YProperty">
+            <summary>
+            Y attached dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.GetX(System.Windows.DependencyObject)">
+            <summary>
+            Gets the X attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.SetX(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the X attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.GetY(System.Windows.DependencyObject)">
+            <summary>
+            Gets the Y attached property value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.SetY(System.Windows.DependencyObject,System.Double)">
+            <summary>
+            Sets the Y attached property value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.PositionChangedEvent">
+            <summary>
+            Position changed event.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.AddPositionChangedHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Adds a new <see cref="F:GraphShape.Controls.GraphCanvas.PositionChangedEvent"/> handler.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.RemovePositionChangedHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Removes the given <paramref name="handler"/> from <see cref="F:GraphShape.Controls.GraphCanvas.PositionChangedEvent"/>.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.AnimationLength">
+            <summary>
+            Gets or sets the length of the animation.
+            If the length of the animations is 0:0:0.000, there won't be any animations.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.AnimationLengthProperty">
+            <summary>
+            Animation length dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.CreationTransition">
+            <summary>
+            Gets or sets the animation controller for the 'Control Creation' animation.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.CreationTransitionProperty">
+            <summary>
+            Transition creation dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.IsAnimationEnabled">
+            <summary>
+            If this property is true, and the other animation disabler
+            properties are also true, the animation is enabled.
+            If this is false, the animations will be disabled.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.IsAnimationEnabledProperty">
+            <summary>
+            Animation enabled dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.MoveAnimation">
+            <summary>
+            Gets or sets the animation controller for the 'Control Moving' animation.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.MoveAnimationProperty">
+            <summary>
+            Animation movement dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.DestructionTransition">
+            <summary>
+            Gets or sets the transition controller for the 'Control Destruction' animation.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.DestructionTransitionProperty">
+            <summary>
+            Transition destruction dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.Origo">
+            <summary>
+            Gets or sets the virtual origo of the canvas.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.OrigoProperty">
+            <summary>
+            Origo dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.Translation">
+            <summary>
+            Translation.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.TranslationPropertyKey">
+            <summary>
+            Translation property key.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas.TranslationProperty">
+            <summary>
+            Translation dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas._topLeft">
+            <summary>
+            The position of the topLeft corner of the most top-left vertex.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphCanvas._bottomRight">
+            <summary>
+            The position of the bottom right corner of the most  bottom-right vertex.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.ArrangeOverride(System.Windows.Size)">
+            <summary>
+            Arranges the size of the control.
+            </summary>
+            <param name="finalSize">The arranged size of the control.</param>
+            <returns>The size of the control.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.MeasureOverride(System.Windows.Size)">
+            <summary>
+            Overridden measure. It calculates a size where all of 
+            of the vertices are visible.
+            </summary>
+            <param name="availableSize">The size constraint.</param>
+            <returns>The calculated size.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.ContinueLayout">
+            <summary>
+            The layout process will be initialized with the current vertices positions.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.Relayout">
+            <summary>
+            The layout process will be started without initial vertices positions.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.AnimationContext">
+            <summary>
+            Gets the context of the animation.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphCanvas.CanAnimate">
+            <summary>
+            Gets whether the animation could be run, or not.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.RunCreationTransition(System.Windows.Controls.Control)">
+            <summary>
+            Does a transition for the <paramref name="control"/> which has been
+            already added to this container.
+            </summary>
+            <param name="control">The control which has been added.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.RunMoveAnimation(System.Windows.Controls.Control,System.Double,System.Double)">
+            <summary>
+            Animates the position of the given <paramref name="control"/> to the given positions.
+            </summary>
+            <param name="control">The control which should be moved.</param>
+            <param name="x">The new horizontal position of the control.</param>
+            <param name="y">The new vertical position of the control.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphCanvas.RunDestructionTransition(System.Windows.Controls.Control,System.Boolean)">
+            <summary>
+            Transitions a control which gonna' be removed from this container.
+            </summary>
+            <param name="control">The control which will be removed.</param>
+            <param name="dontRemoveAfter">
+            If it's true, the control won't be removed automatically
+            from this container's <see cref="P:System.Windows.Controls.Panel.Children"/>.
+            </param>
+        </member>
+        <member name="T:GraphShape.Controls.GraphElementBehaviour">
+            <summary>
+            Graph element behavior.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightEvent">
+            <summary>
+            Highlight event.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.AddHighlightHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Adds a new <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightEvent"/> handler.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.RemoveHighlightHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Removes the given <paramref name="handler"/> from <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightEvent"/>.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.UnhighlightEvent">
+            <summary>
+            Unhighlight event.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.AddUnhighlightHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Adds a new <see cref="F:GraphShape.Controls.GraphElementBehaviour.UnhighlightEvent"/> handler.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.RemoveUnhighlightHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Removes the given <paramref name="handler"/> from <see cref="F:GraphShape.Controls.GraphElementBehaviour.UnhighlightEvent"/>.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggeredEvent">
+            <summary>
+            Highlight trigger event.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.AddHighlightTriggeredHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Adds a new <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggeredEvent"/> handler.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.RemoveHighlightTriggeredHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Removes the given <paramref name="handler"/> from <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggeredEvent"/>.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoChangedEvent">
+            <summary>
+            Highlight information changed event.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.AddHighlightInfoChangedHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Adds a new <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoChangedEvent"/> handler.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.RemoveHighlightInfoChangedHandler(System.Windows.DependencyObject,System.Windows.RoutedEventHandler)">
+            <summary>
+            Removes the given <paramref name="handler"/> from <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoChangedEvent"/>.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggerProperty">
+            <summary>
+            Highlight trigger dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetHighlightTrigger(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggerProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetHighlightTrigger(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightTriggerProperty"/> value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.IsHighlightedPropertyKey">
+            <summary>
+            Is highlighted property key.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.IsHighlightedProperty">
+            <summary>
+            Is highlighted dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetIsHighlighted(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.IsHighlightedProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetIsHighlighted(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.IsHighlightedProperty"/> value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoPropertyKey">
+            <summary>
+            Highlight information property key.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoProperty">
+            <summary>
+            Highlight information dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetHighlightInfo(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetHighlightInfo(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.HighlightInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.IsSemiHighlightedPropertyKey">
+            <summary>
+            Is semi highlighted dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.IsSemiHighlightedProperty">
+            <summary>
+            Is semi highlighted property key.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetIsSemiHighlighted(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.IsSemiHighlightedProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetIsSemiHighlighted(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.IsSemiHighlightedProperty"/> value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.SemiHighlightInfoPropertyKey">
+            <summary>
+            Semi highlight information property key.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.SemiHighlightInfoProperty">
+            <summary>
+            Semi highlight information dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetSemiHighlightInfo(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.SemiHighlightInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetSemiHighlightInfo(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.SemiHighlightInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphElementBehaviour.LayoutInfoProperty">
+            <summary>
+            Layout information dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.GetLayoutInfo(System.Windows.DependencyObject)">
+            <summary>
+            Gets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.LayoutInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphElementBehaviour.SetLayoutInfo(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Sets the <see cref="F:GraphShape.Controls.GraphElementBehaviour.LayoutInfoProperty"/> value.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.GraphLayout">
+            <summary>
+            Default graph layout control.
+            </summary>
+            <remarks>For general purposes, with general types.</remarks>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.GraphLayout"/> class.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.GraphLayout`3">
+            <summary>
+            Graph layout control. Support layout, edge routing and overlap removal algorithms, with multiple layout states.
+            </summary>
+            <typeparam name="TVertex">Vertex type.</typeparam>
+            <typeparam name="TEdge">Edge type.</typeparam>
+            <typeparam name="TGraph">Graph type.</typeparam>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgesControls">
+            <summary>
+            Edges controls.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.VerticesControls">
+            <summary>
+            Vertices controls.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.Sizes">
+            <summary>
+            Vertices sizes.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.Worker">
+            <summary>
+            Background worker to run layout algorithm.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.VerticesSizes">
+            <inheritdoc cref="F:GraphShape.Controls.GraphLayout`3.Sizes"/>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.ActualLayoutMode">
+            <summary>
+            Current <see cref="T:GraphShape.Algorithms.Layout.LayoutMode"/>.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.IsCompoundMode">
+            <summary>
+            Indicates if <see cref="P:GraphShape.Controls.GraphLayout`3.ActualLayoutMode"/> is a <see cref="F:GraphShape.Algorithms.Layout.LayoutMode.Compound"/> mode.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.CanLayout">
+            <summary>
+            Indicates if layout can be done.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.ContinueLayout">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.Relayout">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CancelLayout">
+            <summary>
+            Cancels layout computing.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RecalculateEdgeRouting">
+            <summary>
+            Re-compute edge routing.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RecalculateOverlapRemoval">
+            <summary>
+            Re-compute overlap removal.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CreateHighlightContext">
+            <summary>
+            Creates a <see cref="T:GraphShape.Algorithms.Highlight.IHighlightContext`3"/> from given parameters.
+            </summary>
+            <returns>Created <see cref="T:GraphShape.Algorithms.Highlight.IHighlightContext`3"/>.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CreateOverlapRemovalContext(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.Collections.Generic.IDictionary{`0,GraphShape.Size})">
+            <summary>
+            Creates a <see cref="T:GraphShape.Algorithms.OverlapRemoval.IOverlapRemovalContext`1"/> from given parameters.
+            </summary>
+            <param name="positions">Vertices positions.</param>
+            <param name="sizes">Vertices sizes.</param>
+            <returns>Created <see cref="T:GraphShape.Algorithms.OverlapRemoval.IOverlapRemovalContext`1"/>.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CreateLayoutContext(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.Collections.Generic.IDictionary{`0,GraphShape.Size})">
+            <summary>
+            Creates a <see cref="T:GraphShape.Algorithms.Layout.ILayoutContext`3"/> from given parameters.
+            </summary>
+            <param name="positions">Vertices positions.</param>
+            <param name="sizes">Vertices sizes.</param>
+            <returns>Created <see cref="T:GraphShape.Algorithms.Layout.ILayoutContext`3"/>, null if <see cref="P:GraphShape.Controls.GraphLayout`3.CanLayout"/> is false.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.Layout(System.Boolean)">
+            <summary>
+            Layouts the current <see cref="P:GraphShape.Controls.GraphLayout`3.Graph"/>.
+            </summary>
+            <param name="continueLayout">
+            Indicates if we should continue layout.
+            If layout is continued it gets the relative position of every vertex
+            otherwise it's gets it only for the vertices with fixed parents.
+            </param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnLayoutStarted">
+            <summary>
+            Layout process started callback.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnLayoutIterationFinished(GraphShape.Algorithms.Layout.ILayoutIterationEventArgs{`0})">
+            <summary>
+            Layout process iteration ended callback.
+            </summary>
+            <param name="iterationArgs">Iteration arguments.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnLayoutIterationFinished(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.String)">
+            <summary>
+            Layout process iteration ended callback.
+            </summary>
+            <param name="positions">Vertices positions.</param>
+            <param name="message">Iteration information message.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnLayoutFinished">
+            <summary>
+            Layout process ended callback.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OverlapRemoval(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.Collections.Generic.IDictionary{`0,GraphShape.Size})">
+            <summary>
+            Runs overlap removal algorithm.
+            </summary>
+            <param name="positions">Vertices positions.</param>
+            <param name="sizes">Vertices sizes.</param>
+            <returns>
+            Vertices positions after overlap removal process (if run),
+            otherwise return input <paramref name="positions"/>.
+            </returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RouteEdges(System.Collections.Generic.IDictionary{`0,GraphShape.Point},System.Collections.Generic.IDictionary{`0,GraphShape.Size})">
+            <summary>
+            Runs the proper edge routing algorithm.
+            </summary>
+            <param name="positions">The vertices positions.</param>
+            <param name="sizes">The vertices sizes.</param>
+            <returns>The routes of the edges.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.ChangeState(System.Int32)">
+            <summary>
+            Changes which layout state should be shown.
+            </summary>
+            <param name="stateIndex">The index of the shown layout state.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.GraphLayout"/> class.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.CanAnimate">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.AnimationDisablerVertexCount">
+            <summary>
+            If the graph has more vertex than this count, the animation will be disabled automatically.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.AnimationDisablerVertexCountProperty">
+            <summary>
+            Animation disabler via vertex count dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.AnimationDisablerEdgeCount">
+            <summary>
+            If the graph has more edge than this count, the animations will be disabled automatically.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.AnimationDisablerEdgeCountProperty">
+            <summary>
+            Animation disabler via edge count dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.AsyncCompute">
+            <summary>
+            If this property is true the algorithm will be executed on a separate <see cref="T:System.Threading.Thread"/>.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.AsyncComputeProperty">
+            <summary>
+            Async computing dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmFactory">
+            <summary>
+            Edge routing algorithm factory.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmFactoryProperty">
+            <summary>
+            Edge routing algorithm factory dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceEdgeRoutingAlgorithmFactory(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmFactoryProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithm">
+            <summary>
+            The algorithm used for the edge routing.
+            </summary>
+            <remarks>
+            It can be the same object as the <see cref="P:GraphShape.Controls.GraphLayout`3.LayoutAlgorithm"/>, in this case the
+            <see cref="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithm"/> won't be run separately, the edge routing
+            should be calculated in the <see cref="P:GraphShape.Controls.GraphLayout`3.LayoutAlgorithm"/>.
+            </remarks>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmProperty">
+            <summary>
+            Edge routing algorithm dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmPropertyKey">
+            <summary>
+            Edge routing algorithm property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmType">
+            <summary>
+            Edge routing algorithm type.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingAlgorithmTypeProperty">
+            <summary>
+            Edge routing algorithm type dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingConstraint">
+            <summary>
+            Edge routing constraint.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingConstraintProperty">
+            <summary>
+            Edge routing constraint dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.EdgeRoutingParameters">
+            <summary>
+            Edge routing parameters.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.EdgeRoutingParametersProperty">
+            <summary>
+            Edge routing parameters dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmFactory">
+            <summary>
+            Highlight algorithm factory.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmFactoryProperty">
+            <summary>
+            Highlight algorithm factory dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceHighlightAlgorithmFactory(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmFactoryProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightAlgorithm">
+            <summary>
+            Highlight algorithm.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmProperty">
+            <summary>
+            Highlight algorithm dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmPropertyKey">
+            <summary>
+            Highlight algorithm property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmType">
+            <summary>
+            Highlight algorithm type.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmTypeProperty">
+            <summary>
+            Highlight algorithm type dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceHighlightAlgorithmType(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.HighlightAlgorithmTypeProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightParameters">
+            <summary>
+            Highlight parameters.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.HighlightParametersProperty">
+            <summary>
+            Highlight parameters dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceHighlightParameters(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.HighlightParametersProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmFactory">
+            <summary>
+            Overlap removal algorithm factory.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmFactoryProperty">
+            <summary>
+            Overlap removal algorithm factory dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceOverlapRemovalAlgorithmFactory(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmFactoryProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithm">
+            <summary>
+            Overlap removal algorithm.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmProperty">
+            <summary>
+            Overlap removal algorithm factory dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmPropertyKey">
+            <summary>
+            Overlap removal algorithm property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmType">
+            <summary>
+            Overlap removal algorithm type.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalAlgorithmTypeProperty">
+            <summary>
+            Overlap removal algorithm type dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.OverlapRemovalConstraint">
+            <summary>
+            Overlap removal constraint.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalConstraintProperty">
+            <summary>
+            Overlap removal constraint dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.OverlapRemovalParameters">
+            <summary>
+            Overlap removal parameters.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.OverlapRemovalParametersProperty">
+            <summary>
+            Overlap removal parameters dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmFactory">
+            <summary>
+            Layout algorithm factory.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmFactoryProperty">
+            <summary>
+            Layout algorithm factory dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceLayoutAlgorithmFactory(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="F:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmFactoryProperty"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutAlgorithm">
+            <summary>
+            The algorithm which have been used/is running/will be executed.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmProperty">
+            <summary>
+            Layout algorithm dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmPropertyKey">
+            <summary>
+            Layout algorithm property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmType">
+            <summary>
+            Layout algorithm type.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutAlgorithmTypeProperty">
+            <summary>
+            Layout algorithm type dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutMode">
+            <summary>
+            Layout mode.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutModeProperty">
+            <summary>
+            Layout mode dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceOnLayoutMode(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce callback of the <see cref="P:GraphShape.Controls.GraphLayout`3.LayoutMode"/> dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutParameters">
+            <summary>
+            Layout parameters.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutParametersProperty">
+            <summary>
+            Layout parameters dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutState">
+            <summary>
+            Layout state.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutStateProperty">
+            <summary>
+            Layout state dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutStatePropertyKey">
+            <summary>
+            Layout state property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.LayoutStatusPercent">
+            <summary>
+            Status of the layout process in percent.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutStatusPercentProperty">
+            <summary>
+            Layout status percent dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.LayoutStatusPercentPropertyKey">
+            <summary>
+            Layout status percent property key.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.ShowAllStates">
+            <summary>
+            If true all states of the layout process will be stored, so you can "replay" the layout, otherwise
+            only the start and end states will be stored.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.ShowAllStatesProperty">
+            <summary>
+            Show all states dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.StateCount">
+            <summary>
+            Number of layout states.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.StateCountProperty">
+            <summary>
+            Layout states count dependency property.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.StateCountPropertyKey">
+            <summary>
+            Layout states count property key.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnStateCountPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Property change callback of the <see cref="P:GraphShape.Controls.GraphLayout`3.StateCount"/> dependency property.
+            It coerces the <see cref="P:GraphShape.Controls.GraphLayout`3.StateIndex"/>.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.StateIndex">
+            <summary>
+            Index of the currently shown layout state.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.StateIndexProperty">
+            <summary>
+             Index of the currently shown layout state dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnStateIndexPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Property Change Callback of the <code>StateIndex</code> dependency property. It call the animation, 
+            so the layout will animate from one state to the another.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CoerceStateIndex(System.Windows.DependencyObject,System.Object)">
+            <summary>
+            Coerce Callback of the <see cref="P:GraphShape.Controls.GraphLayout`3.StateIndex"/> dependency property.
+            </summary>
+            <returns>It coerces the value of the <see cref="P:GraphShape.Controls.GraphLayout`3.StateIndex"/> between 0 and (<see cref="P:GraphShape.Controls.GraphLayout`3.StateCount"/>-1).</returns>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.Graph">
+            <summary>
+            The graph we want to show.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.GraphLayout`3.GraphProperty">
+            <summary>
+            Graph dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.OnGraphPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            It's called when the <see cref="P:GraphShape.Controls.GraphLayout`3.Graph"/> dependency property changed.
+            </summary>
+            <param name="d">The <see cref="T:GraphShape.Controls.GraphLayout"/> instance which <see cref="P:GraphShape.Controls.GraphLayout`3.Graph"/> dependency property changed.</param>
+            <param name="args">OldValue &amp; NewValue</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveVertexControl(`0)">
+            <summary>
+            Removes the given <paramref name="vertex"/> from graph.
+            </summary>
+            <param name="vertex">Vertex to remove.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveEdgeControl(`1)">
+            <summary>
+            Removes the given <paramref name="edge"/> from graph.
+            </summary>
+            <param name="edge">Edge to remove.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveAllGraphElements">
+            <summary>
+            Removes all vertices and edges from graph.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RecreateGraphElements(System.Boolean)">
+            <summary>
+            If the graph has been changed, the elements will be regenerated.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.GetVertexControl(`0)">
+            <summary>
+            Gets the <see cref="T:GraphShape.Controls.VertexControl"/> corresponding to the given <paramref name="vertex"/>.
+            </summary>
+            <param name="vertex">Graph vertex.</param>
+            <returns>The corresponding <see cref="T:GraphShape.Controls.VertexControl"/>, null otherwise.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.GetOrCreateVertexControl(`0)">
+            <summary>
+            Gets or creates a <see cref="T:GraphShape.Controls.VertexControl"/> for the given <paramref name="vertex"/>.
+            </summary>
+            <param name="vertex">Graph vertex.</param>
+            <returns>A <see cref="T:GraphShape.Controls.VertexControl"/>.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CreateVertexControl(`0)">
+            <summary>
+            Creates a <see cref="T:GraphShape.Controls.VertexControl"/> for the given <paramref name="vertex"/>.
+            </summary>
+            <param name="vertex">Graph vertex.</param>
+            <returns>A <see cref="T:GraphShape.Controls.VertexControl"/>.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.InitializePosition(`0)">
+            <summary>
+            Initializes the position of the given <paramref name="vertex"/>.
+            </summary>
+            <param name="vertex">Graph vertex.</param>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.GetEdgeControl(`1)">
+            <summary>
+            Gets the <see cref="T:GraphShape.Controls.EdgeControl"/> corresponding to the given <paramref name="edge"/>.
+            </summary>
+            <param name="edge">Graph edge.</param>
+            <returns>The corresponding <see cref="T:GraphShape.Controls.EdgeControl"/>, null otherwise.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.GetOrCreateEdgeControl(`1)">
+            <summary>
+            Gets or creates a <see cref="T:GraphShape.Controls.EdgeControl"/> for the given <paramref name="edge"/>.
+            </summary>
+            <param name="edge">Graph edge.</param>
+            <returns>A <see cref="T:GraphShape.Controls.EdgeControl"/>.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.CreateEdgeControl(`1)">
+            <summary>
+            Creates a <see cref="T:GraphShape.Controls.EdgeControl"/> for the given <paramref name="edge"/>.
+            </summary>
+            <param name="edge">Graph edge.</param>
+            <returns>A <see cref="T:GraphShape.Controls.EdgeControl"/>.</returns>
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightedVertices">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.SemiHighlightedVertices">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.HighlightedEdges">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphShape.Controls.GraphLayout`3.SemiHighlightedEdges">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsHighlightedVertex(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsHighlightedVertex(`0,System.Object@)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsSemiHighlightedVertex(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsSemiHighlightedVertex(`0,System.Object@)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsHighlightedEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsHighlightedEdge(`1,System.Object@)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsSemiHighlightedEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.IsSemiHighlightedEdge(`1,System.Object@)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.HighlightVertex(`0,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.SemiHighlightVertex(`0,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.HighlightEdge(`1,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.SemiHighlightEdge(`1,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveHighlightFromVertex(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveSemiHighlightFromVertex(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveHighlightFromEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.GraphLayout`3.RemoveSemiHighlightFromEdge(`1)">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.HighlightInfoChangedEventHandler">
+            <summary>
+            Handler for an object highlight information changed event.
+            </summary>
+            <param name="sender">Event sender.</param>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="T:GraphShape.Controls.HighlightInfoChangedEventArgs">
+            <summary>
+            Highlight information changed event arguments.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.HighlightInfoChangedEventArgs.OldHighlightInfo">
+            <summary>
+            Old highlight information.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.HighlightInfoChangedEventArgs.NewHighlightInfo">
+            <summary>
+            New highlight information.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.HighlightInfoChangedEventArgs.#ctor(System.Windows.RoutedEvent,System.Object,System.Object,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.HighlightInfoChangedEventArgs"/> class.
+            </summary>
+            <param name="routedEvent">The routed event identifier for this instance of the <see cref="T:System.Windows.RoutedEventArgs" /> class.</param>
+            <param name="source">
+            An alternate source that will be reported when the event is handled.
+            This pre-populates the <see cref="P:System.Windows.RoutedEventArgs.Source" /> property.
+            </param>
+            <param name="oldHighlightInfo">Old highlight information.</param>
+            <param name="newHighlightInfo">New highlight information.</param>
+        </member>
+        <member name="T:GraphShape.Controls.HighlightTriggerEventHandler">
+            <summary>
+            Handler for an object highlight trigger changed event.
+            </summary>
+            <param name="sender">Event sender.</param>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="T:GraphShape.Controls.HighlightTriggeredEventArgs">
+            <summary>
+            Highlight triggered event arguments.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.HighlightTriggeredEventArgs.Cancel">
+            <summary>
+            Indicates if event has been canceled or not.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.HighlightTriggeredEventArgs.IsPositiveTrigger">
+            <summary>
+            Highlight triggered?
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.HighlightTriggeredEventArgs.#ctor(System.Windows.RoutedEvent,System.Object,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.PositionChangedEventArgs"/> class.
+            </summary>
+            <param name="routedEvent">The routed event identifier for this instance of the <see cref="T:System.Windows.RoutedEventArgs" /> class.</param>
+            <param name="source">
+            An alternate source that will be reported when the event is handled.
+            This pre-populates the <see cref="P:System.Windows.RoutedEventArgs.Source" /> property.
+            </param>
+            <param name="isPositiveTrigger">Indicates if trigger has been triggered.</param>
+        </member>
+        <member name="T:GraphShape.Controls.LayoutMode">
+            <summary>
+            Enumeration of possible layout modes.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.LayoutMode.Automatic">
+            <summary>
+            Decide about the layout mode automatically.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.LayoutMode.Simple">
+            <summary>
+            There should not be any compound vertices.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.LayoutMode.Compound">
+            <summary>
+            Compound vertices, compound graph.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.PositionChangedEventHandler">
+            <summary>
+            Handler for an object position changed event.
+            </summary>
+            <param name="sender">Event sender.</param>
+            <param name="args">Event arguments.</param>
+        </member>
+        <member name="T:GraphShape.Controls.PositionChangedEventArgs">
+            <summary>
+            Object position changed event arguments.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.PositionChangedEventArgs.XChange">
+            <summary>
+            X displacement.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.PositionChangedEventArgs.YChange">
+            <summary>
+            Y displacement.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.PositionChangedEventArgs.#ctor(System.Windows.RoutedEvent,System.Object,System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.PositionChangedEventArgs"/> class.
+            </summary>
+            <param name="routedEvent">The routed event identifier for this instance of the <see cref="T:System.Windows.RoutedEventArgs" /> class.</param>
+            <param name="source">
+            An alternate source that will be reported when the event is handled.
+            This pre-populates the <see cref="P:System.Windows.RoutedEventArgs.Source" /> property.
+            </param>
+            <param name="xChange">X displacement.</param>
+            <param name="yChange">Y displacement.</param>
+        </member>
+        <member name="T:GraphShape.Controls.FadeInTransition">
+            <summary>
+            Fade In transition.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.FadeInTransition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.FadeInTransition"/> class.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.FadeOutTransition">
+            <summary>
+            Fade Out transition.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.FadeOutTransition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.FadeOutTransition"/> class.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.FadeTransition">
+            <summary>
+            Fade transition.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.FadeTransition.#ctor(System.Double,System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.FadeTransition"/> class.
+            </summary>
+            <param name="startOpacity">Starting opacity value.</param>
+            <param name="endOpacity">Ending opacity value.</param>
+        </member>
+        <member name="M:GraphShape.Controls.FadeTransition.#ctor(System.Double,System.Double,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphShape.Controls.FadeTransition"/> class.
+            </summary>
+            <param name="startOpacity">Starting opacity value.</param>
+            <param name="endOpacity">Ending opacity value.</param>
+            <param name="rounds">Number of transition rounds.</param>
+        </member>
+        <member name="M:GraphShape.Controls.FadeTransition.Run(GraphShape.Controls.IAnimationContext,System.Windows.Controls.Control,System.TimeSpan,System.Action{System.Windows.Controls.Control})">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.VertexControl">
+            <summary>
+            Vertex control.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.VertexControl.Vertex">
+            <summary>
+            Vertex object.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.VertexControl.VertexProperty">
+            <summary>
+            Vertex dependency property.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.VertexControl.RootCanvas">
+            <summary>
+            Root canvas.
+            </summary>
+        </member>
+        <member name="F:GraphShape.Controls.VertexControl.RootCanvasProperty">
+            <summary>
+            Root canvas dependency property.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.VertexControl.Reset">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.VertexControl.Terminate">
+            <inheritdoc />
+        </member>
+        <member name="E:GraphShape.Controls.VertexControl.Disposing">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.VertexControl.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.VertexControl.Dispose(System.Boolean)">
+            <summary>
+            Dispose this object.
+            </summary>
+            <param name="disposing">Indicates if called by dispose or finalizer.</param>
+        </member>
+        <member name="T:GraphShape.Controls.Converters.EdgeRouteToPathConverter">
+            <summary>
+            Converter of position and sizes of the source and target points,
+            and the route information of an edge to a path.
+            </summary>
+            <remarks>The edge can bend, or it can be straight line.</remarks>
+        </member>
+        <member name="M:GraphShape.Controls.Converters.EdgeRouteToPathConverter.Convert(System.Object[],System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+        </member>
+        <member name="M:GraphShape.Controls.Converters.EdgeRouteToPathConverter.ConvertBack(System.Object,System.Type[],System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.Extensions.BasicStructuresExtensions">
+            <summary>
+            Extensions related to basic structures types.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Extensions.BasicStructuresExtensions.ToPoint(GraphShape.Point)">
+            <summary>
+            Converts a <see cref="T:GraphShape.Point"/> into a <see cref="T:System.Windows.Point"/>.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Extensions.BasicStructuresExtensions.ToPoints(System.Collections.Generic.IEnumerable{GraphShape.Point})">
+            <summary>
+            Converts a set of <see cref="T:GraphShape.Point"/>s into a set of <see cref="T:System.Windows.Point"/>s.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Extensions.BasicStructuresExtensions.ToGraphShapePoint(System.Windows.Point)">
+            <summary>
+            Converts a <see cref="T:System.Windows.Point"/> into a <see cref="T:GraphShape.Point"/>.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Extensions.BasicStructuresExtensions.ToGraphShapePoints(System.Collections.Generic.IEnumerable{System.Windows.Point})">
+            <summary>
+            Converts a set of <see cref="T:System.Windows.Point"/>s into a set of <see cref="T:GraphShape.Point"/>s.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.Extensions.TransitionExtensions">
+            <summary>
+            Extensions for <see cref="T:GraphShape.Controls.ITransition"/>.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Extensions.TransitionExtensions.Run(GraphShape.Controls.ITransition,GraphShape.Controls.IAnimationContext,System.Windows.Controls.Control,System.TimeSpan)">
+            <summary>
+            Runs the transition.
+            </summary>
+            <param name="transition">Transition handler.</param>
+            <param name="context">The context of the transition.</param>
+            <param name="control">The control which the transition should be run on.</param>
+            <param name="duration">The duration of the transition.</param>
+        </member>
+        <member name="T:GraphShape.Controls.Utils.DisposableHelpers">
+            <summary>
+            Helpers to work with <see cref="T:System.IDisposable"/>.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.Utils.DisposableHelpers.Finally(System.Action)">
+            <summary>
+            Calls an action when going out of scope.
+            </summary>
+            <param name="action">The action to call.</param>
+            <returns>A <see cref="T:System.IDisposable"/> object to give to a using clause.</returns>
+        </member>
+        <member name="M:GraphShape.Controls.Utils.DisposableHelpers.FinallyScope.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:GraphShape.Controls.ObjectPool`1">
+            <summary>
+            Pool of objects.
+            </summary>
+            <typeparam name="T">Pool object type.</typeparam>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.#ctor">
+            <summary>
+            Pool constructor, pool will allow growth.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            Pool constructor.
+            </summary>
+            <param name="initialPoolSize">Initial pool size.</param>
+            <param name="allowPoolGrowth">Allow pool growth or not.</param>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.InitializePool">
+            <summary>
+            Fills the pool with objects.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.CreateObject">
+            <summary>
+            Creates a new pool object if the pool is not full
+            or allow growth and adds it to the pool.
+            </summary>
+            <returns>
+            Returns with the newly created object or null if the pool is full.
+            </returns>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.Add(`0)">
+            <summary>
+            Adds the <paramref name="poolObject"/> to the pool and increases the actual pool size.
+            </summary>
+            <param name="poolObject">The object which should be added to the pool.</param>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.OnPoolObjectDisposing(System.Object)">
+            <summary>
+            It puts back the disposed poolObject into the pull.
+            </summary>
+            <param name="sender">The disposed pool object.</param>
+        </member>
+        <member name="M:GraphShape.Controls.ObjectPool`1.GetObject">
+            <summary>
+            Gets an object from the pool.
+            </summary>
+            <returns>
+            Returns with the object or null if there isn't any free objects
+            and the pool does not allow growth.
+            </returns>
+        </member>
+        <member name="T:GraphShape.Controls.IAnimation">
+            <summary>
+            Represents an entity able to animate a control.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.IAnimation.Animate(GraphShape.Controls.IAnimationContext,System.Windows.Controls.Control,System.Double,System.Double,System.TimeSpan)">
+            <summary>
+            Animates the <paramref name="control"/> to a given position.
+            </summary>
+            <param name="context">The context of the animation.</param>
+            <param name="control">The control which should be animated to its new position.</param>
+            <param name="x">The new horizontal coordinate.</param>
+            <param name="y">The new vertical coordinate.</param>
+            <param name="duration">The duration of the animation.</param>
+        </member>
+        <member name="T:GraphShape.Controls.IAnimationContext">
+            <summary>
+            Represents an animation context.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.IAnimationContext.GraphCanvas">
+            <summary>
+            Graph canvas.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.ICompoundVertexControl">
+            <summary>
+            Represents a compound vertex control.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.ICompoundVertexControl.VertexBorderThickness">
+            <summary>
+            Gets the 'border thickness' of the control around the inner canvas.
+            </summary>
+        </member>
+        <member name="P:GraphShape.Controls.ICompoundVertexControl.InnerCanvasSize">
+            <summary>
+            Gets the size of the inner canvas.
+            </summary>
+        </member>
+        <member name="E:GraphShape.Controls.ICompoundVertexControl.Expanded">
+            <summary>
+            Fired when the control is expanded.
+            </summary>
+        </member>
+        <member name="E:GraphShape.Controls.ICompoundVertexControl.Collapsed">
+            <summary>
+            Fired when the control is collapsed.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.DisposingHandler">
+            <summary>
+            Handler for an object <see cref="E:GraphShape.Controls.IPoolObject.Disposing"/> event.
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="T:GraphShape.Controls.IPoolObject">
+            <summary>
+            Represents an entity that can be part of an object pool.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.IPoolObject.Reset">
+            <summary>
+            Resets object state.
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.IPoolObject.Terminate">
+            <summary>
+            Frees object resources.
+            </summary>
+        </member>
+        <member name="E:GraphShape.Controls.IPoolObject.Disposing">
+            <summary>
+            Fired when the object is disposing its resources.
+            </summary>
+        </member>
+        <member name="T:GraphShape.Controls.ITransition">
+            <summary>
+            Represents an entity able to perform animation transitions
+            </summary>
+        </member>
+        <member name="M:GraphShape.Controls.ITransition.Run(GraphShape.Controls.IAnimationContext,System.Windows.Controls.Control,System.TimeSpan,System.Action{System.Windows.Controls.Control})">
+            <summary>
+            Runs the transition.
+            </summary>
+            <param name="context">The context of the transition.</param>
+            <param name="control">The control which the transition should be run on.</param>
+            <param name="duration">The duration of the transition.</param>
+            <param name="endAction">The method that should be called when the transition finished.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:view="clr-namespace:AlgorithmVisualizationTool.View"
+                    xmlns:viewmodel="clr-namespace:AlgorithmVisualizationTool.ViewModel"
+                    xmlns:local="clr-namespace:AlgorithmVisualizationTool.Themes">
+
+    <DataTemplate DataType="{x:Type viewmodel:WelcomeViewVM}">
+        <view:WelcomeView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodel:GraphViewVM}">
+        <view:GraphView/>
+    </DataTemplate>
+
+</ResourceDictionary>

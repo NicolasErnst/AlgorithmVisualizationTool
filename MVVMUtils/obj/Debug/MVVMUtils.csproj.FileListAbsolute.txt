@@ -1,0 +1,8 @@
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\bin\Debug\MVVMUtils.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\bin\Debug\MVVMUtils.pdb
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.csprojAssemblyReference.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.Properties.Resources.resources
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.csproj.GenerateResource.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.csproj.CoreCompileInputs.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\MVVMUtils\obj\Debug\MVVMUtils.pdb

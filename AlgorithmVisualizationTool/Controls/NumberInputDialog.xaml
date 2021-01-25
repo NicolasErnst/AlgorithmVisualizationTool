@@ -1,0 +1,24 @@
+﻿<Window x:Class="AlgorithmVisualizationTool.Controls.NumberInputDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlgorithmVisualizationTool.Controls"
+        mc:Ignorable="d"
+        Title="NumberInputDialog" d:DesignHeight="120" d:DesignWidth="205" MinHeight="120" MinWidth="205">
+    <Grid>
+        <TextBox x:Name="NumberInput" Text="{Binding Value,ElementName=ScrollBar,StringFormat={}{0:F0},Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="11" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" Height="32" Margin="10,10,10,0" PreviewTextInput="NumberInput_PreviewTextInput"/>
+        <ScrollBar x:Name="ScrollBar" Orientation="Vertical" BorderBrush="{x:Null}" SmallChange="1" Height="30" Margin="0,11,11,0" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <ScrollBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ScrollBar.RenderTransform>
+        </ScrollBar>
+        <Button Content="Ok" HorizontalAlignment="Right" Margin="0,57,10,10" VerticalAlignment="Top" FontSize="14" Width="75" Name="OkButton" Click="OkButton_Click" />
+        <Button Content="Cancel" HorizontalAlignment="Right" Margin="0,57,90,10" VerticalAlignment="Top" FontSize="14" Width="75" Name="CancelButton" Click="CancelButton_Click" />
+    </Grid>
+</Window>

@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="GraphAlgorithmPlugin.Vertex"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GraphAlgorithmPlugin"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Border Name="VertexBorder" BorderBrush="Black" BorderThickness="1" CornerRadius="999" MinHeight="100" MinWidth="100" Background="Transparent">
+        <StackPanel>
+            <TextBlock TextWrapping="Wrap" Text="Name" Name="VertexNameBlock" VerticalAlignment="Top" FontWeight="Bold" Margin="10,20,10,0" TextAlignment="Center" FontSize="16"/>
+            <TextBlock TextWrapping="Wrap" Text="VertexContent" Name="VertexContentBlock" Margin="0,10,0,0" TextAlignment="Center"/>
+        </StackPanel>
+    </Border>
+</UserControl>

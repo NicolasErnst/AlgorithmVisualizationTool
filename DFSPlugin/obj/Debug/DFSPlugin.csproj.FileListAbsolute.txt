@@ -1,0 +1,17 @@
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\DFSPlugin.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\DFSPlugin.pdb
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphAlgorithmPlugin.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\QuikGraph.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphShape.Controls.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphShape.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphAlgorithmPlugin.pdb
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\QuikGraph.xml
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphShape.Controls.xml
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\bin\Debug\GraphShape.xml
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.csprojAssemblyReference.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.Properties.Resources.resources
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.csproj.GenerateResource.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.csproj.CoreCompileInputs.cache
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.csproj.CopyComplete
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.dll
+C:\Users\Nicol\source\repos\AlgorithmVisualizationTool\DFSPlugin\obj\Debug\DFSPlugin.pdb

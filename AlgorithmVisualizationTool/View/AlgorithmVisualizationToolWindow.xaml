@@ -1,0 +1,39 @@
+﻿<Window x:Class="AlgorithmVisualizationTool.AlgorithmVisualizationToolWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlgorithmVisualizationTool"
+        xmlns:viewmodel="clr-namespace:AlgorithmVisualizationTool.ViewModel"
+        xmlns:modelmvvm="clr-namespace:AlgorithmVisualizationTool.Model.MVVM"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="450" Width="800"
+        Closing="Window_Closing">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding KeyExitCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.DataContext>
+        <viewmodel:AlgorithmVisualizationToolVM/>
+    </Window.DataContext>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F4" Modifiers="Alt" Command="{Binding KeyExitCommand}"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding KeyOpenCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding KeySaveCommand}"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding KeyNewCommand}"/>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding KeyCopyCommand}"/>
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding KeyPasteCommand}"/>
+        <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding KeyUndoCommand}"/>
+        <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding KeyRedoCommand}"/>
+        <KeyBinding Key="Space" Command="{Binding KeySpaceCommand}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <ContentControl Content="{Binding ShowingView}"/>
+    </Grid>
+</Window>

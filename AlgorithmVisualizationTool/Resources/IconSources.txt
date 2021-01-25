@@ -1,0 +1,4 @@
+﻿Nodes: https://www.flaticon.com/free-icon/nodes_2165556?term=nodes&page=1&position=30&related_item_id=2165556
+Magnifier: https://www.flaticon.com/free-icon/magnifier_64673?term=magnifier&page=1&position=4&related_item_id=64673
+File Storage: https://www.flaticon.com/free-icon/file-storage_3616558?term=folder&page=1&position=49&related_item_id=3616558
+Add File: https://www.flaticon.com/free-icon/add-file_1151197?term=new%20file&page=1&position=42&related_item_id=1151197
