@@ -360,37 +360,41 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
+        #region ParseDotClickedCommand
 
-
-        #region GraphDescription
-
-        private string graphDescription = "";
+        private RelayCommand parseDotClickedCommand;
 
         /// <summary>
-        /// 
+        /// Eigenschaft, die das Kommando liefert
         /// </summary>
-        public string GraphDescription
+        public ICommand ParseDotClickedCommand
         {
             get
             {
-                return graphDescription;
-            }
-            set
-            {
-                if (graphDescription == value)
-                {
-                    return;
-                }
-
-                graphDescription = value;
-
-                RaisePropertyChanged();
-
-                //var task = Task.Run(async () => await SelectedGraphAlgorithm.RunDFS());
+                return parseDotClickedCommand ?? (parseDotClickedCommand = new RelayCommand(ParseDotClickedExe, ParseDotClickedCanExe));
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool ParseDotClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void ParseDotClickedExe(object param)
+        {
+            AlgorithmExecutor?.GenerateFromDot();
+        }
+
+        #endregion 
 
 
         public GraphViewVM(GraphFile graphFile)

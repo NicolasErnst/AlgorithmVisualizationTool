@@ -61,12 +61,16 @@ namespace GraphAlgorithmPlugin
             ExposedLists = new ExposableListContainer();
         }
 
-        public void GenerateFromDot(List<string> dotStatements)
+        public DOTParsingResult GenerateFromDot(List<string> dotStatements)
         {
-            // TODO
-            ExposedLists.Add(new ExposableList("Test", new List<object> { "ABC" }));
+            return DOTParser<V, E>.Parse(Graph, dotStatements); 
         }
 
         public abstract void RunAlgorithm();
+
+        protected void MakeAlgorithmStep(Action doAction, Action undoAction)
+        {
+            GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction);
+        }
     }
 }

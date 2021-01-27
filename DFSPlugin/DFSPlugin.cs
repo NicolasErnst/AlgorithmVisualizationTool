@@ -11,8 +11,25 @@ namespace DFSPlugin
     {
         public override void RunAlgorithm()
         {
-            Graph.AddVertex(new Vertex("ABC"));
-            ExposedLists.ElementAt(0).Add("DEF"); 
+            for(int i = 0; i < 100; i++)
+            {
+                MakeAlgorithmStep(() =>
+                {
+                    Vertex first = Graph.Vertices.FirstOrDefault();
+                    if (first != null)
+                    {
+                        first.VertexContent = (i + 1).ToString();
+                    }
+                }, () =>
+                {
+                    Vertex first = Graph.Vertices.FirstOrDefault();
+                    if (first != null)
+                    {
+                        first.VertexContent = (i).ToString();
+                    }
+                }); 
+            }
+            
         }
     }
 }
