@@ -7,6 +7,7 @@
              xmlns:mvvmmodel="clr-namespace:AlgorithmVisualizationTool.Model.MVVM"
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions" 
              xmlns:local="clr-namespace:AlgorithmVisualizationTool.View"
+             xmlns:graphmodel="clr-namespace:AlgorithmVisualizationTool.Model.Graph"
              mc:Ignorable="d" 
               d:DesignHeight="600" d:DesignWidth="1000">
 
@@ -153,16 +154,65 @@
                                 </TextBlock.InputBindings>
                             </TextBlock>
                             <StackPanel Margin="0,150,0,0" VerticalAlignment="Top">
-                                <Button MinHeight="23" Content="{Binding StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}"/>
+                                <Button MinHeight="23" Content="{Binding StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                                 <Grid Margin="10, 10, 10, 10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Content="Step Backward" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Top" Command="{Binding StepBackwardAlgorithmClickedCommand}"/>
-                                    <Button Content="Step Forward" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Command="{Binding StepForwardAlgorithmClickedCommand}"/>
+                                    <Button Content="Step Backward" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Top" Command="{Binding StepBackwardAlgorithmClickedCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                    <Button Content="Step Forward" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Command="{Binding StepForwardAlgorithmClickedCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </Grid>
-                                <Button Content="Reset" VerticalAlignment="Top" Margin="10,0,10,0"/>
+                                <Button Content="Reset" VerticalAlignment="Top" Margin="10,0,10,0">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </StackPanel>
                         </Grid>
 

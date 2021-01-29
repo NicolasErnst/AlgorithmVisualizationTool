@@ -266,12 +266,11 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Start()
         {
-            if (SelectedGraphAlgorithm == null)
-            {
-                throw new NullReferenceException("No graph algorithm was selected.");
-            }
             AlgorithmState = GraphAlgorithmState.Started;
-            SelectedGraphAlgorithm.RunAlgorithm();
+
+            Task.Run(() => SelectedGraphAlgorithm.RunAlgorithm());
+
+            // SelectedGraphAlgorithm.RunAlgorithm();
         }
 
         public void StepForward()
