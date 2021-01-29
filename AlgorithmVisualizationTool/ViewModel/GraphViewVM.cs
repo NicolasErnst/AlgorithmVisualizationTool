@@ -360,42 +360,6 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
-        #region ParseDotClickedCommand
-
-        private RelayCommand parseDotClickedCommand;
-
-        /// <summary>
-        /// Eigenschaft, die das Kommando liefert
-        /// </summary>
-        public ICommand ParseDotClickedCommand
-        {
-            get
-            {
-                return parseDotClickedCommand ?? (parseDotClickedCommand = new RelayCommand(ParseDotClickedExe, ParseDotClickedCanExe));
-            }
-        }
-
-        /// <summary>
-        /// Gibt an, ob das Kommando ausgeführt werden kann
-        /// <param name="param">Parameter</param>
-        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
-        /// </summary>
-        protected virtual bool ParseDotClickedCanExe(object param)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Führt das Kommando aus
-        /// <param name="param">Parameter</param>
-        /// </summary>
-        protected virtual void ParseDotClickedExe(object param)
-        {
-            AlgorithmExecutor?.GenerateFromDot();
-        }
-
-        #endregion 
-
 
         public GraphViewVM(GraphFile graphFile)
         {

@@ -238,6 +238,8 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 dotDescription = value;
 
                 RaisePropertyChanged();
+
+                GenerateFromDot();
             }
         }
 
