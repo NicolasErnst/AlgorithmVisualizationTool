@@ -46,9 +46,9 @@
                                     <Label.Content>
                                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">
                                             <Run Text="Icon made by "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/vitaly-gorbachev">Vitaly Gorbachev</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/vitaly-gorbachev" RequestNavigate="Hyperlink_RequestNavigate">Vitaly Gorbachev</Hyperlink>
                                             <Run Text=" from "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/" RequestNavigate="Hyperlink_RequestNavigate">www.flaticon.com/</Hyperlink>
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>
@@ -61,9 +61,9 @@
                                     <Label.Content>
                                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">
                                             <Run Text="Icon made by "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/freepik">Freepik</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/freepik" RequestNavigate="Hyperlink_RequestNavigate">Freepik</Hyperlink>
                                             <Run Text=" from "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/" RequestNavigate="Hyperlink_RequestNavigate">www.flaticon.com/</Hyperlink>
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>
@@ -76,9 +76,9 @@
                                     <Label.Content>
                                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">
                                             <Run Text="Icon made by "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/dinosoftlabs">DinosoftLabs</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/dinosoftlabs" RequestNavigate="Hyperlink_RequestNavigate">DinosoftLabs</Hyperlink>
                                             <Run Text=" from "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/" RequestNavigate="Hyperlink_RequestNavigate">www.flaticon.com/</Hyperlink>
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>
@@ -91,9 +91,9 @@
                                     <Label.Content>
                                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">
                                             <Run Text="Icon made by "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/smashicons">Smashicons</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/smashicons" RequestNavigate="Hyperlink_RequestNavigate">Smashicons</Hyperlink>
                                             <Run Text=" from "/>
-                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/" RequestNavigate="Hyperlink_RequestNavigate">www.flaticon.com/</Hyperlink>
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>

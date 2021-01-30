@@ -49,6 +49,42 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
+        #region InfoClickedCommand
+
+        private RelayCommand infoClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand InfoClickedCommand
+        {
+            get
+            {
+                return infoClickedCommand ?? (infoClickedCommand = new RelayCommand(InfoClickedExe, InfoClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool InfoClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void InfoClickedExe(object param)
+        {
+            ShowingView?.KeyInfoCommand?.Invoke();
+        }
+
+        #endregion
+
         #region UnsavedChanges
 
         private bool unsavedChanges = false;
