@@ -396,6 +396,47 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
+        #region StepBackwardClickedCommand
+
+        private RelayCommand stepBackwardClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand StepBackwardClickedCommand
+        {
+            get
+            {
+                return stepBackwardClickedCommand ?? (stepBackwardClickedCommand = new RelayCommand(StepBackwardClickedExe, StepBackwardClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool StepBackwardClickedCanExe(object param)
+        {
+            if (AlgorithmExecutor?.AvailableUndos == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void StepBackwardClickedExe(object param)
+        {
+            AlgorithmExecutor?.StepBackward();
+        }
+
+        #endregion 
+
         #region ResetClickedCommand
 
         private RelayCommand resetClickedCommand;

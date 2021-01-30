@@ -9,7 +9,7 @@ namespace DFSPlugin
 {
     public class DFSPlugin : GraphAlgorithmPlugin<Vertex, Edge<Vertex>>
     {
-        protected override async void Execute()
+        public override async void RunAlgorithm()
         {
             try
             {
@@ -27,7 +27,7 @@ namespace DFSPlugin
                         Vertex first = Graph.Vertices.FirstOrDefault();
                         if (first != null)
                         {
-                            first.VertexContent = (i).ToString();
+                            first.VertexContent = (i - 1).ToString();
                         }
                     });
                 }

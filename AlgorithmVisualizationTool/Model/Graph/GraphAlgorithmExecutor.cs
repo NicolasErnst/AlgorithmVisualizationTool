@@ -246,6 +246,14 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #endregion
 
+        public int AvailableUndos
+        {
+            get
+            {
+                return StepStack.UndoCount;
+            }
+        }
+
 
         public GraphAlgorithmExecutor()
         {
@@ -281,29 +289,20 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void StepForward()
         {
-            if (StepStack.RedoCount > 0)
+            if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                StepStack.Redo();
-                MadeAlgorithmSteps += 1;
-            } 
-            else
+                Reset();
+                SelectedGraphAlgorithm?.RunAlgorithm();
+            }
+            if (AlgorithmState != GraphAlgorithmState.Started)
             {
-                if (AlgorithmState == GraphAlgorithmState.Finished)
-                {
-                    Reset();
-                    SelectedGraphAlgorithm?.RunAlgorithm();
-                }
-                if (AlgorithmState != GraphAlgorithmState.Started)
-                {
-                    AlgorithmState = GraphAlgorithmState.Stopped;
-                    StepHandle.Reset();
-                }
+                AlgorithmState = GraphAlgorithmState.Stopped;
+                StepHandle.Set();
             }
         }
 
         public void StepBackward()
         {
-            // TODO: overwork, stop before undo 
             MadeAlgorithmSteps -= 1;
             StepStack.Undo();
         }
@@ -332,8 +331,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             return Task.Run(async () =>
             {
-                AlgorithmExecutionCTS.Token.ThrowIfCancellationRequested();
-
                 if (MadeAlgorithmSteps > 0 && StepHandle.WaitOne())
                 {
                     if (AlgorithmState == GraphAlgorithmState.Stopped)

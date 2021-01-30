@@ -66,15 +66,7 @@ namespace GraphAlgorithmPlugin
             return DOTParser<V, E>.Parse(Graph, dotStatements); 
         }
 
-        public void RunAlgorithm()
-        {
-            try
-            {
-                Execute();
-            } catch (Exception) { }
-        }
-
-        protected abstract void Execute();
+        public abstract void RunAlgorithm();
 
         protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {

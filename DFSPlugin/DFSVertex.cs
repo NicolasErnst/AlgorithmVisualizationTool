@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DFSPlugin
 {
-    public class DFSVertex : Vertex 
+    public class DFSVertex : Vertex
     {
         #region PushTime
 
