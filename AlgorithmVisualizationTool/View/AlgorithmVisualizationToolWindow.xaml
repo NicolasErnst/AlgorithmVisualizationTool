@@ -8,7 +8,7 @@
         xmlns:modelmvvm="clr-namespace:AlgorithmVisualizationTool.Model.MVVM"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="800"
+        Title="{Binding Title}" Height="600" Width="1000"
         Closing="Window_Closing">
     
     <i:Interaction.Triggers>
@@ -30,7 +30,7 @@
         <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding KeyPasteCommand}"/>
         <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding KeyUndoCommand}"/>
         <KeyBinding Key="Y" Modifiers="Ctrl" Command="{Binding KeyRedoCommand}"/>
-        <KeyBinding Key="Space" Command="{Binding KeySpaceCommand}"/>
+        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding KeyInfoCommand}"/>
     </Window.InputBindings>
 
     <Grid>

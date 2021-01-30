@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\App.xaml
-6-501499749
+7174072752
 
-25-1234679485
+26-1199826775
 29739679266
-Controls\NumberInputDialog.xaml;Controls\SearchBar.xaml;View\AlgorithmVisualizationToolWindow.xaml;Themes\Generic.xaml;View\GraphView.xaml;View\WelcomeView.xaml;
+Controls\InfoDialog.xaml;Controls\NumberInputDialog.xaml;Controls\SearchBar.xaml;View\AlgorithmVisualizationToolWindow.xaml;Themes\Generic.xaml;View\GraphView.xaml;View\WelcomeView.xaml;
 
 False
 

@@ -94,6 +94,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\InfoDialog.xaml.cs">
+      <DependentUpon>InfoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NumberInputDialog.xaml.cs">
       <DependentUpon>NumberInputDialog.xaml</DependentUpon>
     </Compile>
@@ -116,6 +119,10 @@
     <Compile Include="View\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\InfoDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NumberInputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

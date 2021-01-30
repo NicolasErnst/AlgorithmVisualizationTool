@@ -1,0 +1,107 @@
+﻿<Window x:Class="AlgorithmVisualizationTool.Controls.InfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AlgorithmVisualizationTool.Controls"
+        mc:Ignorable="d"
+        Title="Information" Height="450" Width="400" MaxHeight="450" MaxWidth="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="95px"/>
+            <RowDefinition Height="1px"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <DockPanel HorizontalAlignment="Center">
+                <Image HorizontalAlignment="Left" Height="75" VerticalAlignment="Center" Width="75" Source="/Resources/nodes.png"/>
+                <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Label Content="Algorithm Visualization" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
+                    <Label Content="Tool" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="24" FontWeight="Bold" Margin="0,30,0,0"/>
+                </Grid>
+            </DockPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="Black"/>
+
+        <Grid Grid.Row="2">
+            <DockPanel LastChildFill="True">
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="10,10,10,10" DockPanel.Dock="Top">
+                    <TextBlock.Inlines>
+                        <Run Text="AlgorithmVisualizationTool was created by"/>
+                        <Run Text="Nicolas Ernst" FontWeight="Bold"/>
+                        <Run Text="as part of a project work at"/>
+                        <Run Text="Karlsruhe University of Applied Sciences" FontWeight="Bold"/>
+                        <Run Text="in the winter semester 2020/21."/>
+                    </TextBlock.Inlines>
+                </TextBlock>
+                <TextBlock Text="Icon Attributions:" Margin="10,10,10,10" DockPanel.Dock="Top" VerticalAlignment="Top"/>
+                <ListBox Margin="10,0,10,10" HorizontalContentAlignment="Stretch">
+                    <ListBox.Items>
+                        <ListBoxItem>
+                            <Grid Width="320" Margin="5,5,5,0">
+                                <Image HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="50" Source="/Resources/nodes.png"/>
+                                <Label Margin="70,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center">
+                                            <Run Text="Icon made by "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/vitaly-gorbachev">Vitaly Gorbachev</Hyperlink>
+                                            <Run Text=" from "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <Grid Width="320" Margin="5,5,5,0">
+                                <Image HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="50" Source="/Resources/magnifier.png"/>
+                                <Label Margin="70,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center">
+                                            <Run Text="Icon made by "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/freepik">Freepik</Hyperlink>
+                                            <Run Text=" from "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <Grid Width="320" Margin="5,5,5,0">
+                                <Image HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="50" Source="/Resources/file-storage.png"/>
+                                <Label Margin="70,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center">
+                                            <Run Text="Icon made by "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/dinosoftlabs">DinosoftLabs</Hyperlink>
+                                            <Run Text=" from "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </ListBoxItem>
+                        <ListBoxItem>
+                            <Grid Width="320" Margin="5,5,5,0">
+                                <Image HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="50" Source="/Resources/add-file.png"/>
+                                <Label Margin="70,0,5,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Label.Content>
+                                        <TextBlock TextWrapping="Wrap" TextAlignment="Center">
+                                            <Run Text="Icon made by "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/authors/smashicons">Smashicons</Hyperlink>
+                                            <Run Text=" from "/>
+                                            <Hyperlink NavigateUri="https://www.flaticon.com/">www.flaticon.com/</Hyperlink>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                            </Grid>
+                        </ListBoxItem>
+                    </ListBox.Items>
+                </ListBox>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
-﻿using AlgorithmVisualizationTool.Model.Graph;
+﻿using AlgorithmVisualizationTool.Controls;
+using AlgorithmVisualizationTool.Model.Graph;
 using AlgorithmVisualizationTool.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -105,19 +106,19 @@ namespace AlgorithmVisualizationTool.Model.MVVM
             }
         }
 
-        #endregion 
+        #endregion
 
-        #region KeySpaceCommand 
+        #region KeyInfoCommand
 
-        public virtual Action KeySpaceCommand
+        public virtual Action KeyInfoCommand
         {
             get
             {
-                return new Action(() => { });
+                return new Action(() => { new InfoDialog().ShowDialog(); });
             }
         }
 
-        #endregion
+        #endregion 
 
 
         protected void ShowCreateGraphDialog()

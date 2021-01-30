@@ -296,20 +296,20 @@ namespace AlgorithmVisualizationTool.ViewModel
             ShowingView?.KeyRedoCommand?.Invoke();
         }
 
-        #endregion 
+        #endregion
 
-        #region KeySpaceCommand
+        #region KeyInfoCommand
 
-        private RelayCommand keySpaceCommand;
+        private RelayCommand keyInfoCommand;
 
         /// <summary>
         /// Eigenschaft, die das Kommando liefert
         /// </summary>
-        public ICommand KeySpaceCommand
+        public ICommand KeyInfoCommand
         {
             get
             {
-                return keySpaceCommand ?? (keySpaceCommand = new RelayCommand(KeySpaceExe, KeySpaceCanExe));
+                return keyInfoCommand ?? (keyInfoCommand = new RelayCommand(KeyInfoExe, KeyInfoCanExe));
             }
         }
 
@@ -318,7 +318,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// <param name="param">Parameter</param>
         /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
         /// </summary>
-        protected virtual bool KeySpaceCanExe(object param)
+        protected virtual bool KeyInfoCanExe(object param)
         {
             return true;
         }
@@ -327,12 +327,12 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// Führt das Kommando aus
         /// <param name="param">Parameter</param>
         /// </summary>
-        protected virtual void KeySpaceExe(object param)
+        protected virtual void KeyInfoExe(object param)
         {
-            ShowingView?.KeySpaceCommand?.Invoke();
+            ShowingView?.KeyInfoCommand?.Invoke();
         }
 
-        #endregion 
+        #endregion
 
 
         public AlgorithmVisualizationToolVM()
