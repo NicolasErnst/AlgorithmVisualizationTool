@@ -20,6 +20,14 @@ namespace DFSPlugin
                         Vertex first = Graph.Vertices.FirstOrDefault();
                         if (first != null)
                         {
+                            //if (i == 0)
+                            //{
+                            //    first.VertexContent = "1"; 
+                            //}
+                            //else
+                            //{
+                            //    first.VertexContent = (int.Parse(first.VertexContent) + 1).ToString();
+                            //}
                             first.VertexContent = (i + 1).ToString();
                         }
                     }, () =>
@@ -27,7 +35,7 @@ namespace DFSPlugin
                         Vertex first = Graph.Vertices.FirstOrDefault();
                         if (first != null)
                         {
-                            first.VertexContent = (i - 1).ToString();
+                            first.VertexContent = (int.Parse(first.VertexContent) - 1).ToString();
                         }
                     });
                 }

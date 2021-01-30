@@ -15,6 +15,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
     {
         private readonly static EventWaitHandle StepHandle = new ManualResetEvent(false);
         private readonly AlgorithmStepStack StepStack = new AlgorithmStepStack();
+        private object StepStackLock = new object();
         private CancellationTokenSource AlgorithmExecutionCTS = new CancellationTokenSource(); 
 
         #region AlgorithmState
@@ -304,7 +305,11 @@ namespace AlgorithmVisualizationTool.Model.Graph
         public void StepBackward()
         {
             MadeAlgorithmSteps -= 1;
-            StepStack.Undo();
+            lock (StepStackLock)
+            {
+                StepStack.Undo();
+            }
+            
         }
 
         public void Stop()
@@ -327,28 +332,49 @@ namespace AlgorithmVisualizationTool.Model.Graph
             GenerateFromDot();
         }
 
-        public Task MakeAlgorithmStep(Action doAction, Action undoAction)
+        public async Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
-            return Task.Run(async () =>
+            int availableRedoSteps = 0;
+
+            lock(StepStackLock)
             {
-                if (MadeAlgorithmSteps > 0 && StepHandle.WaitOne())
+                availableRedoSteps = StepStack.RedoCount; 
+            }
+
+            while (availableRedoSteps > 0)
+            {
+                await Task.Run(async () => await AlgorithmContinuation());
+                lock(StepStackLock)
                 {
-                    if (AlgorithmState == GraphAlgorithmState.Stopped)
-                    {
-                        StepHandle.Reset();
-                        StepHandle.WaitOne();
-                    }
-                    else if (AlgorithmState == GraphAlgorithmState.Started)
-                    {
-                        await Task.Delay(Delay);
-                        StepHandle.WaitOne();
-                    }
+                    StepStack.Redo();
                 }
-            }).ContinueWith((Task t) =>
+                MadeAlgorithmSteps++;
+                availableRedoSteps--;
+            }
+
+            await Task.Run(async () => await AlgorithmContinuation());
+            lock (StepStackLock)
             {
                 StepStack.Do(new AlgorithmStep(doAction, undoAction));
-                MadeAlgorithmSteps += 1;
-            }, AlgorithmExecutionCTS.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            MadeAlgorithmSteps++;
+        }
+
+        private async Task AlgorithmContinuation()
+        {
+            if (MadeAlgorithmSteps > 0 && StepHandle.WaitOne())
+            {
+                if (AlgorithmState == GraphAlgorithmState.Stopped)
+                {
+                    StepHandle.Reset();
+                    StepHandle.WaitOne();
+                }
+                else if (AlgorithmState == GraphAlgorithmState.Started)
+                {
+                    await Task.Delay(Delay);
+                    StepHandle.WaitOne();
+                }
+            }
         }
     }
 }
