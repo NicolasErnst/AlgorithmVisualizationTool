@@ -44,11 +44,6 @@ C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\Grap
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\GraphShape.Controls.xml
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\QuikGraph.xml
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csprojAssemblyReference.cache
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\Vertex.g.cs
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin_MarkupCompile.cache
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin_MarkupCompile.lref
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\Vertex.baml
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.g.resources
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csproj.CoreCompileInputs.cache
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csproj.CopyComplete
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.dll

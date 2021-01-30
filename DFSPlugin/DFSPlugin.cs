@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DFSPlugin
 {
-    public class DFSPlugin : GraphAlgorithmPlugin<Vertex, Edge<Vertex>>
+    public class DFSPlugin : GraphAlgorithmPlugin<DFSVertex, Edge<DFSVertex>>
     {
         public override async void RunAlgorithm()
         {
