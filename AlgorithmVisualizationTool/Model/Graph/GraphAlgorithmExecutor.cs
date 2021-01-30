@@ -13,8 +13,9 @@ namespace AlgorithmVisualizationTool.Model.Graph
 {
     class GraphAlgorithmExecutor : ViewModelBase, IGraphAlgorithmExecutor
     {
-        private readonly EventWaitHandle StepHandle = new ManualResetEvent(false);
+        private readonly static EventWaitHandle StepHandle = new ManualResetEvent(false);
         private readonly AlgorithmStepStack StepStack = new AlgorithmStepStack();
+        private CancellationTokenSource AlgorithmExecutionCTS = new CancellationTokenSource(); 
 
         #region AlgorithmState
 
@@ -266,11 +267,16 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Start()
         {
-            AlgorithmState = GraphAlgorithmState.Started;
-
-            Task.Run(() => SelectedGraphAlgorithm.RunAlgorithm());
-
-            // SelectedGraphAlgorithm.RunAlgorithm();
+            if (AlgorithmState == GraphAlgorithmState.Finished)
+            {
+                Reset();
+                SelectedGraphAlgorithm?.RunAlgorithm();
+            }
+            if (AlgorithmState != GraphAlgorithmState.Started)
+            {
+                AlgorithmState = GraphAlgorithmState.Started;
+                StepHandle.Set();
+            }
         }
 
         public void StepForward()
@@ -282,12 +288,22 @@ namespace AlgorithmVisualizationTool.Model.Graph
             } 
             else
             {
-                StepHandle.Set();
+                if (AlgorithmState == GraphAlgorithmState.Finished)
+                {
+                    Reset();
+                    SelectedGraphAlgorithm?.RunAlgorithm();
+                }
+                if (AlgorithmState != GraphAlgorithmState.Started)
+                {
+                    AlgorithmState = GraphAlgorithmState.Stopped;
+                    StepHandle.Reset();
+                }
             }
         }
 
         public void StepBackward()
         {
+            // TODO: overwork, stop before undo 
             MadeAlgorithmSteps -= 1;
             StepStack.Undo();
         }
@@ -300,27 +316,45 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Reset()
         {
-            Stop(); 
+            AlgorithmState = GraphAlgorithmState.Finished;
+            StepHandle.Reset();
             Progress = 0;
             ProgressText = "";
             StepStack.Reset();
+            MadeAlgorithmSteps = 0;
+            AlgorithmExecutionCTS.Cancel();
+            AlgorithmExecutionCTS.Dispose();
+            AlgorithmExecutionCTS = new CancellationTokenSource();
+            GenerateFromDot();
         }
 
-        public void MakeAlgorithmStep(Action doAction, Action undoAction)
+        public Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
-            StepStack.Do(new AlgorithmStep(doAction, undoAction)); 
-
-            MadeAlgorithmSteps += 1;
-
-            if (AlgorithmState == GraphAlgorithmState.Stopped)
+            return Task.Run(async () =>
             {
-                StepHandle.Reset();
-                StepHandle.WaitOne();
-            } 
-            else if (AlgorithmState == GraphAlgorithmState.Started)
+                if (AlgorithmExecutionCTS.Token.IsCancellationRequested)
+                {
+                    AlgorithmExecutionCTS.Token.ThrowIfCancellationRequested();
+                }
+
+                if (MadeAlgorithmSteps > 0 && StepHandle.WaitOne())
+                {
+                    if (AlgorithmState == GraphAlgorithmState.Stopped)
+                    {
+                        StepHandle.Reset();
+                        StepHandle.WaitOne();
+                    }
+                    else if (AlgorithmState == GraphAlgorithmState.Started)
+                    {
+                        await Task.Delay(Delay);
+                        StepHandle.WaitOne();
+                    }
+                }
+            }).ContinueWith((Task t) =>
             {
-                Thread.Sleep(Delay);
-            }
+                StepStack.Do(new AlgorithmStep(doAction, undoAction));
+                MadeAlgorithmSteps += 1;
+            }, AlgorithmExecutionCTS.Token, TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
 }

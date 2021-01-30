@@ -68,9 +68,9 @@ namespace GraphAlgorithmPlugin
 
         public abstract void RunAlgorithm();
 
-        protected void MakeAlgorithmStep(Action doAction, Action undoAction)
+        protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
-            GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction);
+            return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction);
         }
     }
 }

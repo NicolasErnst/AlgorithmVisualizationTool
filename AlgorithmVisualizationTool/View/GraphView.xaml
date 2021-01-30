@@ -170,7 +170,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Content="Step Backward" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Top" Command="{Binding StepBackwardAlgorithmClickedCommand}">
+                                    <Button Content="Step Backward" Grid.Column="0" Margin="0,0,5,0" VerticalAlignment="Top" Command="{Binding StepBackwardClickedCommand}">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Style.Triggers>
@@ -180,11 +180,14 @@
                                                     <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Finished}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Button.Style>
                                     </Button>
-                                    <Button Content="Step Forward" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Command="{Binding StepForwardAlgorithmClickedCommand}">
+                                    <Button Content="Step Forward" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Command="{Binding StepForwardClickedCommand}">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Style.Triggers>
@@ -199,7 +202,7 @@
                                         </Button.Style>
                                     </Button>
                                 </Grid>
-                                <Button Content="Reset" VerticalAlignment="Top" Margin="10,0,10,0">
+                                <Button Content="Reset" VerticalAlignment="Top" Margin="10,0,10,0" Command="{Binding ResetClickedCommand}">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Style.Triggers>

@@ -10,6 +10,6 @@ namespace GraphAlgorithmPlugin
     {
         double Progress { get; set; }
         string ProgressText { get; set; }
-        void MakeAlgorithmStep(Action doAction, Action undoAction);
+        Task MakeAlgorithmStep(Action doAction, Action undoAction);
     }
 }

@@ -360,7 +360,7 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
-        #region StepForwardAlgorithmClickedCommand
+        #region StepForwardClickedCommand
 
         private RelayCommand stepForwardClickedCommand;
 
@@ -391,10 +391,46 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// </summary>
         protected virtual void StepForwardClickedExe(object param)
         {
-
+            AlgorithmExecutor?.StepForward();
         }
 
-        #endregion 
+        #endregion
+
+        #region ResetClickedCommand
+
+        private RelayCommand resetClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand ResetClickedCommand
+        {
+            get
+            {
+                return resetClickedCommand ?? (resetClickedCommand = new RelayCommand(ResetClickedExe, ResetClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool ResetClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void ResetClickedExe(object param)
+        {
+            AlgorithmExecutor?.Reset();
+        }
+
+        #endregion
 
 
         public GraphViewVM(GraphFile graphFile)

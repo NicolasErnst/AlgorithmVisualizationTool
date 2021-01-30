@@ -9,11 +9,11 @@ namespace DFSPlugin
 {
     public class DFSPlugin : GraphAlgorithmPlugin<Vertex, Edge<Vertex>>
     {
-        public override void RunAlgorithm()
+        public override async void RunAlgorithm()
         {
             for(int i = 0; i < 100; i++)
             {
-                MakeAlgorithmStep(() =>
+                await MakeAlgorithmStep(() =>
                 {
                     Vertex first = Graph.Vertices.FirstOrDefault();
                     if (first != null)
