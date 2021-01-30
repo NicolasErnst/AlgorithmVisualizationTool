@@ -322,7 +322,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
             ProgressText = "";
             StepStack.Reset();
             MadeAlgorithmSteps = 0;
-            AlgorithmExecutionCTS.Cancel();
+            AlgorithmExecutionCTS.Cancel(); 
             AlgorithmExecutionCTS.Dispose();
             AlgorithmExecutionCTS = new CancellationTokenSource();
             GenerateFromDot();
@@ -332,10 +332,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             return Task.Run(async () =>
             {
-                if (AlgorithmExecutionCTS.Token.IsCancellationRequested)
-                {
-                    AlgorithmExecutionCTS.Token.ThrowIfCancellationRequested();
-                }
+                AlgorithmExecutionCTS.Token.ThrowIfCancellationRequested();
 
                 if (MadeAlgorithmSteps > 0 && StepHandle.WaitOne())
                 {

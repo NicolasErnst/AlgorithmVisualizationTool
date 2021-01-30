@@ -9,27 +9,31 @@ namespace DFSPlugin
 {
     public class DFSPlugin : GraphAlgorithmPlugin<Vertex, Edge<Vertex>>
     {
-        public override async void RunAlgorithm()
+        protected override async void Execute()
         {
-            for(int i = 0; i < 100; i++)
+            try
             {
-                await MakeAlgorithmStep(() =>
+                for (int i = 0; i < 100; i++)
                 {
-                    Vertex first = Graph.Vertices.FirstOrDefault();
-                    if (first != null)
+                    await MakeAlgorithmStep(() =>
                     {
-                        first.VertexContent = (i + 1).ToString();
-                    }
-                }, () =>
-                {
-                    Vertex first = Graph.Vertices.FirstOrDefault();
-                    if (first != null)
+                        Vertex first = Graph.Vertices.FirstOrDefault();
+                        if (first != null)
+                        {
+                            first.VertexContent = (i + 1).ToString();
+                        }
+                    }, () =>
                     {
-                        first.VertexContent = (i).ToString();
-                    }
-                }); 
-            }
-            
+                        Vertex first = Graph.Vertices.FirstOrDefault();
+                        if (first != null)
+                        {
+                            first.VertexContent = (i).ToString();
+                        }
+                    });
+                }
+            } 
+            catch (TaskCanceledException) { }
+            catch (OperationCanceledException) { }
         }
     }
 }
