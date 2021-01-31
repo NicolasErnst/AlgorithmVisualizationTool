@@ -77,6 +77,10 @@ namespace GraphAlgorithmPlugin
 
         protected abstract void RunAlgorithm();
 
+        public abstract string GetAlgorithmName();
+
+        public abstract GraphDirectionType GetSupportedGraphDirections(); 
+
         protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
             return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction, CancellationToken);

@@ -57,7 +57,8 @@ namespace GraphAlgorithmPlugin
         public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements)
         {
             graph.Clear();
-            graph.IsDirected = false;
+            graph.DirectionType = GraphDirectionType.None;
+            bool onlyUndirectedEdgeDefinitions = true; 
 
             for (int i = 0; i < statements.Count(); i++)
             {
@@ -97,7 +98,7 @@ namespace GraphAlgorithmPlugin
                         }
                         else if (IsFullMatch(statement, DirectedEdgeDefinition()))
                         {
-                            graph.IsDirected = true;
+                            onlyUndirectedEdgeDefinitions = false;
                             delimiter = "->";
                         }
                         else
@@ -152,10 +153,32 @@ namespace GraphAlgorithmPlugin
                 } 
                 else
                 {
+                    if (graph.VertexCount > 0)
+                    {
+                        if (onlyUndirectedEdgeDefinitions)
+                        {
+                            graph.DirectionType = GraphDirectionType.Undirected;
+                        }
+                        else
+                        {
+                            graph.DirectionType = GraphDirectionType.Directed;
+                        }
+                    }
                     return new DOTParsingResult(false, statement, i + 1); 
                 }
             }
 
+            if (graph.VertexCount > 0)
+            {
+                if (onlyUndirectedEdgeDefinitions)
+                {
+                    graph.DirectionType = GraphDirectionType.Undirected;
+                }
+                else
+                {
+                    graph.DirectionType = GraphDirectionType.Directed;
+                }
+            }
             return new DOTParsingResult(true);
         }
 

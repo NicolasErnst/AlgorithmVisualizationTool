@@ -61,6 +61,7 @@
     <Compile Include="ExposableListContainer.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="GraphAlgorithmPlugin.cs" />
+    <Compile Include="GraphDirectionType.cs" />
     <Compile Include="GraphLayout.cs" />
     <Compile Include="IGraphAlgorithmExecutor.cs" />
     <Compile Include="IGraphAlgorithmPlugin.cs" />
