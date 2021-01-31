@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GraphAlgorithmPlugin
@@ -17,7 +18,7 @@ namespace GraphAlgorithmPlugin
         string ProgressText { get; set; }
         ExposableListContainer ExposedLists { get; }
         DOTParsingResult GenerateFromDot(List<string> dotStatements);
-        void RunAlgorithm();
+        void RunAlgorithm(CancellationToken cancellationToken);
     }
 
     public interface IGraphAlgorithmPlugin<V, E> : IGraphAlgorithmPlugin where V : class, IVertex, new() where E : Edge<V>, new()

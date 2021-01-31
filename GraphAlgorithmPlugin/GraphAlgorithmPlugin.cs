@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GraphAlgorithmPlugin
@@ -53,6 +54,8 @@ namespace GraphAlgorithmPlugin
 
         public ExposableListContainer ExposedLists { get; set; }
 
+        private CancellationToken CancellationToken { get; set; }
+
 
         public GraphAlgorithmPlugin()
         {
@@ -66,11 +69,17 @@ namespace GraphAlgorithmPlugin
             return DOTParser<V, E>.Parse(Graph, dotStatements); 
         }
 
-        public abstract void RunAlgorithm();
-
-        protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
+        public void RunAlgorithm(CancellationToken cancellationToken)
         {
-            return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction);
+            CancellationToken = cancellationToken;
+            RunAlgorithm();
+        }
+
+        protected abstract void RunAlgorithm();
+
+        protected async Task MakeAlgorithmStep(Action doAction, Action undoAction)
+        {
+            return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction, CancellationToken);
         }
     }
 }

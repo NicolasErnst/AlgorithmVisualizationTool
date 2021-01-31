@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GraphAlgorithmPlugin
@@ -10,6 +11,6 @@ namespace GraphAlgorithmPlugin
     {
         double Progress { get; set; }
         string ProgressText { get; set; }
-        Task MakeAlgorithmStep(Action doAction, Action undoAction);
+        Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken);
     }
 }

@@ -15,8 +15,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
     {
         private readonly static EventWaitHandle StepHandle = new ManualResetEvent(false);
         private readonly AlgorithmStepStack StepStack = new AlgorithmStepStack();
-        private object StepStackLock = new object();
-        private CancellationTokenSource AlgorithmExecutionCTS = new CancellationTokenSource(); 
+        private CancellationTokenSource AlgorithmExecutionCTS = new CancellationTokenSource();
 
         #region AlgorithmState
 
@@ -278,8 +277,9 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                Reset();
-                SelectedGraphAlgorithm?.RunAlgorithm();
+                Reset(); 
+                AlgorithmExecutionCTS = new CancellationTokenSource();
+                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token); 
             }
             if (AlgorithmState != GraphAlgorithmState.Started)
             {
@@ -293,7 +293,8 @@ namespace AlgorithmVisualizationTool.Model.Graph
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
                 Reset();
-                SelectedGraphAlgorithm?.RunAlgorithm();
+                AlgorithmExecutionCTS = new CancellationTokenSource();
+                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token);
             }
             if (AlgorithmState != GraphAlgorithmState.Started)
             {
@@ -305,11 +306,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
         public void StepBackward()
         {
             MadeAlgorithmSteps -= 1;
-            lock (StepStackLock)
-            {
-                StepStack.Undo();
-            }
-            
+            StepStack.Undo();
         }
 
         public void Stop()
@@ -320,43 +317,32 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Reset()
         {
+            StepHandle.Set();
+            AlgorithmExecutionCTS?.Cancel();
             AlgorithmState = GraphAlgorithmState.Finished;
-            StepHandle.Reset();
             Progress = 0;
             ProgressText = "";
             StepStack.Reset();
             MadeAlgorithmSteps = 0;
-            AlgorithmExecutionCTS.Cancel(); 
-            AlgorithmExecutionCTS.Dispose();
-            AlgorithmExecutionCTS = new CancellationTokenSource();
+            StepHandle.Reset();
             GenerateFromDot();
         }
 
-        public async Task MakeAlgorithmStep(Action doAction, Action undoAction)
+        public async Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken)
         {
-            int availableRedoSteps = 0;
-
-            lock(StepStackLock)
-            {
-                availableRedoSteps = StepStack.RedoCount; 
-            }
-
-            while (availableRedoSteps > 0)
-            {
-                await Task.Run(async () => await AlgorithmContinuation());
-                lock(StepStackLock)
-                {
-                    StepStack.Redo();
-                }
-                MadeAlgorithmSteps++;
-                availableRedoSteps--;
-            }
-
+            cancellationToken.ThrowIfCancellationRequested();
             await Task.Run(async () => await AlgorithmContinuation());
-            lock (StepStackLock)
+
+            while (StepStack.RedoCount > 0)
             {
-                StepStack.Do(new AlgorithmStep(doAction, undoAction));
+                StepStack.Redo();
+                MadeAlgorithmSteps++;
+                cancellationToken.ThrowIfCancellationRequested();
+                await Task.Run(async () => await AlgorithmContinuation());
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            StepStack.Do(new AlgorithmStep(doAction, undoAction));
             MadeAlgorithmSteps++;
         }
 
