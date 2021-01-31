@@ -65,6 +65,41 @@ namespace DFSPlugin
 
         #endregion
 
+        #region Marked
+
+        private bool marked = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Marked
+        {
+            get
+            {
+                return marked;
+            }
+            set
+            {
+                if (marked == value)
+                {
+                    return;
+                }
+
+                marked = value;
+
+                if (Marked)
+                {
+                    Emphasize();
+                }
+                else
+                {
+                    Deemphasize();
+                }
+            }
+        }
+
+        #endregion
+
 
         public DFSVertex() : base()
         {

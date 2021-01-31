@@ -66,16 +66,34 @@ namespace GraphAlgorithmPlugin
 
         public DOTParsingResult GenerateFromDot(List<string> dotStatements)
         {
+            Graph.Clear();
             return DOTParser<V, E>.Parse(Graph, dotStatements); 
         }
 
-        public void RunAlgorithm(CancellationToken cancellationToken)
+        public async void RunAlgorithm(CancellationToken cancellationToken, string startVertexName)
         {
+            V startVertex = null; 
+            if (!string.IsNullOrWhiteSpace(startVertexName))
+            {
+                startVertex = Graph.Vertices.FirstOrDefault(x => x.VertexName.Equals(startVertexName)); 
+            }
+
             CancellationToken = cancellationToken;
-            RunAlgorithm();
+            ExposedLists.Clear();
+            await RunAlgorithm(startVertex);
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                GraphAlgorithmExecutor?.FinishedAlgorithm(false);
+            }
+            else 
+            {
+                GraphAlgorithmExecutor?.FinishedAlgorithm(true);
+            }
+            
         }
 
-        protected abstract void RunAlgorithm();
+        protected abstract Task RunAlgorithm(V startVertex);
 
         public abstract string GetAlgorithmName();
 
@@ -84,6 +102,13 @@ namespace GraphAlgorithmPlugin
         protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
             return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction, CancellationToken);
+        }
+
+        public List<string> GetAllVertexNames()
+        {
+            List<string> names = new List<string>();
+            names = Graph?.Vertices.Select(x => x.VertexName).ToList();
+            return names;
         }
     }
 }

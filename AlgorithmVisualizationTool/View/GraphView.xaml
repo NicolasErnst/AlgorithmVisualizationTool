@@ -153,12 +153,17 @@
                                     <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding AlgorithmMaxDelayDoubleClickedCommand}"/>
                                 </TextBlock.InputBindings>
                             </TextBlock>
-                            <StackPanel Margin="0,150,0,0" VerticalAlignment="Top">
-                                <Button MinHeight="23" Content="{Binding StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}">
+                            <TextBlock HorizontalAlignment="Left" Margin="10,150,0,0" Text="Start vertex:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <ComboBox VerticalAlignment="Top" Margin="10,170,10,0" ItemsSource="{Binding AlgorithmExecutor.GraphVertexNames}" SelectedItem="{Binding AlgorithmExecutor.SelectedStartVertexName, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Margin="0,220,0,0" VerticalAlignment="Top">
+                                <Button MinHeight="23" Content="{Binding AlgorithmExecutor.StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="{x:Null}">
                                                     <Setter Property="IsEnabled" Value="False"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -195,6 +200,9 @@
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="{x:Null}">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>

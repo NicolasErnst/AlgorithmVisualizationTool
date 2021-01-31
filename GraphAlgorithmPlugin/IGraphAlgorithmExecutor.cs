@@ -12,5 +12,6 @@ namespace GraphAlgorithmPlugin
         double Progress { get; set; }
         string ProgressText { get; set; }
         Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken);
+        void FinishedAlgorithm(bool success);
     }
 }

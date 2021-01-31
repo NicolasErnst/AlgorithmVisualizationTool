@@ -18,7 +18,8 @@ namespace GraphAlgorithmPlugin
         string ProgressText { get; set; }
         ExposableListContainer ExposedLists { get; }
         DOTParsingResult GenerateFromDot(List<string> dotStatements);
-        void RunAlgorithm(CancellationToken cancellationToken);
+        void RunAlgorithm(CancellationToken cancellationToken, string startVertexName);
+        List<string> GetAllVertexNames();
     }
 
     public interface IGraphAlgorithmPlugin<V, E> : IGraphAlgorithmPlugin where V : class, IVertex, new() where E : Edge<V>, new()

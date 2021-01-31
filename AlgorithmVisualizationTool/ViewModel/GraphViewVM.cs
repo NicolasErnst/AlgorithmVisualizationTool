@@ -322,34 +322,6 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
-        #region StartAlgorithmText
-
-        private string startAlgorithmText = "Start";
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string StartAlgorithmText
-        {
-            get
-            {
-                return startAlgorithmText;
-            }
-            set
-            {
-                if (startAlgorithmText == value)
-                {
-                    return;
-                }
-
-                startAlgorithmText = value;
-
-                RaisePropertyChanged();
-            }
-        }
-
-        #endregion
-
         #region StartAlgorithmClickedCommand
 
         private RelayCommand startAlgorithmClickedCommand;
@@ -381,17 +353,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// </summary>
         protected virtual void StartAlgorithmClickedExe(object param)
         {
-            if (AlgorithmExecutor.AlgorithmState == GraphAlgorithmState.Stopped || AlgorithmExecutor.AlgorithmState == GraphAlgorithmState.Finished)
-            {
-                AlgorithmExecutor.Start();
-                StartAlgorithmText = "Stop";
-                
-            }
-            else
-            {
-                AlgorithmExecutor.Stop();
-                StartAlgorithmText = "Start";
-            }
+            AlgorithmExecutor?.StartClicked();
         }
 
         #endregion

@@ -55,8 +55,7 @@ namespace GraphAlgorithmPlugin
         }
 
         public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements)
-        {
-            graph.Clear();
+        { 
             graph.DirectionType = GraphDirectionType.None;
             bool onlyUndirectedEdgeDefinitions = true; 
 

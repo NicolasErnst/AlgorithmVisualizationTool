@@ -15,6 +15,7 @@ namespace GraphAlgorithmPlugin
             LayoutAlgorithmType = "Tree";
             OverlapRemovalAlgorithmType = "FSA";
             Graph = graph;
+            AnimationLength = new TimeSpan(0); 
         }
     }
 }

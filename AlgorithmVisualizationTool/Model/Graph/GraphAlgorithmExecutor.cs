@@ -177,12 +177,8 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
                 RaisePropertyChanged();
 
-                // TODO: generate graph
                 SelectedGraphAlgorithm.GraphAlgorithmExecutor = this;
-                GenerateFromDot();
-                RaisePropertyChanged("Graph");
-                RaisePropertyChanged("GraphLayout");
-                RaisePropertyChanged("ExposedLists");
+                RefreshGraphVisualization();
             }
         }
 
@@ -240,11 +236,13 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
                 RaisePropertyChanged();
 
-                GenerateFromDot();
+                RefreshGraphVisualization();
             }
         }
 
         #endregion
+
+        #region AvailableUndos 
 
         public int AvailableUndos
         {
@@ -253,6 +251,76 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 return StepStack.UndoCount;
             }
         }
+
+        #endregion
+
+        #region GraphVertexNames 
+
+        public ObservableCollection<string> GraphVertexNames
+        {
+            get
+            {
+                return new ObservableCollection<string>(SelectedGraphAlgorithm?.GetAllVertexNames());
+            }
+        }
+
+        #endregion
+
+        #region SelectedStartVertexName
+
+        private string selectedStartVertexName = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string SelectedStartVertexName
+        {
+            get
+            {
+                return selectedStartVertexName;
+            }
+            set
+            {
+                if (selectedStartVertexName == value)
+                {
+                    return;
+                }
+
+                selectedStartVertexName = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion 
+
+        #region StartAlgorithmText
+
+        private string startAlgorithmText = "Start";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StartAlgorithmText
+        {
+            get
+            {
+                return startAlgorithmText;
+            }
+            set
+            {
+                if (startAlgorithmText == value)
+                {
+                    return;
+                }
+
+                startAlgorithmText = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
 
 
         public GraphAlgorithmExecutor()
@@ -269,7 +337,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
             if (!result.Success)
             {
-                System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nLine of error: " + result.ErrorLine + "\r\nError message:" + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error); 
+                System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nLine of error: " + result.ErrorLine + "\r\nError message:" + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
@@ -277,9 +345,9 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                ResetGraphExecution(); 
+                ResetGraphExecution();
                 AlgorithmExecutionCTS = new CancellationTokenSource();
-                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token); 
+                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token, SelectedStartVertexName);
             }
             if (AlgorithmState != GraphAlgorithmState.Started)
             {
@@ -294,7 +362,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
             {
                 ResetGraphExecution();
                 AlgorithmExecutionCTS = new CancellationTokenSource();
-                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token);
+                SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token, SelectedStartVertexName);
             }
             if (AlgorithmState != GraphAlgorithmState.Started)
             {
@@ -319,7 +387,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             ResetGraphExecution();
             AlgorithmState = GraphAlgorithmState.Finished;
-            GenerateFromDot();
         }
 
         private void ResetGraphExecution()
@@ -331,6 +398,22 @@ namespace AlgorithmVisualizationTool.Model.Graph
             MadeAlgorithmSteps = 0;
             StepStack.Reset();
             StepHandle.Reset();
+            SelectedGraphAlgorithm?.ExposedLists.Clear();
+            RefreshGraphVisualization();
+        }
+
+        private void RefreshGraphVisualization()
+        {
+            GenerateFromDot();
+            RaisePropertyChanged("Graph");
+            RaisePropertyChanged("GraphLayout");
+            RaisePropertyChanged("ExposedLists");
+            RaisePropertyChanged("GraphVertexNames");
+
+            if (!GraphVertexNames.Contains(SelectedStartVertexName))
+            {
+                SelectedStartVertexName = null;
+            }
         }
 
         public async Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken)
@@ -366,6 +449,31 @@ namespace AlgorithmVisualizationTool.Model.Graph
                     StepHandle.WaitOne();
                 }
             }
+        }
+
+        public void StartClicked()
+        {
+            if (AlgorithmState == GraphAlgorithmState.Stopped || AlgorithmState == GraphAlgorithmState.Finished)
+            {
+                Start();
+                StartAlgorithmText = "Stop";
+
+            }
+            else
+            {
+                Stop();
+                StartAlgorithmText = "Start";
+            }
+        }
+
+        public void FinishedAlgorithm(bool success)
+        {
+            if (success)
+            {
+                System.Windows.MessageBox.Show("The algorithm was executed successfully.", "Success", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+            }
+            AlgorithmState = GraphAlgorithmState.Finished;
+            StartAlgorithmText = "Start";
         }
     }
 }
