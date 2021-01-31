@@ -277,7 +277,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                Reset(); 
+                ResetGraphExecution(); 
                 AlgorithmExecutionCTS = new CancellationTokenSource();
                 SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token); 
             }
@@ -292,7 +292,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                Reset();
+                ResetGraphExecution();
                 AlgorithmExecutionCTS = new CancellationTokenSource();
                 SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token);
             }
@@ -317,15 +317,20 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Reset()
         {
-            StepHandle.Set();
-            AlgorithmExecutionCTS?.Cancel();
+            ResetGraphExecution();
             AlgorithmState = GraphAlgorithmState.Finished;
+            GenerateFromDot();
+        }
+
+        private void ResetGraphExecution()
+        {
+            AlgorithmExecutionCTS?.Cancel();
+            StepHandle.Set();
             Progress = 0;
             ProgressText = "";
-            StepStack.Reset();
             MadeAlgorithmSteps = 0;
+            StepStack.Reset();
             StepHandle.Reset();
-            GenerateFromDot();
         }
 
         public async Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken)
