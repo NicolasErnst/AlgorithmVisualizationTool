@@ -9,6 +9,12 @@ namespace GraphAlgorithmPlugin
 {
     public class Graph<V, E> : BidirectionalGraph<V, E> where V : class, IVertex, new() where  E : Edge<V>, new()
     {
-        // Nothing to do here
+        public new bool IsDirected { get; set; }
+
+
+        public Graph()
+        {
+            IsDirected = false;
+        }
     }
 }

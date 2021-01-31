@@ -57,6 +57,7 @@ namespace GraphAlgorithmPlugin
         public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements)
         {
             graph.Clear();
+            graph.IsDirected = false;
 
             for (int i = 0; i < statements.Count(); i++)
             {
@@ -88,17 +89,15 @@ namespace GraphAlgorithmPlugin
                     }
                     else if (IsFullMatch(statement, EdgeDefintion()))
                     {
-                        bool undirected = false;
                         string delimiter = "";
 
                         if (IsFullMatch(statement, UndirectedEdgeDefinition()))
                         {
-                            undirected = true;
                             delimiter = "--"; 
                         }
                         else if (IsFullMatch(statement, DirectedEdgeDefinition()))
                         {
-                            undirected = false;
+                            graph.IsDirected = true;
                             delimiter = "->";
                         }
                         else
@@ -136,7 +135,7 @@ namespace GraphAlgorithmPlugin
                                         graph.AddEdge(edge);
                                     }
 
-                                    if (undirected)
+                                    if (!graph.IsDirected)
                                     {
                                         E invertedExistingEdge = graph.Edges.Where(x => x.Source == targetVertex && x.Target == sourceVertex).FirstOrDefault();
                                         if (invertedExistingEdge == null)
