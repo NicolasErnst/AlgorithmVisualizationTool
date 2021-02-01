@@ -12,7 +12,6 @@ namespace GraphAlgorithmPlugin
         public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements)
         {
             graph.DirectionType = GraphDirectionType.None;
-            bool onlyUndirectedEdgeDefinitions = true;
 
             for (int i = 0; i < statements.Count(); i++)
             {
@@ -46,14 +45,20 @@ namespace GraphAlgorithmPlugin
                     else if (DOTParser.IsFullMatch(statement, DOTParser.EdgeDefintion()))
                     {
                         string delimiter = "";
+                        bool isUndirectedEdge = false; 
 
                         if (DOTParser.IsFullMatch(statement, DOTParser.UndirectedEdgeDefinition()))
                         {
+                            if (graph.DirectionType != GraphDirectionType.Directed)
+                            {
+                                graph.DirectionType = GraphDirectionType.Undirected;
+                            }
+                            isUndirectedEdge = true;  
                             delimiter = "--";
                         }
                         else if (DOTParser.IsFullMatch(statement, DOTParser.DirectedEdgeDefinition()))
                         {
-                            onlyUndirectedEdgeDefinitions = false;
+                            graph.DirectionType = GraphDirectionType.Directed; 
                             delimiter = "->";
                         }
                         else
@@ -91,7 +96,7 @@ namespace GraphAlgorithmPlugin
                                         graph.AddEdge(edge);
                                     }
 
-                                    if (!graph.IsDirected)
+                                    if (isUndirectedEdge)
                                     {
                                         E invertedExistingEdge = graph.Edges.Where(x => x.Source == targetVertex && x.Target == sourceVertex).FirstOrDefault();
                                         if (invertedExistingEdge == null)
@@ -108,32 +113,10 @@ namespace GraphAlgorithmPlugin
                 }
                 else
                 {
-                    if (graph.VertexCount > 0)
-                    {
-                        if (onlyUndirectedEdgeDefinitions)
-                        {
-                            graph.DirectionType = GraphDirectionType.Undirected;
-                        }
-                        else
-                        {
-                            graph.DirectionType = GraphDirectionType.Directed;
-                        }
-                    }
                     return new DOTParsingResult(false, statement, i + 1);
                 }
             }
 
-            if (graph.VertexCount > 0)
-            {
-                if (onlyUndirectedEdgeDefinitions)
-                {
-                    graph.DirectionType = GraphDirectionType.Undirected;
-                }
-                else
-                {
-                    graph.DirectionType = GraphDirectionType.Directed;
-                }
-            }
             return new DOTParsingResult(true);
         }
 

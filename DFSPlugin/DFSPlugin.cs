@@ -9,15 +9,9 @@ namespace DFSPlugin
 {
     public class DFSPlugin : GraphAlgorithmPlugin<DFSVertex, Edge<DFSVertex>>
     {
-        public override string GetAlgorithmName()
-        {
-            return "Depth First Search"; 
-        }
+        public override string AlgorithmName => "Depth First Search";
 
-        public override GraphDirectionType GetSupportedGraphDirections()
-        {
-            return GraphDirectionType.Both;
-        }
+        public override GraphDirectionType CompatibleGraphDirections => GraphDirectionType.Both;
 
         protected override async Task RunAlgorithm(DFSVertex startVertex)
         {

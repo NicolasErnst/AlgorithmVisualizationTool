@@ -81,7 +81,49 @@ namespace GraphAlgorithmPlugin
                 }
             }
 
-            return new DOTParsingResult(true); ;
+            return new DOTParsingResult(true);
+        }
+
+        public static GraphDirectionType DetermineGraphDirection(IEnumerable<string> statements)
+        {
+            bool edgeDefinitionsAvailable = false;
+            bool onlyUndirectedEdgeDefinitions = true;
+
+            for (int i = 0; i < statements.Count(); i++)
+            {
+                string statement = statements.ElementAt(i).Trim();
+                if (DOTParser.IsFullMatch(statement, DOTParser.Statement()))
+                {
+                    statement = Regex.Match(statement, @"[^;]*").Value;
+                    if (Regex.Match(statement, DOTParser.PropertyList()).Success)
+                    {
+                        statement = statement.Replace(Regex.Match(statement, DOTParser.PropertyList()).Value, "");
+                    }
+
+                    if (DOTParser.IsFullMatch(statement, DOTParser.EdgeDefintion()))
+                    {
+                        edgeDefinitionsAvailable = true;
+                        if (DOTParser.IsFullMatch(statement, DOTParser.DirectedEdgeDefinition()))
+                        {
+                            onlyUndirectedEdgeDefinitions = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (edgeDefinitionsAvailable)
+            {
+                if (onlyUndirectedEdgeDefinitions)
+                {
+                    return GraphDirectionType.Undirected; 
+                }
+                else
+                {
+                    return GraphDirectionType.Directed; 
+                }
+            }
+            return GraphDirectionType.None; 
         }
     }
 }

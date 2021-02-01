@@ -184,6 +184,34 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #endregion
 
+        #region AvailableGraphAlgorithms
+
+        private ObservableCollection<IGraphAlgorithmPlugin> availableGraphAlgorithms = new ObservableCollection<IGraphAlgorithmPlugin>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<IGraphAlgorithmPlugin> AvailableGraphAlgorithms
+        {
+            get
+            {
+                return availableGraphAlgorithms;
+            }
+            set
+            {
+                if (availableGraphAlgorithms == value)
+                {
+                    return;
+                }
+
+                availableGraphAlgorithms = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
         #region MadeAlgorithmSteps
 
         private int madeAlgorithmSteps = 0;
@@ -260,7 +288,11 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             get
             {
-                return new ObservableCollection<string>(SelectedGraphAlgorithm?.GetAllVertexNames());
+                if (SelectedGraphAlgorithm != null)
+                {
+                    return new ObservableCollection<string>(SelectedGraphAlgorithm.GetAllVertexNames());
+                }
+                return new ObservableCollection<string>();
             }
         }
 
@@ -323,16 +355,10 @@ namespace AlgorithmVisualizationTool.Model.Graph
         #endregion
 
 
-        public GraphAlgorithmExecutor()
-        {
-            SelectedGraphAlgorithm = new DFSPlugin.DFSPlugin();
-        }
-
-
         public void GenerateFromDot()
         {
             DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements);
-            if (!result.Success)
+            if (result != null && !result.Success)
             {
                 System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nNumber of statement: " + result.ErrorLine + "\r\nStatement: " + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }

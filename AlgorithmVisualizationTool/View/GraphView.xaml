@@ -137,14 +137,16 @@
 
                         <Grid Grid.Row="0">
                             <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Algorithms:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
-                            <ListBox FontSize="14" Margin="10,44,10,10">
-                                <ListBox.Items>
-                                    <ListBoxItem Content="TODO ..."/>
-                                    <ListBoxItem Content="Liste 1"/>
-                                    <ListBoxItem Content="Liste 2"/>
-                                    <ListBoxItem Content="Liste 3"/>
-                                </ListBox.Items>
-                            </ListBox>
+                            <DataGrid FontSize="14" Margin="10,44,10,10" ItemsSource="{Binding AlgorithmExecutor.AvailableGraphAlgorithms}" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}">
+                                <DataGrid.Resources>
+                                    <mvvmmodel:GraphDirectionTypeToStringConverter x:Key="DirectionConverter"/>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding AlgorithmName}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Supported Directions" Binding="{Binding CompatibleGraphDirections, Converter={StaticResource DirectionConverter}}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <TextBlock HorizontalAlignment="Left" Margin="92,20,0,0" Text="{Binding AlgorithmExecutor.SelectedGraphAlgorithm.AlgorithmName}" TextWrapping="Wrap" VerticalAlignment="Top"/>
                         </Grid>
 
                         <Grid Grid.Row="1">

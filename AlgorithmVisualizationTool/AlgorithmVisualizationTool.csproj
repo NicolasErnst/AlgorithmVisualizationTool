@@ -107,6 +107,7 @@
     <Compile Include="Model\Graph\AlgorithmStepStack.cs" />
     <Compile Include="Model\Graph\GraphAlgorithmExecutor.cs" />
     <Compile Include="Model\Graph\GraphAlgorithmState.cs" />
+    <Compile Include="Model\MVVM\GraphDirectionTypeToStringConverter.cs" />
     <Compile Include="Model\MVVM\RelayCommand.cs" />
     <Compile Include="Model\UndoRedo\UndoRedoAction.cs" />
     <Compile Include="Model\UndoRedo\UndoRedoStack.cs" />

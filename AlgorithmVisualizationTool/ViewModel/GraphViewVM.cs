@@ -6,7 +6,9 @@ using GraphAlgorithmPlugin;
 using QuikGraph;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -543,7 +545,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// </summary>
         protected virtual void DOTDescriptionFocusLostExe(object param)
         {
-            if (!dotInputValidation.Success)
+            if (dotInputValidation != null && !dotInputValidation.Success)
             {
                 System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nNumber of statement: " + dotInputValidation.ErrorLine + "\r\nStatement: " + dotInputValidation.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
@@ -556,7 +558,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         public string GraphDirectionType { 
             get
             {
-                GraphDirectionType direction = AlgorithmExecutor?.SelectedGraphAlgorithm?.GetGraphDirectionType() ?? GraphAlgorithmPlugin.GraphDirectionType.None;
+                GraphDirectionType direction = DOTParser.DetermineGraphDirection(GetDOTStatements()); 
                 if (direction == GraphAlgorithmPlugin.GraphDirectionType.Directed)
                 {
                     return "directed"; 
@@ -598,6 +600,16 @@ namespace AlgorithmVisualizationTool.ViewModel
             graph = graphFile;
             UpdateOverviewTab();
             UpdateWindowTitle();
+            LoadAvailableAlgorithms();
+
+            FileSystemWatcher algorithmDirectoryWatcher = new FileSystemWatcher()
+            {
+                Path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"),
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "*.dll",
+                EnableRaisingEvents = true
+            };
+            algorithmDirectoryWatcher.Changed += (s, e) => { LoadAvailableAlgorithms(); }; 
         }
 
 
@@ -624,6 +636,25 @@ namespace AlgorithmVisualizationTool.ViewModel
         {
             string[] statements = Regex.Split(DOTDescription.Replace(Environment.NewLine, ""), @"(?<=;)");
             return statements.Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals(";")); 
+        }
+
+        private void LoadAvailableAlgorithms()
+        {
+            AlgorithmExecutor?.AvailableGraphAlgorithms.Clear();
+            string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"), "*.dll");
+            foreach (string file in files)
+            {
+                var DLL = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms", file));
+                foreach (Type type in DLL.GetExportedTypes())
+                {
+                    if (typeof(IGraphAlgorithmPlugin).IsAssignableFrom(type))
+                    {
+                        IGraphAlgorithmPlugin algorithmPlugin = Activator.CreateInstance(type) as IGraphAlgorithmPlugin;
+                        AlgorithmExecutor?.AvailableGraphAlgorithms.Add(algorithmPlugin);
+                    }
+                }
+            }
+
         }
     }
 }

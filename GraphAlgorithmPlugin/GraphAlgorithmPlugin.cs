@@ -56,6 +56,10 @@ namespace GraphAlgorithmPlugin
 
         private CancellationToken CancellationToken { get; set; }
 
+        public abstract string AlgorithmName { get; }
+
+        public abstract GraphDirectionType CompatibleGraphDirections { get; }
+
 
         public GraphAlgorithmPlugin()
         {
@@ -63,6 +67,7 @@ namespace GraphAlgorithmPlugin
             GraphLayout = new GraphLayout<V, E>(Graph);
             ExposedLists = new ExposableListContainer();
         }
+
 
         public DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements)
         {
@@ -94,10 +99,6 @@ namespace GraphAlgorithmPlugin
 
         protected abstract Task RunAlgorithm(V startVertex);
 
-        public abstract string GetAlgorithmName();
-
-        public abstract GraphDirectionType GetSupportedGraphDirections(); 
-
         protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
             return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction, CancellationToken);
@@ -108,11 +109,6 @@ namespace GraphAlgorithmPlugin
             List<string> names = new List<string>();
             names = Graph?.Vertices.Select(x => x.VertexName).ToList();
             return names;
-        }
-
-        public GraphDirectionType GetGraphDirectionType()
-        {
-            return Graph.DirectionType;
         }
     }
 }

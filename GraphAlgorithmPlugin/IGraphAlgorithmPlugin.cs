@@ -20,7 +20,8 @@ namespace GraphAlgorithmPlugin
         DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements);
         void RunAlgorithm(CancellationToken cancellationToken, string startVertexName);
         List<string> GetAllVertexNames();
-        GraphDirectionType GetGraphDirectionType();
+        string AlgorithmName { get; }
+        GraphDirectionType CompatibleGraphDirections { get; }
     }
 
     public interface IGraphAlgorithmPlugin<V, E> : IGraphAlgorithmPlugin where V : class, IVertex, new() where E : Edge<V>, new()
