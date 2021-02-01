@@ -54,6 +54,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DOTGraphConverter.cs" />
     <Compile Include="DOTParser.cs" />
     <Compile Include="DOTParsingResult.cs" />
     <Compile Include="Edge.cs" />

@@ -8,6 +8,7 @@
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions" 
              xmlns:local="clr-namespace:AlgorithmVisualizationTool.View"
              xmlns:graphmodel="clr-namespace:AlgorithmVisualizationTool.Model.Graph"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
               d:DesignHeight="600" d:DesignWidth="1000">
 
@@ -85,14 +86,45 @@
                 </TabItem>
                 <TabItem Header="Graph Description">
                     <Grid>
-                        <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" Text="Graph description (DOT):" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
-                        <TextBox FontSize="14" Margin="10,44,10,10" Text="{Binding AlgorithmExecutor.DOTDescription, UpdateSourceTrigger=LostFocus}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,44,0,0" Text="Graph description (DOT):" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="ToolTip" Value="{Binding DOTInputValidation}"/>
+                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DOTInputValidation}" Value="{x:Null}">
+                                            <Setter Property="ToolTip" Value="" />
+                                            <Setter Property="Foreground" Value="Black"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBox FontSize="14" Margin="10,68,10,10" Text="{Binding DOTDescription, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">
+                            <TextBox.Style>
+                                <Style TargetType="{x:Type TextBox}">
+                                    <Setter Property="ToolTip" Value="{Binding DOTInputValidation}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DOTInputValidation}" Value="{x:Null}">
+                                            <Setter Property="ToolTip" Value="" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding DOTDescriptionFocusLostCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
                         <Grid VerticalAlignment="Bottom">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                         </Grid>
+                        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" Text="Graph type:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="92,10,0,0" Text="{Binding GraphDirectionType}" TextWrapping="Wrap" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Graph Algorithm">
@@ -154,8 +186,8 @@
                                 </TextBlock.InputBindings>
                             </TextBlock>
                             <TextBlock HorizontalAlignment="Left" Margin="10,150,0,0" Text="Start vertex:" TextWrapping="Wrap" VerticalAlignment="Top" FontWeight="Bold"/>
-                            <ComboBox VerticalAlignment="Top" Margin="10,170,10,0" ItemsSource="{Binding AlgorithmExecutor.GraphVertexNames}" SelectedItem="{Binding AlgorithmExecutor.SelectedStartVertexName, UpdateSourceTrigger=PropertyChanged}"/>
-                            <StackPanel Margin="0,220,0,0" VerticalAlignment="Top">
+                            <ComboBox VerticalAlignment="Top" Margin="10,174,10,0" ItemsSource="{Binding AlgorithmExecutor.GraphVertexNames}" SelectedItem="{Binding AlgorithmExecutor.SelectedStartVertexName, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Margin="0,224,0,0" VerticalAlignment="Top">
                                 <Button MinHeight="23" Content="{Binding AlgorithmExecutor.StartAlgorithmText}" Margin="10,0,10,0" VerticalAlignment="Top" Command="{Binding StartAlgorithmClickedCommand}">
                                     <Button.Style>
                                         <Style TargetType="Button">

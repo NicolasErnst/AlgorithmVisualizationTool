@@ -214,25 +214,25 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #region DOTDescription 
 
-        private string dotDescription = "";
+        private IEnumerable<string> dotStatements = null;
 
         /// <summary>
         /// 
         /// </summary>
-        public string DOTDescription
+        public IEnumerable<string> DOTStatements
         {
             get
             {
-                return dotDescription;
+                return dotStatements;
             }
             set
             {
-                if (dotDescription == value)
+                if (dotStatements == value)
                 {
                     return;
                 }
 
-                dotDescription = value;
+                dotStatements = value;
 
                 RaisePropertyChanged();
 
@@ -331,13 +331,10 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void GenerateFromDot()
         {
-            string[] statements = DOTDescription.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            List<string> dotStatements = statements.Select(x => x.Trim().Replace(Environment.NewLine, "") + ";").ToList();
-            DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(dotStatements);
-
+            DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements);
             if (!result.Success)
             {
-                System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nLine of error: " + result.ErrorLine + "\r\nError message:" + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nNumber of statement: " + result.ErrorLine + "\r\nStatement: " + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
@@ -404,12 +401,14 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         private void RefreshGraphVisualization()
         {
-            GenerateFromDot();
-            RaisePropertyChanged("Graph");
-            RaisePropertyChanged("GraphLayout");
-            RaisePropertyChanged("ExposedLists");
-            RaisePropertyChanged("GraphVertexNames");
-
+            if (DOTStatements != null)
+            {
+                GenerateFromDot();
+                RaisePropertyChanged("Graph");
+                RaisePropertyChanged("GraphLayout");
+                RaisePropertyChanged("ExposedLists");
+                RaisePropertyChanged("GraphVertexNames");
+            }
             if (!GraphVertexNames.Contains(SelectedStartVertexName))
             {
                 SelectedStartVertexName = null;

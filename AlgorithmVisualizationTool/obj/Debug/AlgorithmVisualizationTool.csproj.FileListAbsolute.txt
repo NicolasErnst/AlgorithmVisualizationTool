@@ -159,3 +159,5 @@ C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debu
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\AlgorithmVisualizationTool.pdb
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.g.cs
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.baml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.g.cs
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.baml

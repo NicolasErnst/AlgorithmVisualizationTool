@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -471,6 +472,126 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
+        #region DOTDescription
+
+        private string dotDescription = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DOTDescription
+        {
+            get
+            {
+                return dotDescription;
+            }
+            set
+            {
+                if (dotDescription == value)
+                {
+                    return;
+                }
+
+                dotDescription = value;
+
+                RaisePropertyChanged();
+
+                if (AlgorithmExecutor != null)
+                {
+                    IEnumerable<string> statements = GetDOTStatements();
+                    dotInputValidation = DOTParser.IsDotStatement(statements);
+                    if (dotInputValidation.Success)
+                    {
+                        AlgorithmExecutor.DOTStatements = statements;
+                        RaisePropertyChanged("GraphDirectionType");
+                    }
+                    RaisePropertyChanged("DOTInputValidation"); 
+                }
+            }
+        }
+
+        #endregion
+
+        #region DOTDescriptionFocusLostCommand
+
+        private RelayCommand dotDescriptionFocusLostCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand DOTDescriptionFocusLostCommand
+        {
+            get
+            {
+                return dotDescriptionFocusLostCommand ?? (dotDescriptionFocusLostCommand = new RelayCommand(DOTDescriptionFocusLostExe, DOTDescriptionFocusLostCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool DOTDescriptionFocusLostCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void DOTDescriptionFocusLostExe(object param)
+        {
+            if (!dotInputValidation.Success)
+            {
+                System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nNumber of statement: " + dotInputValidation.ErrorLine + "\r\nStatement: " + dotInputValidation.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+        }
+
+        #endregion 
+
+        #region GraphDirectionType 
+
+        public string GraphDirectionType { 
+            get
+            {
+                GraphDirectionType direction = AlgorithmExecutor?.SelectedGraphAlgorithm?.GetGraphDirectionType() ?? GraphAlgorithmPlugin.GraphDirectionType.None;
+                if (direction == GraphAlgorithmPlugin.GraphDirectionType.Directed)
+                {
+                    return "directed"; 
+                }
+                else if (direction == GraphAlgorithmPlugin.GraphDirectionType.Undirected)
+                {
+                    return "undirected";
+                }
+                return "not defined";
+            }
+        }
+
+        #endregion
+
+        #region DOTInputValidation
+
+        private DOTParsingResult dotInputValidation = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DOTInputValidation
+        {
+            get
+            {
+                if (dotInputValidation == null || dotInputValidation.Success)
+                {
+                    return null;
+                }
+                return "Error in statement " + dotInputValidation.ErrorLine + ": " + dotInputValidation.ErrorMessage;
+            }
+        }
+
+        #endregion
+
 
         public GraphViewVM(GraphFile graphFile)
         {
@@ -497,6 +618,12 @@ namespace AlgorithmVisualizationTool.ViewModel
             RaisePropertyChanged("GraphName");
             RaisePropertyChanged("GraphLastModified");
             RaisePropertyChanged("GraphPath");
+        }
+
+        private IEnumerable<string> GetDOTStatements()
+        {
+            string[] statements = Regex.Split(DOTDescription.Replace(Environment.NewLine, ""), @"(?<=;)");
+            return statements.Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x) && !x.Equals(";")); 
         }
     }
 }

@@ -64,10 +64,10 @@ namespace GraphAlgorithmPlugin
             ExposedLists = new ExposableListContainer();
         }
 
-        public DOTParsingResult GenerateFromDot(List<string> dotStatements)
+        public DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements)
         {
             Graph.Clear();
-            return DOTParser<V, E>.Parse(Graph, dotStatements); 
+            return DOTGraphConverter<V, E>.Parse(Graph, dotStatements); 
         }
 
         public async void RunAlgorithm(CancellationToken cancellationToken, string startVertexName)
@@ -77,9 +77,9 @@ namespace GraphAlgorithmPlugin
             {
                 startVertex = Graph.Vertices.FirstOrDefault(x => x.VertexName.Equals(startVertexName)); 
             }
-
             CancellationToken = cancellationToken;
             ExposedLists.Clear();
+
             await RunAlgorithm(startVertex);
 
             if (cancellationToken.IsCancellationRequested)
@@ -90,7 +90,6 @@ namespace GraphAlgorithmPlugin
             {
                 GraphAlgorithmExecutor?.FinishedAlgorithm(true);
             }
-            
         }
 
         protected abstract Task RunAlgorithm(V startVertex);
@@ -109,6 +108,11 @@ namespace GraphAlgorithmPlugin
             List<string> names = new List<string>();
             names = Graph?.Vertices.Select(x => x.VertexName).ToList();
             return names;
+        }
+
+        public GraphDirectionType GetGraphDirectionType()
+        {
+            return Graph.DirectionType;
         }
     }
 }

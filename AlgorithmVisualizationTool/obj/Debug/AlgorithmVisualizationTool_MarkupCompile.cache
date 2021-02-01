@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\
 AlgorithmVisualizationTool
 none
 false
 DEBUG;TRACE
-C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\App.xaml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\App.xaml
 7174072752
 
 26-1199826775
-29739679266
+29-1508840590
 Controls\InfoDialog.xaml;Controls\NumberInputDialog.xaml;Controls\SearchBar.xaml;View\AlgorithmVisualizationToolWindow.xaml;Themes\Generic.xaml;View\GraphView.xaml;View\WelcomeView.xaml;
 
 False
