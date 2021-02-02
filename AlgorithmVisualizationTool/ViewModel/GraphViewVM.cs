@@ -3,6 +3,7 @@ using AlgorithmVisualizationTool.Model.Extensions;
 using AlgorithmVisualizationTool.Model.Graph;
 using AlgorithmVisualizationTool.Model.MVVM;
 using GraphAlgorithmPlugin;
+using Microsoft.Win32;
 using QuikGraph;
 using System;
 using System.Collections.Generic;
@@ -19,26 +20,206 @@ namespace AlgorithmVisualizationTool.ViewModel
 {
     class GraphViewVM : DisplayableViewModel
     {
+        #region NewClickedCommand
+
+        private RelayCommand newClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand NewClickedCommand
+        {
+            get
+            {
+                return newClickedCommand ?? (newClickedCommand = new RelayCommand(NewClickedExe, NewClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool NewClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void NewClickedExe(object param)
+        {
+            KeyNewCommand?.Invoke();
+        }
+
+        #endregion
+
+        #region OpenClickedCommand
+
+        private RelayCommand openClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand OpenClickedCommand
+        {
+            get
+            {
+                return openClickedCommand ?? (openClickedCommand = new RelayCommand(OpenClickedExe, OpenClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool OpenClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void OpenClickedExe(object param)
+        {
+            KeyOpenCommand?.Invoke();
+        }
+
+        #endregion 
+
         #region KeySaveCommand
 
-        public override Action KeySaveCommand => new Action(async () =>
+        public override Action KeySaveCommand => new Action(() =>
         {
-            await graph.Save();
+            Graph.Save();
             UnsavedChanges = false;
         });
 
         #endregion
 
+        #region SaveClickedCommand 
+
+        private RelayCommand saveClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand SaveClickedCommand
+        {
+            get
+            {
+                return saveClickedCommand ?? (saveClickedCommand = new RelayCommand(SaveClickedExe, SaveClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool SaveClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void SaveClickedExe(object param)
+        {
+            KeySaveCommand?.Invoke();
+        }
+
+        #endregion
+
+        #region ExitClickedCommand
+
+        private RelayCommand exitClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand ExitClickedCommand
+        {
+            get
+            {
+                return exitClickedCommand ?? (exitClickedCommand = new RelayCommand(ExitClickedExe, ExitClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool ExitClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void ExitClickedExe(object param)
+        {
+            KeyExitCommand?.Invoke();
+        }
+
+        #endregion 
+
+        #region SaveAsClickedCommand
+
+        private RelayCommand saveAsClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand SaveAsClickedCommand
+        {
+            get
+            {
+                return saveAsClickedCommand ?? (saveAsClickedCommand = new RelayCommand(SaveAsClickedExe, SaveAsClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool SaveAsClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void SaveAsClickedExe(object param)
+        {
+            Graph.OpenSaveAsDialog();
+        }
+
+        #endregion 
+
         #region KeyExitCommand
 
-        public override Action KeyExitCommand => new Action(async () =>
+        public override Action KeyExitCommand => new Action(() =>
         {
             if (UnsavedChanges)
             {
                 MessageBoxResult result = MessageBox.Show("You have unsaved changes. Do you want to save them before exiting the application?", "Unsaved changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    await graph.Save();
+                    Graph.Save();
                     UnsavedChanges = false;
                 }
                 else if (result == MessageBoxResult.Cancel)
@@ -113,7 +294,6 @@ namespace AlgorithmVisualizationTool.ViewModel
                 if (!unsavedChanges)
                 {
                     graph.Name = graph.Name.Trim();
-                    graph.UpdateModification();
                     UpdateOverviewTab();
                 }
 
@@ -476,27 +656,24 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #region DOTDescription
 
-        private string dotDescription = "";
-
-        /// <summary>
-        /// 
-        /// </summary>
         public string DOTDescription
         {
             get
             {
-                return dotDescription;
+                return graph.DOTDescription;
             }
             set
             {
-                if (dotDescription == value)
+                if (graph.DOTDescription == value)
                 {
                     return;
                 }
 
-                dotDescription = value;
+                graph.DOTDescription = value;
 
                 RaisePropertyChanged();
+
+                UnsavedChanges = true; 
 
                 if (AlgorithmExecutor != null)
                 {
@@ -558,16 +735,9 @@ namespace AlgorithmVisualizationTool.ViewModel
         public string GraphDirectionType { 
             get
             {
-                GraphDirectionType direction = DOTParser.DetermineGraphDirection(GetDOTStatements()); 
-                if (direction == GraphAlgorithmPlugin.GraphDirectionType.Directed)
-                {
-                    return "directed"; 
-                }
-                else if (direction == GraphAlgorithmPlugin.GraphDirectionType.Undirected)
-                {
-                    return "undirected";
-                }
-                return "not defined";
+                GraphDirectionType direction = DOTParser.DetermineGraphDirection(GetDOTStatements());
+                GraphDirectionTypeToStringConverter converter = new GraphDirectionTypeToStringConverter();
+                return converter.Convert(direction, typeof(string), null, null) as string; 
             }
         }
 
@@ -594,8 +764,84 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #endregion
 
+        #region ImportClickedCommand
 
-        public GraphViewVM(GraphFile graphFile)
+        private RelayCommand importClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand ImportClickedCommand
+        {
+            get
+            {
+                return importClickedCommand ?? (importClickedCommand = new RelayCommand(ImportClickedExe, ImportClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool ImportClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void ImportClickedExe(object param)
+        {
+            ShowImportProjectDialog();
+        }
+
+        #endregion
+
+        #region ExportClickedCommand
+
+        private RelayCommand exportClickedCommand;
+
+        /// <summary>
+        /// Eigenschaft, die das Kommando liefert
+        /// </summary>
+        public ICommand ExportClickedCommand
+        {
+            get
+            {
+                return exportClickedCommand ?? (exportClickedCommand = new RelayCommand(ExportClickedExe, ExportClickedCanExe));
+            }
+        }
+
+        /// <summary>
+        /// Gibt an, ob das Kommando ausgeführt werden kann
+        /// <param name="param">Parameter</param>
+        /// <returns>Gibt an, ob das Kommando ausgeführt werden kann</returns>
+        /// </summary>
+        protected virtual bool ExportClickedCanExe(object param)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Führt das Kommando aus
+        /// <param name="param">Parameter</param>
+        /// </summary>
+        protected virtual void ExportClickedExe(object param)
+        {
+            ExportProjectDialog exportDialog = new ExportProjectDialog(Graph, AlgorithmExecutor?.SelectedStartVertexName, AlgorithmExecutor?.MadeAlgorithmSteps ?? 0, AlgorithmExecutor?.SelectedGraphAlgorithm, AlgorithmExecutor?.AvailableGraphAlgorithms);
+            if (exportDialog.ShowDialog() == true)
+            {
+                ExportProjectFile(exportDialog.FileToExport, exportDialog.FileName); 
+            }
+        }
+
+        #endregion 
+
+
+        public GraphViewVM(GraphFile graphFile, string selectedAlgorithm = null, int madeAlgorithmSteps = 0, string startVertex = null)
         {
             graph = graphFile;
             UpdateOverviewTab();
@@ -609,7 +855,21 @@ namespace AlgorithmVisualizationTool.ViewModel
                 Filter = "*.dll",
                 EnableRaisingEvents = true
             };
-            algorithmDirectoryWatcher.Changed += (s, e) => { LoadAvailableAlgorithms(); }; 
+            algorithmDirectoryWatcher.Changed += (s, e) => { LoadAvailableAlgorithms(); };
+
+            if (AlgorithmExecutor != null)
+            {
+                AlgorithmExecutor.DOTStatements = GetDOTStatements();
+                if (selectedAlgorithm != null)
+                {
+                    AlgorithmExecutor.SelectGraphAlgorithmByFileName(selectedAlgorithm, startVertex);
+
+                    if (madeAlgorithmSteps > 0)
+                    {
+                        AlgorithmExecutor.SetAlgorithmToState(madeAlgorithmSteps);
+                    }
+                }
+            }
         }
 
 
@@ -640,21 +900,33 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         private void LoadAvailableAlgorithms()
         {
-            AlgorithmExecutor?.AvailableGraphAlgorithms.Clear();
-            string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"), "*.dll");
-            foreach (string file in files)
+            try
             {
-                var DLL = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms", file));
-                foreach (Type type in DLL.GetExportedTypes())
+                if (!Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms")))
                 {
-                    if (typeof(IGraphAlgorithmPlugin).IsAssignableFrom(type))
+                    Directory.CreateDirectory(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"));
+                }
+
+                AlgorithmExecutor?.AvailableGraphAlgorithms.Clear();
+                string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"), "*.dll");
+                foreach (string file in files)
+                {
+                    var DLL = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms", file));
+                    foreach (Type type in DLL.GetExportedTypes())
                     {
-                        IGraphAlgorithmPlugin algorithmPlugin = Activator.CreateInstance(type) as IGraphAlgorithmPlugin;
-                        AlgorithmExecutor?.AvailableGraphAlgorithms.Add(algorithmPlugin);
+                        if (typeof(IGraphAlgorithmPlugin).IsAssignableFrom(type))
+                        {
+                            IGraphAlgorithmPlugin algorithmPlugin = Activator.CreateInstance(type) as IGraphAlgorithmPlugin;
+                            algorithmPlugin.FileName = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms", file);
+                            AlgorithmExecutor?.AvailableGraphAlgorithms.Add(algorithmPlugin);
+                        }
                     }
                 }
             }
-
+            catch
+            {
+                MessageBox.Show("The algorithm plugins could not be loaded.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

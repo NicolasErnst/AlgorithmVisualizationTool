@@ -1,14 +1,17 @@
 ﻿using AlgorithmVisualizationTool.Model.Extensions;
 using AlgorithmVisualizationTool.Model.MVVM;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 namespace AlgorithmVisualizationTool.Model.Graph
 {
-    class GraphFile : ViewModelBase
+    public class GraphFile : ViewModelBase
     {
         #region Name
 
@@ -45,6 +48,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
         /// <summary>
         /// 
         /// </summary>
+        [JsonIgnore]
         public string FilePath
         {
             get
@@ -174,24 +178,104 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #endregion
 
+        #region DOTDescription
 
-        public GraphFile(string name, string filePath, DateTime lastOpened, DateTime lastModified, string lastModifier)
+        private string dotDescription = "";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string DOTDescription
+        {
+            get
+            {
+                return dotDescription;
+            }
+            set
+            {
+                if (dotDescription == value)
+                {
+                    return;
+                }
+
+                dotDescription = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+
+        public GraphFile(string name, string filePath, DateTime lastOpened, DateTime lastModified, string lastModifier, string dotDescription)
         {
             Name = name;
             FilePath = filePath;
             LastOpened = lastOpened;
             LastModified = lastModified;
             LastModifier = lastModifier;
+            DOTDescription = dotDescription;
         }
 
 
-        public async Task Save()
+        public void Save()
         {
-            // TODO
-            Console.WriteLine("SAVED FILE!");
+            if (FilePath != null)
+            {
+                SaveAs(FilePath);
+            }
+            else
+            {
+                OpenSaveAsDialog();
+            }   
         }
 
-        public void UpdateModification()
+        public void OpenSaveAsDialog()
+        {
+            SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Title = "Save graph file as...",
+                Filter = "Graph Files (*.graph)|*.graph",
+            };
+
+            if (sfd.ShowDialog() == true)
+            {
+                string fileName = sfd.FileName;
+                SaveAs(fileName);
+
+                if (string.IsNullOrWhiteSpace(FilePath))
+                {
+                    FilePath = fileName;
+                }
+                else
+                {
+                    MessageBoxResult result = MessageBox.Show("Do you want to open the newly saved file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        ShowingView?.OpenGraph(fileName);
+                    }
+                }
+            }
+        }
+
+        public async void SaveAs(string saveFilePath)
+        {
+            UpdateModification();
+            await Task.Run(() =>
+            {
+                JsonSerializer serializer = new JsonSerializer()
+                {
+                    NullValueHandling = NullValueHandling.Include
+                };
+                using (StreamWriter sw = new StreamWriter(saveFilePath))
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, this);
+                }
+            }); 
+        }
+
+        private void UpdateModification()
         {
             LastModified = DateTime.Now;
             LastModifier = Environment.UserName;

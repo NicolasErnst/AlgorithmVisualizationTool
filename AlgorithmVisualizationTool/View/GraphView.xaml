@@ -15,10 +15,10 @@
     <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top" Margin="0,0,0,10" FontSize="14">
             <MenuItem Header="File">
-                <MenuItem Header="New project..." InputGestureText="Ctrl+N" Command="{Binding KeyNewCommand}"/>
-                <MenuItem Header="Open project..." InputGestureText="Ctrl+O" Command="{Binding KeyOpenCommand}"/>
+                <MenuItem Header="New project..." InputGestureText="Ctrl+N" Command="{Binding NewClickedCommand}"/>
+                <MenuItem Header="Open project..." InputGestureText="Ctrl+O" Command="{Binding OpenClickedCommand}"/>
                 <Separator/>
-                <MenuItem InputGestureText="Ctrl+S" Command="{Binding KeySaveCommand}">
+                <MenuItem InputGestureText="Ctrl+S" Command="{Binding SaveClickedCommand}">
                     <MenuItem.Header>
                         <TextBlock>
                             <TextBlock.Text>
@@ -29,7 +29,7 @@
                         </TextBlock>
                     </MenuItem.Header>
                 </MenuItem>
-                <MenuItem Command="{Binding SaveAs_ClickedCommand}">
+                <MenuItem Command="{Binding SaveAsClickedCommand}">
                     <MenuItem.Header>
                         <TextBlock>
                             <TextBlock.Text>
@@ -41,10 +41,10 @@
                     </MenuItem.Header>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Import"/>
-                <MenuItem Header="Export"/>
+                <MenuItem Header="Import" Command="{Binding ImportClickedCommand}"/>
+                <MenuItem Header="Export" Command="{Binding ExportClickedCommand}"/>
                 <Separator/>
-                <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding KeyExitCommand}"/>
+                <MenuItem Header="Exit" InputGestureText="Alt+F4" Command="{Binding ExitClickedCommand}"/>
             </MenuItem>
             <MenuItem Header="Info" Command="{Binding InfoClickedCommand}"/>
         </Menu>

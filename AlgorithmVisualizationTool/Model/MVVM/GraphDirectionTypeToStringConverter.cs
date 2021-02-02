@@ -16,13 +16,17 @@ namespace AlgorithmVisualizationTool.Model.MVVM
             try
             {
                 GraphDirectionType direction = (GraphDirectionType)value;
-                if (direction == GraphAlgorithmPlugin.GraphDirectionType.Directed)
+                if (direction == GraphDirectionType.Directed)
                 {
                     return "directed";
                 }
-                else if (direction == GraphAlgorithmPlugin.GraphDirectionType.Undirected)
+                else if (direction == GraphDirectionType.Undirected)
                 {
                     return "undirected";
+                }
+                else if (direction == GraphDirectionType.Both)
+                {
+                    return "both";
                 }
                 return "not defined";
             }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AlgorithmVisualizationTool.Model.MVVM
 {
-    abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         #region Title
 

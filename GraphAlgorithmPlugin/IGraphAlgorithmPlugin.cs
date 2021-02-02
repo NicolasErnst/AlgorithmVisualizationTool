@@ -22,6 +22,7 @@ namespace GraphAlgorithmPlugin
         List<string> GetAllVertexNames();
         string AlgorithmName { get; }
         GraphDirectionType CompatibleGraphDirections { get; }
+        string FileName { get; set; }
     }
 
     public interface IGraphAlgorithmPlugin<V, E> : IGraphAlgorithmPlugin where V : class, IVertex, new() where E : Edge<V>, new()

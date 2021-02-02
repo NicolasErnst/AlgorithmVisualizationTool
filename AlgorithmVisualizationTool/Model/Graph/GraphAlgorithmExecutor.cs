@@ -8,6 +8,7 @@ using System.Threading;
 using GraphAlgorithmPlugin;
 using QuikGraph;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace AlgorithmVisualizationTool.Model.Graph
 {
@@ -313,7 +314,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
             }
             set
             {
-                if (selectedStartVertexName == value)
+                if (selectedStartVertexName == value || (value != null && !GraphVertexNames.Contains(value)))
                 {
                     return;
                 }
@@ -435,10 +436,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 RaisePropertyChanged("ExposedLists");
                 RaisePropertyChanged("GraphVertexNames");
             }
-            if (!GraphVertexNames.Contains(SelectedStartVertexName))
-            {
-                SelectedStartVertexName = null;
-            }
         }
 
         public async Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken)
@@ -499,6 +496,30 @@ namespace AlgorithmVisualizationTool.Model.Graph
             }
             AlgorithmState = GraphAlgorithmState.Finished;
             StartAlgorithmText = "Start";
+        }
+
+        public void SelectGraphAlgorithmByFileName(string fileName, string startVertex)
+        {
+            foreach(IGraphAlgorithmPlugin plugin in AvailableGraphAlgorithms)
+            {
+                if (Path.GetFileName(plugin.FileName).Equals(fileName))
+                {
+                    SelectedGraphAlgorithm = plugin;
+                    SelectedStartVertexName = startVertex; 
+                    break; 
+                }
+            }
+        }
+
+        public void SetAlgorithmToState(int algorithmSteps)
+        {
+            //if (algorithmSteps > 0)
+            //{
+            //    do
+            //    {
+            //        StepForward();
+            //    } while (MadeAlgorithmSteps < algorithmSteps && AlgorithmState != GraphAlgorithmState.Finished); 
+            //}
         }
     }
 }

@@ -161,3 +161,10 @@ C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debu
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.baml
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.g.cs
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\InfoDialog.baml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\DotNetZip.dll
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\DotNetZip.pdb
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\DotNetZip.xml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\ExportProjectDialog.g.cs
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\ExportProjectDialog.baml

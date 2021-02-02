@@ -35,11 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutomaticGraphLayout, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutomaticGraphLayout.1.1.7\lib\netstandard2.0\AutomaticGraphLayout.dll</HintPath>
+    <Reference Include="AutomaticGraphLayout, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6baa2c1345e83b6e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutomaticGraphLayout.1.1.11\lib\netstandard2.0\AutomaticGraphLayout.dll</HintPath>
     </Reference>
-    <Reference Include="AutomaticGraphLayout.Drawing, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutomaticGraphLayout.Drawing.1.1.7\lib\netstandard2.0\AutomaticGraphLayout.Drawing.dll</HintPath>
+    <Reference Include="AutomaticGraphLayout.Drawing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6baa2c1345e83b6e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutomaticGraphLayout.Drawing.1.1.11\lib\netstandard2.0\AutomaticGraphLayout.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.15.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.15.0\lib\net40\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="GraphShape, Version=1.1.0.0, Culture=neutral, PublicKeyToken=77ac9095553894e3, processorArchitecture=MSIL">
       <HintPath>..\packages\GraphShape.1.1.0\lib\net45\GraphShape.dll</HintPath>
@@ -49,6 +52,9 @@
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="QuikGraph, Version=2.2.0.0, Culture=neutral, PublicKeyToken=46bd58b0789759cb, processorArchitecture=MSIL">
       <HintPath>..\packages\QuikGraph.2.2.0\lib\net45\QuikGraph.dll</HintPath>
@@ -94,6 +100,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ExportProjectDialog.xaml.cs">
+      <DependentUpon>ExportProjectDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\InfoDialog.xaml.cs">
       <DependentUpon>InfoDialog.xaml</DependentUpon>
     </Compile>
@@ -107,6 +116,8 @@
     <Compile Include="Model\Graph\AlgorithmStepStack.cs" />
     <Compile Include="Model\Graph\GraphAlgorithmExecutor.cs" />
     <Compile Include="Model\Graph\GraphAlgorithmState.cs" />
+    <Compile Include="Model\Graph\ProjectDefinitionFile.cs" />
+    <Compile Include="Model\Graph\ProjectFile.cs" />
     <Compile Include="Model\MVVM\GraphDirectionTypeToStringConverter.cs" />
     <Compile Include="Model\MVVM\RelayCommand.cs" />
     <Compile Include="Model\UndoRedo\UndoRedoAction.cs" />
@@ -120,6 +131,10 @@
     <Compile Include="View\WelcomeView.xaml.cs">
       <DependentUpon>WelcomeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\ExportProjectDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\InfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

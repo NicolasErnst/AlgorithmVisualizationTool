@@ -2,9 +2,11 @@
 using AlgorithmVisualizationTool.Model.Extensions;
 using AlgorithmVisualizationTool.Model.Graph;
 using AlgorithmVisualizationTool.Model.MVVM;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,8 @@ namespace AlgorithmVisualizationTool.ViewModel
 {
     class WelcomeViewVM : DisplayableViewModel
     {
+        private readonly Dictionary<ImageTemplate, GraphFile> TemplateToFileMappings = new Dictionary<ImageTemplate, GraphFile>();
+
         #region RecentGraphs
 
         private ObservableCollection<GraphFile> recentGraphs = new ObservableCollection<GraphFile>();
@@ -255,7 +259,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// </summary>
         protected virtual void OpenGraphExe(object param)
         {
-            ShowOpenGraphDialog();
+            ShowOpenGraphOrImportProjectDialog();
         }
 
         #endregion
@@ -335,20 +339,37 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         public WelcomeViewVM()
         {
-            RecentGraphs.Add(new GraphFile("Test 1", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName));
-            RecentGraphs.Add(new GraphFile("Test 2", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName));
-            RecentGraphs.Add(new GraphFile("Test 3", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName));
-            RecentGraphs.Add(new GraphFile("Test 4", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName));
-            RecentGraphs.Add(new GraphFile("Test 5", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName));
-            FilteredRecentGraphs = new ObservableCollection<GraphFile>(RecentGraphs);
+            // TODO: check RecentGraphs if they still exist 
 
-            GraphTemplates.Add(new ImageTemplate("Test 1"));
-            GraphTemplates.Add(new ImageTemplate("Test Das wird ein Langer Test"));
-            GraphTemplates.Add(new ImageTemplate("Test 3"));
-            GraphTemplates.Add(new ImageTemplate("Test 4"));
-            GraphTemplates.Add(new ImageTemplate("Test 5"));
-            RaisePropertyChanged("GraphTemplates");
-            SelectedGraphTemplate = GraphTemplates.ElementAt(0);
+            //RecentGraphs.Add(new GraphFile("Test 1", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            //RecentGraphs.Add(new GraphFile("Test 2", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            //RecentGraphs.Add(new GraphFile("Test 3", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            //RecentGraphs.Add(new GraphFile("Test 4", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            //RecentGraphs.Add(new GraphFile("Test 5", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            FilteredRecentGraphs = new ObservableCollection<GraphFile>(RecentGraphs);
+            OpenTemplates();
+        }
+
+        private async void OpenTemplates()
+        {
+            //await Task.Run(() =>
+            //{
+            //    TemplateToFileMappings.Clear();
+            //    string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates"), "*.template");
+            //    //foreach (string templateFileLocation in files)
+            //    //{
+            //    //    GraphFile graph = JsonConvert.DeserializeObject<GraphFile>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates", templateFileLocation)));
+            //    //    ImageTemplate graphTemplate = new ImageTemplate(graph.Name);
+            //    //    TemplateToFileMappings.Add(graphTemplate, graph); 
+            //    //    GraphTemplates.Add(graphTemplate);
+            //    //}
+
+            //    //RaisePropertyChanged("GraphTemplates");
+            //    //if (GraphTemplates.Count > 0)
+            //    //{
+            //    //    SelectedGraphTemplate = GraphTemplates.ElementAt(0);
+            //    //}
+            //});
         }
     }
 }
