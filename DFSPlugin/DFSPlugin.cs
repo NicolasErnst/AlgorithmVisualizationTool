@@ -17,6 +17,9 @@ namespace DFSPlugin
         {
             try
             {
+                Progress = 0;
+                ProgressText = "Initializing..."; 
+
                 Stack<DFSVertex> q = new Stack<DFSVertex>();
                 ExposableList qList = new ExposableList("q");
                 ExposedLists.Add(qList);
@@ -30,6 +33,8 @@ namespace DFSPlugin
                     qList.Insert(0, startVertex);
                     startVertex.Marked = true;
                     GetDescendantNodes(startVertex, descendantNodes);
+                    Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                    ProgressText = "Executing...";
                 }, () =>
                 {
                     startVertex.PushTime = 0; 
@@ -40,7 +45,9 @@ namespace DFSPlugin
                     {
                         descendantNodes.Remove(startVertex); 
                     }
-                }); 
+                    Progress = 0;
+                    ProgressText = "Initializing";
+                });
 
                 while (q.Count > 0)
                 {
@@ -61,6 +68,7 @@ namespace DFSPlugin
                                 GetDescendantNodes(w, descendantNodes);
                                 u += 1;
                                 w.PushTime = u;
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
                             }
                         }, () =>
                         {
@@ -78,7 +86,8 @@ namespace DFSPlugin
                                     descendantNodes.Remove(w);
                                 }
                                 u -= 1;
-                                w.PushTime = 0; 
+                                w.PushTime = 0;
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
                             }
                         });
                     }
@@ -90,15 +99,20 @@ namespace DFSPlugin
                             qList.Remove(v);
                             u += 1;
                             v.PopTime = u;
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
                         }, () =>
                         {
                             q.Push(v);
                             qList.Insert(0, v);
                             u -= 1;
-                            v.PopTime = 0; 
+                            v.PopTime = 0;
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
                         }); 
                     }
                 }
+
+                Progress = 100;
+                ProgressText = "Finished!";
             } 
             catch (TaskCanceledException) { }
             catch (OperationCanceledException) { }

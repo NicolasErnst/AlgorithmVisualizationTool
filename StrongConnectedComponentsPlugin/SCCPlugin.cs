@@ -13,7 +13,7 @@ namespace StrongConnectedComponentsPlugin
 
         public override GraphDirectionType CompatibleGraphDirections => GraphDirectionType.Directed; 
 
-        protected override Task RunAlgorithm(Vertex startVertex)
+        protected override async Task RunAlgorithm(Vertex startVertex)
         {
             // TODO
         }
