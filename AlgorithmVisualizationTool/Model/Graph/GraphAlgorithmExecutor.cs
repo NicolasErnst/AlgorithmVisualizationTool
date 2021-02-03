@@ -355,6 +355,33 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #endregion
 
+        #region CurrentAlgorithmIncompatible
+
+        public bool CurrentAlgorithmIncompatible
+        {
+            get
+            {
+                if (SelectedGraphAlgorithm != null)
+                {
+                    GraphDirectionType direction = DOTParser.DetermineGraphDirection(DOTStatements);
+                    if (direction != GraphDirectionType.None)
+                    {
+                        if (SelectedGraphAlgorithm.CompatibleGraphDirections == GraphDirectionType.Both)
+                        {
+                            return false; 
+                        }
+                        else
+                        {
+                            return SelectedGraphAlgorithm.CompatibleGraphDirections == direction; 
+                        }
+                    }
+                }
+                return true; 
+            }
+        }
+
+        #endregion
+
         private int TargetAlgorithmsSteps = 0; 
 
 
@@ -384,6 +411,12 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void StepForward()
         {
+            if (CurrentAlgorithmIncompatible)
+            {
+                System.Windows.MessageBox.Show("The selected graph algorithm is not compatible with the graph direction type.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
                 ResetGraphExecution();
@@ -492,9 +525,14 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             if (AlgorithmState == GraphAlgorithmState.Stopped || AlgorithmState == GraphAlgorithmState.Finished)
             {
+                if (CurrentAlgorithmIncompatible)
+                {
+                    System.Windows.MessageBox.Show("The selected graph algorithm is not compatible with the graph direction type.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                    return;
+                }
+
                 Start();
                 StartAlgorithmText = "Stop";
-
             }
             else
             {
@@ -528,12 +566,15 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void SetAlgorithmToState(int algorithmSteps)
         {
-            TargetAlgorithmsSteps = algorithmSteps;
-            while (TargetAlgorithmsSteps > 0)
+            if (algorithmSteps > 0 && !CurrentAlgorithmIncompatible)
             {
-                StepForward();
+                TargetAlgorithmsSteps = algorithmSteps;
+                while (TargetAlgorithmsSteps > 0)
+                {
+                    StepForward();
+                }
+                TargetAlgorithmsSteps = 0;
             }
-            TargetAlgorithmsSteps = 0;
         }
     }
 }

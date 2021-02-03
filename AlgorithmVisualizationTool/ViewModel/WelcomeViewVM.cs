@@ -337,11 +337,16 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         public WelcomeViewVM()
         {
-            string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString(); 
+            string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString();
+            List<GraphFile> recentGraphs = new List<GraphFile>();
             if (!string.IsNullOrWhiteSpace(recentFilesSetting))
             {
-                RecentGraphs = new ObservableCollection<GraphFile>(JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting).Where(x => !string.IsNullOrWhiteSpace(x.FilePath) && File.Exists(x.FilePath)));
+                recentGraphs = JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting);
             }
+            recentGraphs = recentGraphs.GroupBy(x => x.FilePath).Select(y => y.OrderByDescending(r => r.LastOpened).First()).ToList();
+            Properties.Settings.Default["RecentFiles"] = JsonConvert.SerializeObject(recentGraphs);
+            Properties.Settings.Default.Save();
+            RecentGraphs = new ObservableCollection<GraphFile>(recentGraphs);
             FilteredRecentGraphs = new ObservableCollection<GraphFile>(RecentGraphs);
             OpenTemplates();
         }

@@ -838,7 +838,7 @@ namespace AlgorithmVisualizationTool.ViewModel
             }
         }
 
-        #endregion 
+        #endregion
 
 
         public GraphViewVM(GraphFile graphFile, string selectedAlgorithm = null, int madeAlgorithmSteps = 0, string startVertex = null)
