@@ -479,7 +479,7 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #region AlgorithmExecutor
 
-        private GraphAlgorithmExecutor algorithmExecutor = new GraphAlgorithmExecutor();
+        private GraphAlgorithmExecutor algorithmExecutor = null;
 
         /// <summary>
         /// 
@@ -844,6 +844,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         public GraphViewVM(GraphFile graphFile, string selectedAlgorithm = null, int madeAlgorithmSteps = 0, string startVertex = null)
         {
             graph = graphFile;
+            AlgorithmExecutor = new GraphAlgorithmExecutor(); 
             UpdateOverviewTab();
             UpdateWindowTitle();
             LoadAvailableAlgorithms();
@@ -857,18 +858,20 @@ namespace AlgorithmVisualizationTool.ViewModel
             };
             algorithmDirectoryWatcher.Changed += (s, e) => { LoadAvailableAlgorithms(); };
 
-            if (AlgorithmExecutor != null)
+            AlgorithmExecutor.DOTStatements = GetDOTStatements();
+            if (selectedAlgorithm != null)
             {
-                AlgorithmExecutor.DOTStatements = GetDOTStatements();
-                if (selectedAlgorithm != null)
-                {
-                    AlgorithmExecutor.SelectGraphAlgorithmByFileName(selectedAlgorithm, startVertex);
+                AlgorithmExecutor.SelectGraphAlgorithmByFileName(selectedAlgorithm, startVertex);
 
-                    if (madeAlgorithmSteps > 0)
-                    {
-                        AlgorithmExecutor.SetAlgorithmToState(madeAlgorithmSteps);
-                    }
+                if (madeAlgorithmSteps > 0)
+                {
+                    AlgorithmExecutor.SetAlgorithmToState(madeAlgorithmSteps);
                 }
+            }
+
+            if (string.IsNullOrWhiteSpace(Graph.FilePath))
+            {
+                UnsavedChanges = true; 
             }
         }
 

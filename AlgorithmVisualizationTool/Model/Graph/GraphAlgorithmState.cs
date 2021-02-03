@@ -10,6 +10,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
     {
         Started,
         Stopped,
-        Finished
+        Finished,
+        Ignore
     }
 }

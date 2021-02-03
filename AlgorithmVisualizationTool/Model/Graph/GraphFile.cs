@@ -217,6 +217,16 @@ namespace AlgorithmVisualizationTool.Model.Graph
             DOTDescription = dotDescription;
         }
 
+        public GraphFile(string name, string dotDescription)
+        {
+            Name = name;
+            FilePath = "";
+            LastOpened = DateTime.Now;
+            LastModified = DateTime.Now;
+            LastModifier = Environment.UserName;
+            DOTDescription = dotDescription; 
+        }
+
 
         public void Save()
         {

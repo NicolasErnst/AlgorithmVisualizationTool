@@ -314,7 +314,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
             }
             set
             {
-                if (selectedStartVertexName == value || (value != null && !GraphVertexNames.Contains(value)))
+                if (selectedStartVertexName == value || value == null)
                 {
                     return;
                 }
@@ -354,6 +354,8 @@ namespace AlgorithmVisualizationTool.Model.Graph
         }
 
         #endregion
+
+        private int TargetAlgorithmsSteps = 0; 
 
 
         public void GenerateFromDot()
@@ -436,13 +438,21 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 RaisePropertyChanged("ExposedLists");
                 RaisePropertyChanged("GraphVertexNames");
             }
+            if (!GraphVertexNames.Contains(SelectedStartVertexName))
+            {
+                SelectedStartVertexName = "";
+            }
         }
 
         public async Task MakeAlgorithmStep(Action doAction, Action undoAction, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await Task.Run(async () => await AlgorithmContinuation());
-
+            if (TargetAlgorithmsSteps == 0)
+            {
+                await Task.Run(async () => await AlgorithmContinuation());
+            }
+            
+            
             while (StepStack.RedoCount > 0)
             {
                 StepStack.Redo();
@@ -454,6 +464,11 @@ namespace AlgorithmVisualizationTool.Model.Graph
             cancellationToken.ThrowIfCancellationRequested();
             StepStack.Do(new AlgorithmStep(doAction, undoAction));
             MadeAlgorithmSteps++;
+
+            if (MadeAlgorithmSteps >= TargetAlgorithmsSteps)
+            {
+                TargetAlgorithmsSteps = 0;
+            }
         }
 
         private async Task AlgorithmContinuation()
@@ -505,21 +520,20 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 if (Path.GetFileName(plugin.FileName).Equals(fileName))
                 {
                     SelectedGraphAlgorithm = plugin;
-                    SelectedStartVertexName = startVertex; 
                     break; 
                 }
             }
+            SelectedStartVertexName = startVertex;
         }
 
         public void SetAlgorithmToState(int algorithmSteps)
         {
-            //if (algorithmSteps > 0)
-            //{
-            //    do
-            //    {
-            //        StepForward();
-            //    } while (MadeAlgorithmSteps < algorithmSteps && AlgorithmState != GraphAlgorithmState.Finished); 
-            //}
+            TargetAlgorithmsSteps = algorithmSteps;
+            while (TargetAlgorithmsSteps > 0)
+            {
+                StepForward();
+            }
+            TargetAlgorithmsSteps = 0;
         }
     }
 }

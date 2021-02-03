@@ -128,11 +128,15 @@ namespace AlgorithmVisualizationTool.Model.MVVM
         #endregion 
 
 
-        protected void ShowCreateGraphDialog()
+        protected void ShowCreateGraphDialog(string dotContent = "")
         {
-            // TODO: SFD and Name
-            // TODO: Add DOT if template selected
-            // OpenGraph();
+            TextInputDialog nameDialog = new TextInputDialog();
+            nameDialog.Title = "Enter a graph name...";
+            if (nameDialog.ShowDialog() == true)
+            {
+                GraphFile graph = new GraphFile(nameDialog.Input, dotContent);
+                OpenGraph(graph);
+            }
         }
 
         protected void ShowOpenGraphDialog()
@@ -274,8 +278,10 @@ namespace AlgorithmVisualizationTool.Model.MVVM
                         {
                             OpenGraphFromContent(graphFileContent, projectFile.SelectedAlgorithm, projectFile.MadeAlgorithmSteps, projectFile.StartVertex);
                         }
-
-                        OpenGraphFromContent(graphFileContent, projectFile.SelectedAlgorithm, 0, null);
+                        else
+                        {
+                            OpenGraphFromContent(graphFileContent, projectFile.SelectedAlgorithm, 0, null);
+                        }
                     }
                 }
             }
