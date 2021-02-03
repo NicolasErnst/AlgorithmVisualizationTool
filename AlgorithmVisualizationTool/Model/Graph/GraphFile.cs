@@ -48,7 +48,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
         /// <summary>
         /// 
         /// </summary>
-        [JsonIgnore]
         public string FilePath
         {
             get
@@ -207,6 +206,16 @@ namespace AlgorithmVisualizationTool.Model.Graph
         #endregion
 
 
+        public GraphFile()
+        {
+            Name = "";
+            FilePath = "";
+            LastOpened = DateTime.Now;
+            LastModified = DateTime.Now;
+            LastModifier = Environment.UserName;
+            DOTDescription = "";
+        }
+
         public GraphFile(string name, string filePath, DateTime lastOpened, DateTime lastModified, string lastModifier, string dotDescription)
         {
             Name = name;
@@ -230,7 +239,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void Save()
         {
-            if (FilePath != null)
+            if (!string.IsNullOrEmpty(FilePath))
             {
                 SaveAs(FilePath);
             }
@@ -251,14 +260,15 @@ namespace AlgorithmVisualizationTool.Model.Graph
             if (sfd.ShowDialog() == true)
             {
                 string fileName = sfd.FileName;
-                SaveAs(fileName);
 
                 if (string.IsNullOrWhiteSpace(FilePath))
                 {
                     FilePath = fileName;
+                    SaveAs(fileName);
                 }
                 else
                 {
+                    SaveAs(fileName);
                     MessageBoxResult result = MessageBox.Show("Do you want to open the newly saved file?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
@@ -271,6 +281,17 @@ namespace AlgorithmVisualizationTool.Model.Graph
         public async void SaveAs(string saveFilePath)
         {
             UpdateModification();
+            string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString();
+            List<GraphFile> recentGraphs = new List<GraphFile>();
+            if (!string.IsNullOrWhiteSpace(recentFilesSetting))
+            {
+                recentGraphs = JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting);
+            }
+            recentGraphs.RemoveAll(x => string.IsNullOrEmpty(x.FilePath) || !File.Exists(x.FilePath));
+            recentGraphs.RemoveAll(x => x.FilePath.Equals(this.FilePath));
+            recentGraphs.Insert(0, this);
+            Properties.Settings.Default["RecentFiles"] = JsonConvert.SerializeObject(recentGraphs);
+            Properties.Settings.Default.Save();
             await Task.Run(() =>
             {
                 JsonSerializer serializer = new JsonSerializer()

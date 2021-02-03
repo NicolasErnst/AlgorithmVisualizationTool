@@ -337,13 +337,11 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         public WelcomeViewVM()
         {
-            // TODO: check RecentGraphs if they still exist 
-
-            //RecentGraphs.Add(new GraphFile("Test 1", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
-            //RecentGraphs.Add(new GraphFile("Test 2", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
-            //RecentGraphs.Add(new GraphFile("Test 3", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
-            //RecentGraphs.Add(new GraphFile("Test 4", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
-            //RecentGraphs.Add(new GraphFile("Test 5", @"C:\Users\Nicol\Desktop\Test1.graph", DateTime.Now, DateTime.Now, Environment.UserName, ""));
+            string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString(); 
+            if (!string.IsNullOrWhiteSpace(recentFilesSetting))
+            {
+                RecentGraphs = new ObservableCollection<GraphFile>(JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting).Where(x => !string.IsNullOrWhiteSpace(x.FilePath) && File.Exists(x.FilePath)));
+            }
             FilteredRecentGraphs = new ObservableCollection<GraphFile>(RecentGraphs);
             OpenTemplates();
         }

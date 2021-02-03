@@ -218,6 +218,7 @@ namespace AlgorithmVisualizationTool.Model.MVVM
                 try
                 {
                     GraphFile graph = JsonConvert.DeserializeObject<GraphFile>(content);
+                    UpdateRecentOpenedGraphs(graph);
                     ShowingView = new GraphViewVM(graph, selectedAlgorithm, madeAlgorithmSteps, startVertex);
                 }
                 catch (Exception) { }
@@ -226,7 +227,22 @@ namespace AlgorithmVisualizationTool.Model.MVVM
 
         public void OpenGraph(GraphFile file)
         {
+            UpdateRecentOpenedGraphs(file);
             ShowingView = new GraphViewVM(file);
+        }
+
+        private void UpdateRecentOpenedGraphs(GraphFile file)
+        {
+            string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString();
+            List<GraphFile> recentGraphs = new List<GraphFile>();
+            if (!string.IsNullOrWhiteSpace(recentFilesSetting))
+            {
+                recentGraphs = JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting);
+            }
+            recentGraphs.RemoveAll(x => string.IsNullOrEmpty(x.FilePath) || !File.Exists(x.FilePath));
+            recentGraphs.Insert(0, file);
+            Properties.Settings.Default["RecentFiles"] = JsonConvert.SerializeObject(recentGraphs);
+            Properties.Settings.Default.Save();
         }
 
         public void ImportProjectFile(string filePath)
