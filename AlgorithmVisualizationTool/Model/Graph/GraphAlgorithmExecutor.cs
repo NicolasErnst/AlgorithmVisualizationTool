@@ -419,7 +419,10 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
             if (AlgorithmState == GraphAlgorithmState.Finished)
             {
-                ResetGraphExecution();
+                if (TargetAlgorithmsSteps == 0)
+                {
+                    ResetGraphExecution();
+                }
                 AlgorithmExecutionCTS = new CancellationTokenSource();
                 SelectedGraphAlgorithm?.RunAlgorithm(AlgorithmExecutionCTS.Token, SelectedStartVertexName);
             }
@@ -566,6 +569,12 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public void SetAlgorithmToState(int algorithmSteps)
         {
+            if (CurrentAlgorithmIncompatible)
+            {
+                System.Windows.MessageBox.Show("The selected graph algorithm is not compatible with the graph direction type.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return;
+            }
+
             if (algorithmSteps > 0 && !CurrentAlgorithmIncompatible)
             {
                 TargetAlgorithmsSteps = algorithmSteps;
