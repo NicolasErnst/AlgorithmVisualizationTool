@@ -182,7 +182,7 @@
   <ItemGroup>
     <Compile Include="Model\Extensions\DateTimeExtension.cs" />
     <Compile Include="Model\Graph\GraphFile.cs" />
-    <Compile Include="Model\ImageTemplate.cs" />
+    <Compile Include="Model\Graph\GraphTemplate.cs" />
     <Compile Include="Model\MVVM\DisplayableViewModel.cs" />
     <Compile Include="Model\MVVM\ViewModelBase.cs" />
     <Compile Include="Model\Validations\NameValidationRule.cs" />

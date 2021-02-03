@@ -16,8 +16,6 @@ namespace AlgorithmVisualizationTool.ViewModel
 {
     class WelcomeViewVM : DisplayableViewModel
     {
-        private readonly Dictionary<ImageTemplate, GraphFile> TemplateToFileMappings = new Dictionary<ImageTemplate, GraphFile>();
-
         #region RecentGraphs
 
         private ObservableCollection<GraphFile> recentGraphs = new ObservableCollection<GraphFile>();
@@ -138,12 +136,12 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #region GraphTemplates
 
-        private ObservableCollection<ImageTemplate> graphTemplates = new ObservableCollection<ImageTemplate>();
+        private ObservableCollection<GraphTemplate> graphTemplates = new ObservableCollection<GraphTemplate>();
 
         /// <summary>
         /// 
         /// </summary>
-        public ObservableCollection<ImageTemplate> GraphTemplates
+        public ObservableCollection<GraphTemplate> GraphTemplates
         {
             get
             {
@@ -166,12 +164,12 @@ namespace AlgorithmVisualizationTool.ViewModel
 
         #region SelectedGraphTemplate
 
-        private ImageTemplate selectedGraphTemplate = null;
+        private GraphTemplate selectedGraphTemplate = null;
 
         /// <summary>
         /// 
         /// </summary>
-        public ImageTemplate SelectedGraphTemplate
+        public GraphTemplate SelectedGraphTemplate
         {
             get
             {
@@ -331,7 +329,7 @@ namespace AlgorithmVisualizationTool.ViewModel
         /// </summary>
         protected virtual void GraphTemplatesDoubleClickedExe(object param)
         {
-            ShowCreateGraphDialog();
+            ShowCreateGraphDialog(SelectedGraphTemplate.DOTDescription);
         }
 
         #endregion 
@@ -350,26 +348,24 @@ namespace AlgorithmVisualizationTool.ViewModel
             OpenTemplates();
         }
 
-        private async void OpenTemplates()
+        private void OpenTemplates()
         {
-            //await Task.Run(() =>
-            //{
-            //    TemplateToFileMappings.Clear();
-            //    string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates"), "*.template");
-            //    //foreach (string templateFileLocation in files)
-            //    //{
-            //    //    GraphFile graph = JsonConvert.DeserializeObject<GraphFile>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates", templateFileLocation)));
-            //    //    ImageTemplate graphTemplate = new ImageTemplate(graph.Name);
-            //    //    TemplateToFileMappings.Add(graphTemplate, graph); 
-            //    //    GraphTemplates.Add(graphTemplate);
-            //    //}
+            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates")))
+            {
+                string[] files = Directory.GetFiles(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates"), "*.template", SearchOption.AllDirectories);
+                foreach (string templateFilePath in files)
+                {
+                    GraphTemplate template = JsonConvert.DeserializeObject<GraphTemplate>(File.ReadAllText(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates", templateFilePath)));
+                    template.SetTemplateFilePath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Templates", templateFilePath));
+                    GraphTemplates.Add(template);
+                }
+            }
 
-            //    //RaisePropertyChanged("GraphTemplates");
-            //    //if (GraphTemplates.Count > 0)
-            //    //{
-            //    //    SelectedGraphTemplate = GraphTemplates.ElementAt(0);
-            //    //}
-            //});
+            if (GraphTemplates.Count > 0)
+            {
+                RaisePropertyChanged("GraphTemplates");
+                SelectedGraphTemplate = GraphTemplates.ElementAt(0); 
+            }
         }
     }
 }
