@@ -102,6 +102,11 @@ namespace GraphAlgorithmPlugin
 
         protected abstract Task RunAlgorithm(V startVertex);
 
+        protected Task MakeAlgorithmStep(Action doAction)
+        {
+            return MakeAlgorithmStep(doAction, new Action(() => { }));
+        }
+
         protected Task MakeAlgorithmStep(Action doAction, Action undoAction)
         {
             return GraphAlgorithmExecutor?.MakeAlgorithmStep(doAction, undoAction, CancellationToken);

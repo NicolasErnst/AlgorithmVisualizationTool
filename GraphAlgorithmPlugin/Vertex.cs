@@ -39,8 +39,38 @@ namespace GraphAlgorithmPlugin
         public string VertexName { get => VertexNameBlock.Text; set => VertexNameBlock.Text = value; }
         public string VertexContent { get => VertexContentBlock.Text; set => VertexContentBlock.Text = value; }
         public Brush VertexBorderBrush { get => VertexBorder.BorderBrush; set => VertexBorder.BorderBrush = value; }
+        private bool marked = false;
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Marked
+        {
+            get
+            {
+                return marked;
+            }
+            set
+            {
+                if (marked == value)
+                {
+                    return;
+                }
+
+                marked = value;
+
+                if (marked)
+                {
+                    Emphasize();
+                }
+                else
+                {
+                    Deemphasize();
+                }
+            }
+        }
+
+
         public Vertex() : this("")
         {
             // Nothing to do here
@@ -68,6 +98,7 @@ namespace GraphAlgorithmPlugin
             VertexName = vertexName;
             VertexContent = vertexContent;
             VertexBorderBrush = vertexBorderBrush;
+            Marked = false; 
         }
 
 

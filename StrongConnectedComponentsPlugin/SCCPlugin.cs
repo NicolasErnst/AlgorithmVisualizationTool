@@ -246,5 +246,72 @@ namespace StrongConnectedComponentsPlugin
             }
             descendantNodes[vertex].AddRange(Graph.OutEdges(vertex).Select(x => x.Target));
         }
+
+        // DFS Code without Progress :
+//        Stack<DFSVertex> q = new Stack<DFSVertex>();
+//        Dictionary<DFSVertex, HashSet<DFSVertex>> descendantVertices = new Dictionary<DFSVertex, HashSet<DFSVertex>>();
+//        int u = 1;
+
+//        await MakeAlgorithmStep(() =>
+//                {
+//            q.Push(startVertex);
+//            startVertex.Marked = true;
+//            GetDescendants(startVertex, descendantVertices);
+//            startVertex.PushTime = u;
+//        }, () =>
+//                {
+//                    q.Pop();
+//                    startVertex.Marked = false; 
+//                    if (descendantVertices.ContainsKey(startVertex))
+//                    {
+//                        descendantVertices.Remove(startVertex);
+//                    }
+//    startVertex.PushTime = 0; 
+//                });
+
+//while (q.Count > 0)
+//{
+//    DFSVertex v = q.Peek();
+//    if (descendantVertices.ContainsKey(v) && descendantVertices[v].Count > 0)
+//    {
+//        DFSVertex w = descendantVertices[v].First();
+//        descendantVertices[v].Remove(w);
+//        if (!w.Marked)
+//        {
+//            await MakeAlgorithmStep(() =>
+//            {
+//                q.Push(w);
+//                w.Marked = true;
+//                GetDescendants(w, descendantVertices);
+//                u += 1;
+//                w.PushTime = u;
+//            }, () =>
+//            {
+//                q.Pop();
+//                w.Marked = false;
+//                if (descendantVertices.ContainsKey(w))
+//                {
+//                    descendantVertices.Remove(w);
+//                }
+//                u -= 1;
+//                w.PushTime = 0;
+//            });
+//        }
+//    }
+//    else
+//    {
+//        await MakeAlgorithmStep(() =>
+//        {
+//            q.Pop();
+//            u += 1;
+//            v.PopTime = u;
+//        }, () =>
+//        {
+//            q.Push(v);
+//            u -= 1;
+//            v.PopTime = 0;
+//        });
+//    }
+//}
     }
 }

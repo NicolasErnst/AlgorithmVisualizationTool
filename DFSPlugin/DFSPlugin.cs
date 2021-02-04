@@ -17,97 +17,81 @@ namespace DFSPlugin
         {
             try
             {
+                Stack<DFSVertex> q = new Stack<DFSVertex>();
+                Dictionary<DFSVertex, HashSet<DFSVertex>> descendantVertices = new Dictionary<DFSVertex, HashSet<DFSVertex>>();
+                int u = 1;
+                ExposableList exposedQ = new ExposableList("Q");
+                ExposedLists.Add(exposedQ);
                 Progress = 0;
                 ProgressText = "Initializing..."; 
 
-                Stack<DFSVertex> q = new Stack<DFSVertex>();
-                ExposableList qList = new ExposableList("q");
-                ExposedLists.Add(qList);
-                Dictionary<DFSVertex, List<DFSVertex>> descendantNodes = new Dictionary<DFSVertex, List<DFSVertex>>(); 
-                int u = 1;
-
                 await MakeAlgorithmStep(() =>
                 {
-                    startVertex.PushTime = u; 
                     q.Push(startVertex);
-                    qList.Insert(0, startVertex);
+                    exposedQ.Insert(0, startVertex);
                     startVertex.Marked = true;
-                    GetDescendantNodes(startVertex, descendantNodes);
-                    Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
+                    GetDescendants(startVertex, descendantVertices);
+                    startVertex.PushTime = u;
+                    Progress = (u / (Graph.VertexCount * 2.0)) * 100;
                     ProgressText = "Executing...";
                 }, () =>
                 {
-                    startVertex.PushTime = 0; 
                     q.Pop();
-                    qList.Remove(startVertex);
+                    exposedQ.Remove(startVertex);
                     startVertex.Marked = false; 
-                    if (descendantNodes.ContainsKey(startVertex))
-                    {
-                        descendantNodes.Remove(startVertex); 
-                    }
+                    descendantVertices.Remove(startVertex);
+                    startVertex.PushTime = 0;
                     Progress = 0;
-                    ProgressText = "Initializing";
+                    ProgressText = "Initializing...";
                 });
 
-                while (q.Count > 0)
+                while(q.Count > 0)
                 {
                     DFSVertex v = q.Peek(); 
-                    if (descendantNodes.ContainsKey(v) && descendantNodes[v].Count > 0)
+                    if (descendantVertices.ContainsKey(v) && descendantVertices[v].Count > 0)
                     {
-                        DFSVertex w = descendantNodes[v].First();
-                        bool wMarkedState = w.Marked;
-
-                        await MakeAlgorithmStep(() =>
+                        DFSVertex w = descendantVertices[v].First();
+                        descendantVertices[v].Remove(w);
+                        if (!w.Marked)
                         {
-                            descendantNodes[v].Remove(w);
-                            if (!wMarkedState)
+                            await MakeAlgorithmStep(() =>
                             {
                                 q.Push(w);
-                                qList.Insert(0, w);
+                                exposedQ.Insert(0, w);
                                 w.Marked = true;
-                                GetDescendantNodes(w, descendantNodes);
+                                GetDescendants(w, descendantVertices);
                                 u += 1;
                                 w.PushTime = u;
-                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
-                            }
-                        }, () =>
-                        {
-                            if (!descendantNodes[v].Contains(w))
-                            {
-                                descendantNodes[v].Add(w);
-                            }
-                            if (!wMarkedState)
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100;
+                            }, () => 
                             {
                                 q.Pop();
-                                qList.Remove(w);
+                                exposedQ.Remove(w);
                                 w.Marked = false;
-                                if (descendantNodes.ContainsKey(w))
-                                {
-                                    descendantNodes.Remove(w);
-                                }
+                                descendantVertices.Remove(w);
                                 u -= 1;
                                 w.PushTime = 0;
-                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
-                            }
-                        });
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100;
+                            });
+                        }
                     }
                     else
                     {
                         await MakeAlgorithmStep(() =>
                         {
                             q.Pop();
-                            qList.Remove(v);
+                            exposedQ.Remove(v);
                             u += 1;
                             v.PopTime = u;
-                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100;
                         }, () =>
                         {
                             q.Push(v);
-                            qList.Insert(0, v);
+                            exposedQ.Insert(0, v);
                             u -= 1;
                             v.PopTime = 0;
-                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
-                        }); 
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100;
+                        });
                     }
                 }
 
@@ -118,13 +102,16 @@ namespace DFSPlugin
             catch (OperationCanceledException) { }
         }
 
-        private void GetDescendantNodes(DFSVertex vertex, Dictionary<DFSVertex, List<DFSVertex>> descendantNodes)
+        private void GetDescendants(DFSVertex vertex, Dictionary<DFSVertex, HashSet<DFSVertex>> descendants)
         {
-            if (!descendantNodes.ContainsKey(vertex))
+            if (!descendants.ContainsKey(vertex))
             {
-                descendantNodes.Add(vertex, new List<DFSVertex>()); 
+                descendants.Add(vertex, new HashSet<DFSVertex>()); 
             }
-            descendantNodes[vertex].AddRange(Graph.OutEdges(vertex).Select(x => x.Target));
+            foreach(DFSVertex descendantVertex in Graph.OutEdges(vertex).Select(x => x.Target))
+            {
+                descendants[vertex].Add(descendantVertex);
+            }
         }
     }
 }
