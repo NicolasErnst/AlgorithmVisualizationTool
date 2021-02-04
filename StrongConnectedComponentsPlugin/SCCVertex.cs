@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace StrongConnectedComponentsPlugin
 {
     public class SCCVertex : Vertex
     {
-        public bool Marked { get; set; }
-
         #region SccID
 
         private int sccID = 0;
@@ -94,7 +93,8 @@ namespace StrongConnectedComponentsPlugin
         }
 
         #endregion
-
+        
+        public Point Coordinates { get; set; }
 
         public SCCVertex()
         {

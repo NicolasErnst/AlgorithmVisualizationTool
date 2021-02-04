@@ -22,8 +22,6 @@ namespace DFSPlugin
                 int u = 1;
                 ExposableList exposedQ = new ExposableList("Q");
                 ExposedLists.Add(exposedQ);
-                Progress = 0;
-                ProgressText = "Initializing..."; 
 
                 await MakeAlgorithmStep(() =>
                 {
@@ -94,9 +92,6 @@ namespace DFSPlugin
                         });
                     }
                 }
-
-                Progress = 100;
-                ProgressText = "Finished!";
             } 
             catch (TaskCanceledException) { }
             catch (OperationCanceledException) { }

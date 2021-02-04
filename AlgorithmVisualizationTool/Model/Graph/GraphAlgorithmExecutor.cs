@@ -390,7 +390,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         public GraphAlgorithmExecutor()
         {
-            SelectedGraphAlgorithm = new DFSPlugin.DFSPlugin();
+            SelectedGraphAlgorithm = new StrongConnectedComponentsPlugin.SCCPlugin();
         }
 
 

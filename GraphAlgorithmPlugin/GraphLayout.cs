@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GraphAlgorithmPlugin
 {
@@ -15,7 +16,21 @@ namespace GraphAlgorithmPlugin
             LayoutAlgorithmType = "Tree";
             OverlapRemovalAlgorithmType = "FSA";
             Graph = graph;
-            AnimationLength = new TimeSpan(0); 
+            AnimationLength = new TimeSpan(0);
+        }
+
+        
+        public void UpdatePosition(V v, Point coordinates)
+        {
+            var vertexControl = GetVertexControl(v);
+            GraphCanvas.SetX(vertexControl, coordinates.X);
+            GraphCanvas.SetY(vertexControl, coordinates.Y);
+        }
+
+        public Point GetPosition(V v)
+        {
+            var vertexControl = GetVertexControl(v);
+            return new Point(GraphCanvas.GetX(vertexControl), GraphCanvas.GetY(vertexControl));
         }
     }
 }

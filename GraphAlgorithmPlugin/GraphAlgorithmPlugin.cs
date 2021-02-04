@@ -88,7 +88,13 @@ namespace GraphAlgorithmPlugin
             CancellationToken = cancellationToken;
             ExposedLists.Clear();
 
+            Progress = 0;
+            ProgressText = "Initializing..."; 
+
             await RunAlgorithm(startVertex);
+
+            Progress = 100;
+            ProgressText = "Finished!"; 
 
             if (cancellationToken.IsCancellationRequested)
             {
