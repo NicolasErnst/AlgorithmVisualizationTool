@@ -170,3 +170,5 @@ C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\De
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\ExportProjectDialog.baml
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\TextInputDialog.g.cs
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\obj\Debug\Controls\TextInputDialog.baml
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\StrongConnectedComponentsPlugin.dll
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\bin\Debug\StrongConnectedComponentsPlugin.pdb

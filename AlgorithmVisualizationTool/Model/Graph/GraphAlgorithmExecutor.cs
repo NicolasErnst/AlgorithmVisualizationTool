@@ -363,26 +363,35 @@ namespace AlgorithmVisualizationTool.Model.Graph
             {
                 if (SelectedGraphAlgorithm != null)
                 {
-                    GraphDirectionType direction = DOTParser.DetermineGraphDirection(DOTStatements);
-                    if (direction != GraphDirectionType.None)
+                    GraphDirectionType graphDirection = DOTParser.DetermineGraphDirection(DOTStatements);
+                    GraphDirectionType algoDirection = SelectedGraphAlgorithm.CompatibleGraphDirections; 
+
+                    if (algoDirection != GraphDirectionType.None)
                     {
-                        if (SelectedGraphAlgorithm.CompatibleGraphDirections == GraphDirectionType.Both)
+                        if (algoDirection == GraphDirectionType.Both)
                         {
                             return false; 
                         }
                         else
                         {
-                            return SelectedGraphAlgorithm.CompatibleGraphDirections == direction; 
+                            return !(graphDirection == algoDirection);
                         }
                     }
                 }
+
                 return true; 
             }
         }
 
         #endregion
 
-        private int TargetAlgorithmsSteps = 0; 
+        private int TargetAlgorithmsSteps = 0;
+
+
+        public GraphAlgorithmExecutor()
+        {
+            SelectedGraphAlgorithm = new StrongConnectedComponentsPlugin.SCCPlugin();
+        }
 
 
         public void GenerateFromDot()
@@ -487,7 +496,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
             {
                 await Task.Run(async () => await AlgorithmContinuation());
             }
-            
             
             while (StepStack.RedoCount > 0)
             {

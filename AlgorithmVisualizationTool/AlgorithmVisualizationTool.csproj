@@ -228,6 +228,10 @@
       <Project>{89dd9e1f-c38d-4f4b-9ff2-93f5cb37e3dd}</Project>
       <Name>GraphAlgorithmPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\StrongConnectedComponentsPlugin\StrongConnectedComponentsPlugin.csproj">
+      <Project>{315062d2-5013-4163-9209-db43b75df0d0}</Project>
+      <Name>StrongConnectedComponentsPlugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

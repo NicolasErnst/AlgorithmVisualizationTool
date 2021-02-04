@@ -33,7 +33,7 @@ namespace DFSPlugin
                     qList.Insert(0, startVertex);
                     startVertex.Marked = true;
                     GetDescendantNodes(startVertex, descendantNodes);
-                    Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                    Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
                     ProgressText = "Executing...";
                 }, () =>
                 {
@@ -68,7 +68,7 @@ namespace DFSPlugin
                                 GetDescendantNodes(w, descendantNodes);
                                 u += 1;
                                 w.PushTime = u;
-                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
                             }
                         }, () =>
                         {
@@ -87,7 +87,7 @@ namespace DFSPlugin
                                 }
                                 u -= 1;
                                 w.PushTime = 0;
-                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                                Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
                             }
                         });
                     }
@@ -99,14 +99,14 @@ namespace DFSPlugin
                             qList.Remove(v);
                             u += 1;
                             v.PopTime = u;
-                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
                         }, () =>
                         {
                             q.Push(v);
                             qList.Insert(0, v);
                             u -= 1;
                             v.PopTime = 0;
-                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0; ;
+                            Progress = (u / (Graph.VertexCount * 2.0)) * 100.0;
                         }); 
                     }
                 }
