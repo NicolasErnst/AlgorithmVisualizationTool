@@ -18,56 +18,57 @@ namespace StrongConnectedComponentsPlugin
         {
             try
             {
-                await Task.Delay(100);
-                SCCVertex a = Graph.Vertices.FirstOrDefault(x => x.VertexName.Equals("a")); 
-                if (a != null)
+                Stack<SCCVertex> l = new Stack<SCCVertex>();
+                int u = 0;
+                Progress = 0;
+                ProgressText = "Initializing...";
+
+                u = await RunDFS(startVertex, u, l);
+                foreach (SCCVertex s in Graph.Vertices)
                 {
-                    a.SetTargetCoordinates(new Point(0, 0)); 
+                    if (!s.Marked)
+                    {
+                        u = await RunDFS(s, u, l);
+                    }
                 }
 
-                //Stack<SCCVertex> l = new Stack<SCCVertex>();
-                //int u = 0;
-
-                //u = await RunDFS(startVertex, u, l);
-                //foreach(SCCVertex s in Graph.Vertices)
-                //{
-                //    if (!s.Marked)
-                //    {
-                //        u = await RunDFS(s, u, l);
-                //    }
-                //}
-                //List<Edge<SCCVertex>> edges = new List<Edge<SCCVertex>>(Graph.Edges);
-                //GraphLayout.SetRemainPositions(true);
-                //await MakeAlgorithmStep(() =>
-                //{
-                //    foreach (SCCVertex s in Graph.Vertices)
-                //    {
-                //        s.Marked = false;
-                //        s.PopTime = 0;
-                //        s.PushTime = 0;
-                //        Graph.ClearEdges(s);
-                //    }
-                //    Graph.AddEdgeRange(edges.Select(x => new Edge<SCCVertex>(x.Target, x.Source)));
-                //}, () =>
-                //{
-                //    foreach (SCCVertex s in Graph.Vertices)
-                //    {
-                //        Graph.ClearEdges(s);
-                //    }
-                //    Graph.AddEdgeRange(edges);
-                //});
-                //GraphLayout.SetRemainPositions(false);
-
-                //int sccID = 1;
-                //while (l.Count > 0)
-                //{
-                //    SCCVertex s = l.Pop();
-                //    if (!s.Marked)
-                //    {
-                //        await IdentifySCCs(s, sccID);
-                //        sccID += 1;
-                //    }
-                //}
+                List<Edge<SCCVertex>> edges = new List<Edge<SCCVertex>>(Graph.Edges);
+                GraphLayout.KeepPositions = true;
+                await MakeAlgorithmStep(() =>
+                {
+                    foreach (SCCVertex s in Graph.Vertices)
+                    {
+                        s.Marked = false;
+                        s.PopTime = 0;
+                        s.PushTime = 0;
+                        Graph.ClearEdges(s);
+                    }
+                    Graph.AddEdgeRange(edges.Select(x => new Edge<SCCVertex>(x.Target, x.Source)));
+                    ProgressText = "Invert edges..."; 
+                    Progress = ((2 * Graph.Vertices.Count() + 1) / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
+                }, () =>
+                {
+                    foreach (SCCVertex s in Graph.Vertices)
+                    {
+                        Graph.ClearEdges(s);
+                    }
+                    Graph.AddEdgeRange(edges);
+                    ProgressText = "DFS...";
+                    Progress = (2 * Graph.Vertices.Count() / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
+                });
+                GraphLayout.KeepPositions = false;
+                
+                int sccID = 1;
+                u = 0;
+                while (l.Count > 0)
+                {
+                    SCCVertex s = l.Pop();
+                    if (!s.Marked)
+                    {
+                        u = await IdentifySCCs(s, sccID, u);
+                        sccID += 1;
+                    }
+                }
             }
             catch (TaskCanceledException) { }
             catch (OperationCanceledException) { }
@@ -97,12 +98,16 @@ namespace StrongConnectedComponentsPlugin
                 startVertex.Marked = true;
                 GetDescendants(startVertex, descendantVertices);
                 startVertex.PushTime = u;
+                Progress = (u / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
+                ProgressText = "DFS..."; 
             }, () =>
             {
                 q.Pop();
                 startVertex.Marked = false;
                 descendantVertices.Remove(startVertex);
                 startVertex.PushTime = 0;
+                Progress = 0;
+                ProgressText = "Initializing...";
             });
 
             while (q.Count > 0)
@@ -121,6 +126,7 @@ namespace StrongConnectedComponentsPlugin
                             GetDescendants(w, descendantVertices);
                             u += 1;
                             w.PushTime = u;
+                            Progress = (u / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                         }, () =>
                         {
                             q.Pop();
@@ -128,6 +134,7 @@ namespace StrongConnectedComponentsPlugin
                             descendantVertices.Remove(w);
                             u -= 1;
                             w.PushTime = 0;
+                            Progress = (u / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                         });
                     }
                 }
@@ -139,12 +146,14 @@ namespace StrongConnectedComponentsPlugin
                         l.Push(v);
                         u += 1;
                         v.PopTime = u;
+                        Progress = (u / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                     }, () =>
                     {
                         q.Push(v);
                         l.Pop();
                         u -= 1;
                         v.PopTime = 0;
+                        Progress = (u / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                     });
                 }
             }
@@ -152,22 +161,28 @@ namespace StrongConnectedComponentsPlugin
             return u;
         }
 
-        private async Task IdentifySCCs(SCCVertex startVertex, int sccID)
+        private async Task<int> IdentifySCCs(SCCVertex startVertex, int sccID, int u)
         {
             Stack<SCCVertex> q = new Stack<SCCVertex>();
             Dictionary<SCCVertex, HashSet<SCCVertex>> descendantVertices = new Dictionary<SCCVertex, HashSet<SCCVertex>>();
+            u += 1; 
+
             await MakeAlgorithmStep(() =>
             {
                 q.Push(startVertex);
                 startVertex.Marked = true;
                 GetDescendants(startVertex, descendantVertices);
                 startVertex.SccID = sccID;
+                ProgressText = "Identify SCCs...";
+                Progress = ((2 * Graph.Vertices.Count() + 1 + u) / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
             }, () =>
             {
                 q.Pop();
                 startVertex.Marked = false;
                 descendantVertices.Remove(startVertex);
                 startVertex.SccID = 0;
+                ProgressText = "Invert edges...";
+                Progress = ((2 * Graph.Vertices.Count() + u) / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
             });
 
             while (q.Count > 0)
@@ -185,12 +200,16 @@ namespace StrongConnectedComponentsPlugin
                             w.Marked = true;
                             GetDescendants(w, descendantVertices);
                             w.SccID = sccID;
+                            u += 1;
+                            Progress = ((2 * Graph.Vertices.Count() + 1 + u) / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                         }, () =>
                         {
                             q.Pop();
                             w.Marked = false;
                             descendantVertices.Remove(w);
                             w.SccID = 0;
+                            u -= 1;
+                            Progress = ((2 * Graph.Vertices.Count() + 1 + u) / (3.0 * Graph.Vertices.Count() + 1.0)) * 100;
                         });
                     }
                 }
@@ -199,6 +218,8 @@ namespace StrongConnectedComponentsPlugin
                     q.Pop();
                 }
             }
+
+            return u;
         }
 
 

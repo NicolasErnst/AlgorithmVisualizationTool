@@ -11,8 +11,9 @@ namespace GraphAlgorithmPlugin
 {
     public class GraphLayout<V, E> : GraphLayout<V, E, Graph<V, E>> where V : class, IVertex, new() where E : Edge<V>, new()
     {
-        public bool RemainPositions { get; private set; }
-
+        public bool KeepPositions { get; set; }
+        private static Dictionary<V, Point> LastKnownPositions = new Dictionary<V, Point>();
+        private static bool IsCallback = false;
 
         public GraphLayout(Graph<V, E> graph)
         {
@@ -24,11 +25,6 @@ namespace GraphAlgorithmPlugin
         }
 
 
-        public void SetRemainPositions(bool remainPositions)
-        {
-            RemainPositions = remainPositions;
-        }
-
         private void GraphLayout_LayoutUpdated(object sender, EventArgs e)
         {
             foreach(V vertex in Graph.Vertices)
@@ -36,7 +32,36 @@ namespace GraphAlgorithmPlugin
                 vertex.TargetCoordinatesChanged += Vertex_TargetCoordinatesChanged;
                 GraphLayout.AddPositionChangedHandler(GetVertexControl(vertex), (s, ea) =>
                 {
-                    vertex.CurrentCoordinates = GetPosition(vertex);
+                    if (IsCallback)
+                    {
+                        return; 
+                    }
+
+                    var vertexControl = GetVertexControl(vertex); 
+
+                    if (KeepPositions)
+                    {
+                        SetPosition(vertex, LastKnownPositions[vertex]); 
+                        vertex.CurrentCoordinates = LastKnownPositions[vertex]; 
+                    }
+                    else
+                    {
+                        if (!double.IsNaN(vertex.TargetCoordinates.X) && !double.IsNaN(vertex.TargetCoordinates.Y))
+                        {
+                            SetPosition(vertex, vertex.TargetCoordinates);
+                            vertex.CurrentCoordinates = vertex.TargetCoordinates;
+                            if (!LastKnownPositions.ContainsKey(vertex))
+                            {
+                                LastKnownPositions.Add(vertex, new Point());
+                            }
+                            LastKnownPositions[vertex] = vertex.TargetCoordinates;
+                            vertex.SetTargetCoordinates(new Point(double.NaN, double.NaN), false);
+                        }
+                        else
+                        {
+                            vertex.CurrentCoordinates = GetPosition(vertex); 
+                        }
+                    }
                 });
 
             }
@@ -45,15 +70,20 @@ namespace GraphAlgorithmPlugin
         private void Vertex_TargetCoordinatesChanged(object sender, EventArgs e)
         {
             V vertex = sender as V;
-            var vertexControl = GetVertexControl(vertex);
-
             if (!double.IsNaN(vertex.TargetCoordinates.X) && !double.IsNaN(vertex.TargetCoordinates.Y))
             {
-                GraphCanvas.SetX(vertexControl, vertex.TargetCoordinates.X);
-                GraphCanvas.SetY(vertexControl, vertex.TargetCoordinates.Y);
+                SetPosition(vertex, vertex.TargetCoordinates);
             }
-
             vertex.SetTargetCoordinates(new Point(double.NaN, double.NaN));
+        }
+
+        public void SetPosition(V vertex, Point coordinates)
+        {
+            var vertexControl = GetVertexControl(vertex);
+            IsCallback = true;
+            GraphLayout.SetX(vertexControl, coordinates.X);
+            GraphLayout.SetY(vertexControl, coordinates.Y);
+            IsCallback = false;
         }
 
         public Point GetPosition(V v)
