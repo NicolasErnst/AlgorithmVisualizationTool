@@ -17,7 +17,7 @@ namespace GraphAlgorithmPlugin
         double Progress { get; set; }
         string ProgressText { get; set; }
         ExposableListContainer ExposedLists { get; }
-        DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements);
+        DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements, bool refreshOnly);
         void RunAlgorithm(CancellationToken cancellationToken, string startVertexName);
         List<string> GetAllVertexNames();
         string AlgorithmName { get; }

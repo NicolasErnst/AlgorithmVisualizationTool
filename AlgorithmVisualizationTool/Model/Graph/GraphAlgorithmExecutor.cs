@@ -241,7 +241,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
         #endregion
 
-        #region DOTDescription 
+        #region DOTStatements 
 
         private IEnumerable<string> dotStatements = null;
 
@@ -265,7 +265,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
 
                 RaisePropertyChanged();
 
-                RefreshGraphVisualization();
+                RefreshGraphVisualization(false);
             }
         }
 
@@ -394,9 +394,9 @@ namespace AlgorithmVisualizationTool.Model.Graph
         }
 
 
-        public void GenerateFromDot()
+        public void GenerateFromDot(bool refreshOnly)
         {
-            DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements);
+            DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements, refreshOnly);
             if (result != null && !result.Success)
             {
                 System.Windows.MessageBox.Show("The specified DOT description of the graph could not be parsed.\r\n\r\nNumber of statement: " + result.ErrorLine + "\r\nStatement: " + result.ErrorMessage, "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
@@ -473,11 +473,11 @@ namespace AlgorithmVisualizationTool.Model.Graph
             RefreshGraphVisualization();
         }
 
-        private void RefreshGraphVisualization()
+        private void RefreshGraphVisualization(bool refreshOnly = true)
         {
             if (DOTStatements != null)
             {
-                GenerateFromDot();
+                GenerateFromDot(refreshOnly);
                 RaisePropertyChanged("Graph");
                 RaisePropertyChanged("GraphLayout");
                 RaisePropertyChanged("ExposedLists");

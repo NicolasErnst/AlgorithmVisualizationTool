@@ -4,13 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GraphAlgorithmPlugin
 {
     public class DOTGraphConverter<V, E> where V : class, IVertex, new() where E : Edge<V>, new()
     {
-        public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements)
+        private static Dictionary<string, Point> previousCoordinates = new Dictionary<string, Point>();
+
+        public static DOTParsingResult Parse(Graph<V, E> graph, IEnumerable<string> statements, bool refreshOnly)
         {
+            previousCoordinates = new Dictionary<string, Point>();
+            foreach (V vertex in graph.Vertices)
+            {
+                previousCoordinates.Add(vertex.VertexName, vertex.CurrentCoordinates);
+            }
+            graph.Clear();
+
             graph.DirectionType = GraphDirectionType.None;
 
             for (int i = 0; i < statements.Count(); i++)
@@ -30,7 +40,7 @@ namespace GraphAlgorithmPlugin
                     {
                         try
                         {
-                            IList<V> vertices = ParseVertices(graph, statement, false);
+                            IList<V> vertices = ParseVertices(graph, statement, false, refreshOnly);
                             foreach (V vertex in vertices)
                             {
                                 vertex.OnInitialize(propertyList);
@@ -69,8 +79,8 @@ namespace GraphAlgorithmPlugin
                         string[] verticesOfEdge = statement.Split(delimiter.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         for (int j = 0; j < verticesOfEdge.Length - 1; j++)
                         {
-                            IList<V> sourceVertices = ParseVertices(graph, verticesOfEdge[j], true);
-                            IList<V> targetVertices = ParseVertices(graph, verticesOfEdge[j + 1], true);
+                            IList<V> sourceVertices = ParseVertices(graph, verticesOfEdge[j], true, refreshOnly);
+                            IList<V> targetVertices = ParseVertices(graph, verticesOfEdge[j + 1], true, refreshOnly);
 
                             foreach (V sourceVertex in sourceVertices)
                             {
@@ -140,7 +150,7 @@ namespace GraphAlgorithmPlugin
             return properties;
         }
 
-        public static IList<V> ParseVertices(Graph<V, E> graph, string statement, bool allowForReferencing)
+        public static IList<V> ParseVertices(Graph<V, E> graph, string statement, bool allowForReferencing, bool refreshOnly)
         {
             List<V> vertices = new List<V>();
             DOTParsingResult result = new DOTParsingResult(true);
@@ -162,6 +172,11 @@ namespace GraphAlgorithmPlugin
                 {
                     V vertex = new V() { VertexName = vertexName };
                     vertices.Add(vertex);
+
+                    if (refreshOnly && previousCoordinates.ContainsKey(vertex.VertexName))
+                    {
+                        vertex.SetTargetCoordinates(previousCoordinates[vertex.VertexName]);
+                    }
                 }
             }
 

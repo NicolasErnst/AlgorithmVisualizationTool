@@ -93,8 +93,7 @@ namespace StrongConnectedComponentsPlugin
         }
 
         #endregion
-        
-        public Point Coordinates { get; set; }
+
 
         public SCCVertex()
         {

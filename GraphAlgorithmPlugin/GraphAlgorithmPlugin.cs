@@ -72,10 +72,9 @@ namespace GraphAlgorithmPlugin
         }
 
 
-        public DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements)
+        public DOTParsingResult GenerateFromDot(IEnumerable<string> dotStatements, bool refreshOnly)
         {
-            Graph.Clear();
-            return DOTGraphConverter<V, E>.Parse(Graph, dotStatements); 
+            return DOTGraphConverter<V, E>.Parse(Graph, dotStatements, refreshOnly); 
         }
 
         public async void RunAlgorithm(CancellationToken cancellationToken, string startVertexName)

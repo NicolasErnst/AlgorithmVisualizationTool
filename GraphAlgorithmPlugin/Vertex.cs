@@ -39,6 +39,9 @@ namespace GraphAlgorithmPlugin
         public string VertexName { get => VertexNameBlock.Text; set => VertexNameBlock.Text = value; }
         public string VertexContent { get => VertexContentBlock.Text; set => VertexContentBlock.Text = value; }
         public Brush VertexBorderBrush { get => VertexBorder.BorderBrush; set => VertexBorder.BorderBrush = value; }
+
+        #region Marked 
+
         private bool marked = false;
 
         /// <summary>
@@ -70,6 +73,68 @@ namespace GraphAlgorithmPlugin
             }
         }
 
+        #endregion
+
+        #region CurrentCoordinates
+
+        private Point currentCoordinates = new Point(double.NaN,double.NaN);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point CurrentCoordinates
+        {
+            get
+            {
+                return currentCoordinates;
+            }
+            set
+            {
+                if (currentCoordinates == value)
+                {
+                    return;
+                }
+
+                currentCoordinates = value;
+            }
+        }
+
+        #endregion
+
+        #region TargetCoordinates
+
+        public event EventHandler TargetCoordinatesChanged;
+
+        private Point targetCoordinates = new Point(double.NaN, double.NaN);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Point TargetCoordinates
+        {
+            get
+            {
+                return targetCoordinates;
+            }
+            set
+            {
+                if (targetCoordinates == value)
+                {
+                    return;
+                }
+
+                targetCoordinates = value;
+
+                if (!double.IsNaN(targetCoordinates.X) && !double.IsNaN(targetCoordinates.Y))
+                {
+                    EventHandler handler = TargetCoordinatesChanged;
+                    handler?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        #endregion
+
 
         public Vertex() : this("")
         {
@@ -98,7 +163,7 @@ namespace GraphAlgorithmPlugin
             VertexName = vertexName;
             VertexContent = vertexContent;
             VertexBorderBrush = vertexBorderBrush;
-            Marked = false; 
+            Marked = false;
         }
 
 
@@ -123,6 +188,18 @@ namespace GraphAlgorithmPlugin
         public override string ToString()
         {
             return VertexName;
+        }
+
+        public void SetTargetCoordinates(Point targetCoordinates, bool fireEventOnUpdate = true)
+        {
+            if (fireEventOnUpdate)
+            {
+                TargetCoordinates = targetCoordinates;
+            }
+            else
+            {
+                this.targetCoordinates = targetCoordinates;
+            }
         }
     }
 }

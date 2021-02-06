@@ -343,10 +343,13 @@ namespace AlgorithmVisualizationTool.ViewModel
             {
                 recentGraphs = JsonConvert.DeserializeObject<List<GraphFile>>(recentFilesSetting);
             }
-            recentGraphs.RemoveAll(x => string.IsNullOrEmpty(x.FilePath) || !File.Exists(x.FilePath));
-            recentGraphs = recentGraphs.GroupBy(x => x.FilePath).Select(y => y.OrderByDescending(r => r.LastOpened).First()).ToList();
-            Properties.Settings.Default["RecentFiles"] = JsonConvert.SerializeObject(recentGraphs);
-            Properties.Settings.Default.Save();
+            if (recentGraphs.Count > 0)
+            {
+                recentGraphs.RemoveAll(x => string.IsNullOrEmpty(x.FilePath) || !File.Exists(x.FilePath));
+                recentGraphs = recentGraphs.GroupBy(x => x.FilePath).Select(y => y.OrderByDescending(r => r.LastOpened).First()).ToList();
+                Properties.Settings.Default["RecentFiles"] = JsonConvert.SerializeObject(recentGraphs);
+                Properties.Settings.Default.Save();
+            }
             RecentGraphs = new ObservableCollection<GraphFile>(recentGraphs);
             FilteredRecentGraphs = new ObservableCollection<GraphFile>(RecentGraphs);
             OpenTemplates();

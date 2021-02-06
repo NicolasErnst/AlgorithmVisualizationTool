@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using GraphAlgorithmPlugin;
 
 namespace StrongConnectedComponentsPlugin
@@ -17,65 +18,59 @@ namespace StrongConnectedComponentsPlugin
         {
             try
             {
-                Stack<SCCVertex> l = new Stack<SCCVertex>();
-                int u = 0;
-
-                u = await RunDFS(startVertex, u, l);
-                foreach(SCCVertex s in Graph.Vertices)
+                await Task.Delay(100);
+                SCCVertex a = Graph.Vertices.FirstOrDefault(x => x.VertexName.Equals("a")); 
+                if (a != null)
                 {
-                    if (!s.Marked)
-                    {
-                        u = await RunDFS(s, u, l);
-                    }
+                    a.SetTargetCoordinates(new Point(0, 0)); 
                 }
 
-                List<Edge<SCCVertex>> edges = new List<Edge<SCCVertex>>(Graph.Edges);
-                await MakeAlgorithmStep(() =>
-                {
-                    foreach (SCCVertex s in Graph.Vertices)
-                    {
-                        s.Coordinates = GraphLayout.GetPosition(s);
-                        s.Marked = false;
-                        s.PopTime = 0;
-                        s.PushTime = 0;
-                    }
-                    foreach (SCCVertex s in Graph.Vertices)
-                    {
-                        Graph.ClearEdges(s);
-                    }
-                    GraphLayout.LayoutUpdated += GraphLayout_LayoutUpdated;
-                    Graph.AddEdgeRange(edges.Select(x => new Edge<SCCVertex>(x.Target, x.Source)));
-                }, () =>
-                {
-                    foreach (SCCVertex s in Graph.Vertices)
-                    {
-                        Graph.ClearEdges(s);
-                    }
-                    Graph.AddEdgeRange(edges);
-                });
+                //Stack<SCCVertex> l = new Stack<SCCVertex>();
+                //int u = 0;
 
-                int sccID = 1;
-                while (l.Count > 0)
-                {
-                    SCCVertex s = l.Pop();
-                    if (!s.Marked)
-                    {
-                        await IdentifySCCs(s, sccID);
-                        sccID += 1;
-                    }
-                }
+                //u = await RunDFS(startVertex, u, l);
+                //foreach(SCCVertex s in Graph.Vertices)
+                //{
+                //    if (!s.Marked)
+                //    {
+                //        u = await RunDFS(s, u, l);
+                //    }
+                //}
+                //List<Edge<SCCVertex>> edges = new List<Edge<SCCVertex>>(Graph.Edges);
+                //GraphLayout.SetRemainPositions(true);
+                //await MakeAlgorithmStep(() =>
+                //{
+                //    foreach (SCCVertex s in Graph.Vertices)
+                //    {
+                //        s.Marked = false;
+                //        s.PopTime = 0;
+                //        s.PushTime = 0;
+                //        Graph.ClearEdges(s);
+                //    }
+                //    Graph.AddEdgeRange(edges.Select(x => new Edge<SCCVertex>(x.Target, x.Source)));
+                //}, () =>
+                //{
+                //    foreach (SCCVertex s in Graph.Vertices)
+                //    {
+                //        Graph.ClearEdges(s);
+                //    }
+                //    Graph.AddEdgeRange(edges);
+                //});
+                //GraphLayout.SetRemainPositions(false);
+
+                //int sccID = 1;
+                //while (l.Count > 0)
+                //{
+                //    SCCVertex s = l.Pop();
+                //    if (!s.Marked)
+                //    {
+                //        await IdentifySCCs(s, sccID);
+                //        sccID += 1;
+                //    }
+                //}
             }
             catch (TaskCanceledException) { }
             catch (OperationCanceledException) { }
-        }
-
-        private void GraphLayout_LayoutUpdated(object sender, EventArgs e)
-        {
-            foreach (SCCVertex s in Graph.Vertices)
-            {
-                GraphLayout.UpdatePosition(s, s.Coordinates);
-            }
-            // TODO: remove after positions set
         }
 
         private void GetDescendants(SCCVertex vertex, Dictionary<SCCVertex, HashSet<SCCVertex>> descendants)
