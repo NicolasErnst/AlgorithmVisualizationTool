@@ -27,42 +27,58 @@ namespace GraphAlgorithmPlugin
 
         private void GraphLayout_LayoutUpdated(object sender, EventArgs e)
         {
-            foreach(V vertex in Graph.Vertices)
-            {
-                vertex.TargetCoordinatesChanged += Vertex_TargetCoordinatesChanged;
-                GraphLayout.AddPositionChangedHandler(GetVertexControl(vertex), (s, ea) =>
+                foreach (V vertex in Graph.Vertices)
                 {
-                    if (IsCallback)
+                    vertex.TargetCoordinatesChanged += Vertex_TargetCoordinatesChanged;
+                    GraphLayout.AddPositionChangedHandler(GetVertexControl(vertex), (s, ea) =>
                     {
-                        return; 
-                    }
-
-                    var vertexControl = GetVertexControl(vertex); 
-
-                    if (KeepPositions)
-                    {
-                        SetPosition(vertex, LastKnownPositions[vertex]); 
-                        vertex.CurrentCoordinates = LastKnownPositions[vertex]; 
-                    }
-                    else
-                    {
-                        if (!double.IsNaN(vertex.TargetCoordinates.X) && !double.IsNaN(vertex.TargetCoordinates.Y))
+                        if (IsCallback)
                         {
-                            SetPosition(vertex, vertex.TargetCoordinates);
-                            vertex.CurrentCoordinates = vertex.TargetCoordinates;
-                            if (!LastKnownPositions.ContainsKey(vertex))
-                            {
-                                LastKnownPositions.Add(vertex, new Point());
-                            }
-                            LastKnownPositions[vertex] = vertex.TargetCoordinates;
+                            return;
+                        }
+
+                        var vertexControl = GetVertexControl(vertex);
+
+                        if (KeepPositions)
+                        {
+                            SetPosition(vertex, LastKnownPositions[vertex]);
+                            vertex.CurrentCoordinates = LastKnownPositions[vertex];
                         }
                         else
                         {
-                            vertex.CurrentCoordinates = GetPosition(vertex); 
-                        }
-                    }
-                });
+                            Point currentPosition = GetPosition(vertex); 
 
+                            if (!double.IsNaN(vertex.TargetCoordinates.Y) && currentPosition.Y != vertex.TargetCoordinates.Y)
+                            {
+                                SetPosition(vertex, vertex.TargetCoordinates);
+                                vertex.CurrentCoordinates = vertex.TargetCoordinates;
+                                if (!LastKnownPositions.ContainsKey(vertex))
+                                {
+                                    LastKnownPositions.Add(vertex, new Point());
+                                }
+                                LastKnownPositions[vertex] = vertex.TargetCoordinates;
+
+                                if (!double.IsNaN(vertex.TargetCoordinates.X) && currentPosition.X != vertex.TargetCoordinates.X)
+                                {
+                                    SetPosition(vertex, vertex.TargetCoordinates);
+                                    vertex.CurrentCoordinates = vertex.TargetCoordinates;
+                                    if (!LastKnownPositions.ContainsKey(vertex))
+                                    {
+                                        LastKnownPositions.Add(vertex, new Point());
+                                    }
+                                    LastKnownPositions[vertex] = vertex.TargetCoordinates;
+                                } 
+                                else
+                                {
+                                    vertex.SetTargetCoordinates(new Point(double.NaN, double.NaN), false);
+                                }
+                            }
+                            else
+                            {
+                                vertex.CurrentCoordinates = GetPosition(vertex);
+                            }
+                        }
+                    });
             }
         }
 
@@ -76,13 +92,19 @@ namespace GraphAlgorithmPlugin
             vertex.SetTargetCoordinates(new Point(double.NaN, double.NaN));
         }
 
-        public void SetPosition(V vertex, Point coordinates)
+        public void SetPosition(V vertex, Point coordinates, bool setCallbackFlag = true)
         {
             var vertexControl = GetVertexControl(vertex);
-            IsCallback = true;
+            if (setCallbackFlag)
+            {
+                IsCallback = true;
+            }
             GraphLayout.SetX(vertexControl, coordinates.X);
             GraphLayout.SetY(vertexControl, coordinates.Y);
-            IsCallback = false;
+            if (setCallbackFlag)
+            {
+                IsCallback = false; 
+            }
         }
 
         public Point GetPosition(V v)
