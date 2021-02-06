@@ -388,12 +388,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
         private int TargetAlgorithmsSteps = 0;
 
 
-        public GraphAlgorithmExecutor()
-        {
-            SelectedGraphAlgorithm = new StrongConnectedComponentsPlugin.SCCPlugin();
-        }
-
-
         public void GenerateFromDot(bool refreshOnly)
         {
             DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements, refreshOnly);

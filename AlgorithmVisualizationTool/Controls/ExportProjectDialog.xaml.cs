@@ -51,6 +51,11 @@ namespace AlgorithmVisualizationTool.Controls
             {
                 AlgorithmSelection.Items.Add(AvailablePlugins.ElementAt(i).AlgorithmName);
             }
+
+            if (SelectedGraphAlgorithm == null)
+            {
+                ExportCurrentState.IsEnabled = false;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
