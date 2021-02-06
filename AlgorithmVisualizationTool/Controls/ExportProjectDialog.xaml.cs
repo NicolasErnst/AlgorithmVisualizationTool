@@ -106,7 +106,7 @@ namespace AlgorithmVisualizationTool.Controls
 
             List<string> plugins = new List<string>();
             int counter = 0;
-            foreach(ListBoxItem item in AlgorithmSelection.Items)
+            foreach(var item in AlgorithmSelection.Items)
             {
                 plugins.Add(AvailablePlugins.ElementAt(counter).FileName);
                 counter++; 

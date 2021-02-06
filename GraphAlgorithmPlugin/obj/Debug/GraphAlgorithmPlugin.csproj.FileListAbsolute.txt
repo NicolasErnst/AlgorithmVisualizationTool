@@ -25,7 +25,6 @@ C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\Qu
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\GraphShape.xml
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\GraphShape.Controls.xml
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\bin\Debug\QuikGraph.xml
-C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csprojAssemblyReference.cache
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csproj.CoreCompileInputs.cache
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csproj.CopyComplete
 C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.dll
