@@ -16,5 +16,5 @@ C:\Users\Nicolas\Git\AlgoritmVisualizationTool\AlgorithmVisualizationTool\App.xa
 32865565317
 Controls\ExportProjectDialog.xaml;Controls\InfoDialog.xaml;Controls\NumberInputDialog.xaml;Controls\SearchBar.xaml;Controls\TextInputDialog.xaml;View\AlgorithmVisualizationToolWindow.xaml;Themes\Generic.xaml;View\GraphView.xaml;View\WelcomeView.xaml;
 
-True
+False
 

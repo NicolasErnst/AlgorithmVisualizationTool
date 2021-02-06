@@ -197,6 +197,9 @@
                                                 <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedGraphAlgorithm}" Value="{x:Null}">
                                                     <Setter Property="IsEnabled" Value="False"/>
                                                 </DataTrigger>
+                                                <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
                                                 <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="{x:Null}">
                                                     <Setter Property="IsEnabled" Value="False"/>
                                                 </DataTrigger>
@@ -236,9 +239,12 @@
                                                         <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="{x:Null}">
                                                             <Setter Property="IsEnabled" Value="False"/>
                                                         </DataTrigger>
+                                                        <DataTrigger Binding="{Binding AlgorithmExecutor.SelectedStartVertexName}" Value="">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
                                                         <DataTrigger Binding="{Binding AlgorithmExecutor.AlgorithmState}" Value="{x:Static graphmodel:GraphAlgorithmState.Started}">
-                                                        <Setter Property="IsEnabled" Value="False"/>
-                                                    </DataTrigger>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Button.Style>

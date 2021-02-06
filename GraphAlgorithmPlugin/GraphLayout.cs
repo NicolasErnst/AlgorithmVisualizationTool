@@ -55,7 +55,6 @@ namespace GraphAlgorithmPlugin
                                 LastKnownPositions.Add(vertex, new Point());
                             }
                             LastKnownPositions[vertex] = vertex.TargetCoordinates;
-                            vertex.SetTargetCoordinates(new Point(double.NaN, double.NaN), false);
                         }
                         else
                         {
