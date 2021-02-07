@@ -30,9 +30,17 @@
                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="10,10,10,10" DockPanel.Dock="Top">
                     <TextBlock.Inlines>
                         <Run Text="AlgorithmVisualizationTool was created by"/>
-                        <Run Text="Nicolas Ernst" FontWeight="Bold"/>
+                        <Hyperlink NavigateUri="https://www.nicolasernst.de/" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="Nicolas Ernst" FontWeight="Bold"/>
+                        </Hyperlink>
+                        <Run Text="with supervision from"/>
+                        <Hyperlink NavigateUri="https://www.hs-karlsruhe.de/hochschule/personen-a-z/details/user/heiko-koerner/" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="Prof. Dr. Heiko Körner" FontWeight="Bold"/>
+                        </Hyperlink>
                         <Run Text="as part of a project work at"/>
-                        <Run Text="Karlsruhe University of Applied Sciences" FontWeight="Bold"/>
+                        <Hyperlink NavigateUri="https://www.hs-karlsruhe.de/" RequestNavigate="Hyperlink_RequestNavigate">
+                            <TextBlock Text="Karlsruhe University of Applied Sciences" FontWeight="Bold"/>
+                        </Hyperlink>
                         <Run Text="in the winter semester 2020/21."/>
                     </TextBlock.Inlines>
                 </TextBlock>
