@@ -93,16 +93,18 @@ namespace GraphAlgorithmPlugin
             await RunAlgorithm(startVertex);
 
             GraphLayout.KeepPositions = false;
-            Progress = 100;
-            ProgressText = "Finished!"; 
-
+            
             if (cancellationToken.IsCancellationRequested)
             {
                 GraphAlgorithmExecutor?.FinishedAlgorithm(false);
+                Progress = 0;
+                ProgressText = "";
             }
             else 
             {
                 GraphAlgorithmExecutor?.FinishedAlgorithm(true);
+                Progress = 100;
+                ProgressText = "Finished!";
             }
         }
 

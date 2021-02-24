@@ -92,6 +92,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 lastOpened = value;
 
                 RaisePropertyChanged();
+                RaisePropertyChanged("LastOpenedToString");
             }
         }
 
@@ -132,6 +133,7 @@ namespace AlgorithmVisualizationTool.Model.Graph
                 lastModified = value;
 
                 RaisePropertyChanged();
+                RaisePropertyChanged("LastModifiedToString"); 
             }
         }
 
@@ -278,9 +280,12 @@ namespace AlgorithmVisualizationTool.Model.Graph
             }
         }
 
-        public async void SaveAs(string saveFilePath)
+        public async void SaveAs(string saveFilePath, bool updateModification = true)
         {
-            UpdateModification();
+            if (updateModification)
+            {
+                UpdateModification();
+            }
             string recentFilesSetting = Properties.Settings.Default["RecentFiles"].ToString();
             List<GraphFile> recentGraphs = new List<GraphFile>();
             if (!string.IsNullOrWhiteSpace(recentFilesSetting))

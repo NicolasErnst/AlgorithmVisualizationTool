@@ -388,13 +388,6 @@ namespace AlgorithmVisualizationTool.Model.Graph
         private int TargetAlgorithmsSteps = 0;
 
 
-        // TODO Remove
-        public GraphAlgorithmExecutor()
-        {
-            SelectedGraphAlgorithm = new StrongConnectedComponentsPlugin.SCCPlugin();
-        }
-
-
         public void GenerateFromDot(bool refreshOnly)
         {
             DOTParsingResult result = SelectedGraphAlgorithm?.GenerateFromDot(DOTStatements, refreshOnly);
@@ -465,13 +458,13 @@ namespace AlgorithmVisualizationTool.Model.Graph
         {
             AlgorithmExecutionCTS?.Cancel();
             StepHandle.Set();
-            Progress = 0;
-            ProgressText = "";
             MadeAlgorithmSteps = 0;
             StepStack.Reset();
             StepHandle.Reset();
             SelectedGraphAlgorithm?.ExposedLists.Clear();
             RefreshGraphVisualization();
+            Progress = 0;
+            ProgressText = "";
         }
 
         private void RefreshGraphVisualization(bool refreshOnly = true)

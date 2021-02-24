@@ -848,13 +848,17 @@ namespace AlgorithmVisualizationTool.ViewModel
             UpdateOverviewTab();
             UpdateWindowTitle();
             LoadAvailableAlgorithms();
+            graph.LastOpened = DateTime.Now;
+            if (!string.IsNullOrEmpty(graph.FilePath))
+            {
+                graph.SaveAs(graph.FilePath, false);
+            }
 
             FileSystemWatcher algorithmDirectoryWatcher = new FileSystemWatcher()
             {
                 Path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Algorithms"),
                 NotifyFilter = NotifyFilters.LastWrite,
-                Filter = "*.dll",
-                EnableRaisingEvents = true
+                Filter = "*.dll"
             };
             algorithmDirectoryWatcher.Changed += (s, e) => { LoadAvailableAlgorithms(); };
 
@@ -926,7 +930,7 @@ namespace AlgorithmVisualizationTool.ViewModel
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
                 MessageBox.Show("The algorithm plugins could not be loaded.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
