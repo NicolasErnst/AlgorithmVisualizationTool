@@ -12,7 +12,7 @@ namespace GraphAlgorithmPlugin
     public class GraphLayout<V, E> : GraphLayout<V, E, Graph<V, E>> where V : class, IVertex, new() where E : Edge<V>, new()
     {
         public bool KeepPositions { get; set; }
-        private static Dictionary<V, Point> LastKnownPositions = new Dictionary<V, Point>();
+        private static Dictionary<string, Point> LastKnownPositions = new Dictionary<string, Point>();
         private static bool IsCallback = false;
 
         public GraphLayout(Graph<V, E> graph)
@@ -41,8 +41,11 @@ namespace GraphAlgorithmPlugin
 
                         if (KeepPositions)
                         {
-                            SetPosition(vertex, LastKnownPositions[vertex]);
-                            vertex.CurrentCoordinates = LastKnownPositions[vertex];
+                            if (LastKnownPositions.ContainsKey(vertex.VertexName))
+                            {
+                                SetPosition(vertex, LastKnownPositions[vertex.VertexName]);
+                                vertex.CurrentCoordinates = LastKnownPositions[vertex.VertexName];
+                            }
                         }
                         else
                         {
@@ -52,21 +55,21 @@ namespace GraphAlgorithmPlugin
                             {
                                 SetPosition(vertex, vertex.TargetCoordinates);
                                 vertex.CurrentCoordinates = vertex.TargetCoordinates;
-                                if (!LastKnownPositions.ContainsKey(vertex))
+                                if (!LastKnownPositions.ContainsKey(vertex.VertexName))
                                 {
-                                    LastKnownPositions.Add(vertex, new Point());
+                                    LastKnownPositions.Add(vertex.VertexName, new Point());
                                 }
-                                LastKnownPositions[vertex] = vertex.TargetCoordinates;
+                                LastKnownPositions[vertex.VertexName] = vertex.TargetCoordinates;
 
                                 if (!double.IsNaN(vertex.TargetCoordinates.X) && currentPosition.X != vertex.TargetCoordinates.X)
                                 {
                                     SetPosition(vertex, vertex.TargetCoordinates);
                                     vertex.CurrentCoordinates = vertex.TargetCoordinates;
-                                    if (!LastKnownPositions.ContainsKey(vertex))
+                                    if (!LastKnownPositions.ContainsKey(vertex.VertexName))
                                     {
-                                        LastKnownPositions.Add(vertex, new Point());
+                                        LastKnownPositions.Add(vertex.VertexName, new Point());
                                     }
-                                    LastKnownPositions[vertex] = vertex.TargetCoordinates;
+                                    LastKnownPositions[vertex.VertexName] = vertex.TargetCoordinates;
                                 } 
                                 else
                                 {

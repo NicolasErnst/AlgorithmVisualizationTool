@@ -101,7 +101,7 @@ namespace StrongConnectedComponentsPlugin
         }
 
 
-        private void UpdateContent()
+        public void UpdateContent()
         {
             string content = "";
             if (SccID > 0)

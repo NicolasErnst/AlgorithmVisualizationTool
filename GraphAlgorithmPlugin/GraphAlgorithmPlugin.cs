@@ -92,6 +92,7 @@ namespace GraphAlgorithmPlugin
 
             await RunAlgorithm(startVertex);
 
+            GraphLayout.KeepPositions = false;
             Progress = 100;
             ProgressText = "Finished!"; 
 

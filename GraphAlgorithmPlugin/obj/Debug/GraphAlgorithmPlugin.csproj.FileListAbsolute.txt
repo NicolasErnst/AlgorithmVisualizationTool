@@ -42,3 +42,4 @@ C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\Grap
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csproj.CopyComplete
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.dll
 C:\Users\Nicol\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.pdb
+C:\Users\Nicolas\Git\AlgoritmVisualizationTool\GraphAlgorithmPlugin\obj\Debug\GraphAlgorithmPlugin.csprojAssemblyReference.cache
